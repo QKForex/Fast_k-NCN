@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fast_k-NCN", "Fast_k-NCN\Fast_k-NCN.vcxproj", "{1E1CE337-60A7-4996-8673-829A7D1BBAA9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fast_k-NCN.Test", "Fast_k-NCN.Test\Fast_k-NCN.Test.vcxproj", "{DFDABF71-9A31-4833-81C8-DDEA7045C157}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D559F524-2FBA-47B1-8A83-1AA7D17234EB}"
+	ProjectSection(SolutionItems) = preProject
+		Fast_k-NCN.vsmdi = Fast_k-NCN.vsmdi
+		Local.testsettings = Local.testsettings
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Fast_k-NCN.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E1CE337-60A7-4996-8673-829A7D1BBAA9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1E1CE337-60A7-4996-8673-829A7D1BBAA9}.Debug|Win32.Build.0 = Debug|Win32
+		{1E1CE337-60A7-4996-8673-829A7D1BBAA9}.Release|Win32.ActiveCfg = Release|Win32
+		{1E1CE337-60A7-4996-8673-829A7D1BBAA9}.Release|Win32.Build.0 = Release|Win32
+		{DFDABF71-9A31-4833-81C8-DDEA7045C157}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DFDABF71-9A31-4833-81C8-DDEA7045C157}.Debug|Win32.Build.0 = Debug|Win32
+		{DFDABF71-9A31-4833-81C8-DDEA7045C157}.Release|Win32.ActiveCfg = Release|Win32
+		{DFDABF71-9A31-4833-81C8-DDEA7045C157}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
