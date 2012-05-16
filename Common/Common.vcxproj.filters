@@ -15,8 +15,31 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="fast_kncn.cpp">
+    <ClCompile Include="Sample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SampleSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="distance_measure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Distance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sse_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="distance_measure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
