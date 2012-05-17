@@ -38,8 +38,6 @@ namespace Common {
 		bool Sample::operator==(const Sample& s) const;
 		float& operator[] (int i);
 		const float& operator[](int i) const;
-		
-
 	};
 
 	ostream& operator<<(ostream& out, const Sample& s);
