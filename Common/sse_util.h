@@ -9,7 +9,7 @@ namespace Common {
 
 	const union ieee754_qnan
 	{
-		const float f;
+		const SampleDim f;
 		struct
 		{
 			const unsigned int mantissa:23, exp:8, sign:1;
@@ -19,6 +19,8 @@ namespace Common {
 	} absmask;
 
 	static const __m128 abs4mask = _mm_load1_ps(&absmask.f);
+
+	//TODO int (4-bytes) and double (8-bytes) SSE data vector
 
 }
 

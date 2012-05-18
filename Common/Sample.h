@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "config.h"
+
 using namespace std;
 
 namespace Common {
@@ -13,7 +15,7 @@ namespace Common {
 
 	class Sample
 	{
-		float* sampleDims;
+		SampleDim* sampleDims;
 
 		int label;
 		int nrDims;
@@ -29,15 +31,15 @@ namespace Common {
 		int getNrDims() const;
 		void setLabel(int l);
 		void setNrDims(int n);
-		void getSampleDims(float* result) const;
-		float* getSampleDims() const;
+		void getSampleDims(SampleDim* result) const;
+		SampleDim* getSampleDims() const;
 
 		//Sample& operator=(Sample& s);
 		Sample& operator=(const Sample& s);
 		//Sample& operator=(Sample* s);
 		bool Sample::operator==(const Sample& s) const;
-		float& operator[] (int i);
-		const float& operator[](int i) const;
+		SampleDim& operator[] (int i);
+		const SampleDim& operator[](int i) const;
 	};
 
 	ostream& operator<<(ostream& out, const Sample& s);

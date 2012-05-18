@@ -14,8 +14,8 @@ namespace Common {
 	{
 		//TODO Get rid of remainder_table, some modulo hack needed
 		//sampleDims = new float[nrDims + remainder_table[nrDims % 4]];
-		sampleDims = (float*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(float), 16);
-		memset(sampleDims, 0, sizeof(float) * (nrDims + remainder_table[nrDims % 4]));
+		sampleDims = (SampleDim*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim), 16);
+		memset(sampleDims, 0, sizeof(SampleDim) * (nrDims + remainder_table[nrDims % 4]));
 	}
 
 	Sample::~Sample()
@@ -27,8 +27,8 @@ namespace Common {
 	Sample::Sample(const Sample& copy) : label(copy.label), nrDims(copy.nrDims)
 		//, sampleDims(new float[copy.nrDims + remainder_table[copy.nrDims % 4]])
 	{
-		sampleDims = (float*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(float), 16);
-		memset(sampleDims, 0, sizeof(float) * (nrDims + remainder_table[nrDims % 4]));
+		sampleDims = (SampleDim*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim), 16);
+		memset(sampleDims, 0, sizeof(SampleDim) * (nrDims + remainder_table[nrDims % 4]));
 
 		for (int i = 0; i < nrDims; i++)
 			sampleDims[i] = copy.sampleDims[i];
@@ -38,12 +38,12 @@ namespace Common {
 	{
 		//TODO Find out better way to populate dimensions - operator>> ?
 		
-		float x;
+		SampleDim x;
 
 		//float* sampleDimsFirst = new float[nrDims + remainder_table[nrDims % 4]];
 
-		sampleDims = (float*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(float), 16);
-		memset(sampleDims, 0, sizeof(float) * (nrDims + remainder_table[nrDims % 4]));
+		sampleDims = (SampleDim*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim), 16);
+		memset(sampleDims, 0, sizeof(SampleDim) * (nrDims + remainder_table[nrDims % 4]));
 
 		for (int i = 0; i < nrDims; i++)
 		{
@@ -57,7 +57,7 @@ namespace Common {
 		//delete[] sampleDimsFirst;
 	}
 
-	float* Sample::getSampleDims() const
+	SampleDim* Sample::getSampleDims() const
 	{
 		//float* result = new float[nrDims];
 		//
@@ -96,8 +96,8 @@ namespace Common {
 		{
 			//float* newSampleDims = new float[nrDims + remainder_table[nrDims % 4]];
 			
-			float* newSampleDims = (float*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(float), 16);
-			memset(newSampleDims, 0, sizeof(float) * (nrDims + remainder_table[nrDims % 4]));
+			SampleDim* newSampleDims = (SampleDim*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim), 16);
+			memset(newSampleDims, 0, sizeof(SampleDim) * (nrDims + remainder_table[nrDims % 4]));
 			
 			for (int i = 0; i < nrDims; i++)
 				newSampleDims[i] = s[i];
@@ -188,12 +188,12 @@ namespace Common {
 		return false;
 	}
 
-	float& Sample::operator[](int i)
+	SampleDim& Sample::operator[](int i)
 	{
 		return sampleDims[i];
 	}
 
-	const float& Sample::operator[](int i) const
+	const SampleDim& Sample::operator[](int i) const
 	{
 		return sampleDims[i];
 	}

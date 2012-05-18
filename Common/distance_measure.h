@@ -7,9 +7,9 @@
 
 namespace Common {
 
-float countManhattanDistance(const Sample& train, const Sample& test, const int nrDims);
+	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, const int nrDims);
 
-float countEuclideanDistance(const Sample& train, const Sample& test, const int nrDims);
+	DistanceValue countEuclideanDistance(const Sample& train, const Sample& test, const int nrDims);
 
 }
 

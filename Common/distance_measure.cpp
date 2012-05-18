@@ -2,7 +2,7 @@
 
 namespace Common {
 
-	float countManhattanDistance(const Sample& train, const Sample& test, int nrDims)
+	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, int nrDims)
 	{
 		int registersNumber = nrDims >> 2;
 
@@ -14,7 +14,7 @@ namespace Common {
 		union xmmregister
 		{
 			__m128 m;
-			float f[4];
+			DistanceValue f[4];
 		} result;
 
 		result.m = _mm_set1_ps(0x0);
@@ -34,10 +34,10 @@ namespace Common {
 		return result.f[0] + result.f[1] + result.f[2] + result.f[3];
 	}
 
-	float countEuclideanDistance(const Sample& train, const Sample& test,
+	DistanceValue countEuclideanDistance(const Sample& train, const Sample& test,
 		const int nrDims)
 	{
-		float result = 0;
+		DistanceValue result = 0;
 
 		for (int i = 0; i < nrDims; i++)
 		{

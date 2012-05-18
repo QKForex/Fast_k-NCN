@@ -8,7 +8,7 @@ namespace Common {
 	{
 		int index;
 		int label;
-		float dist;
+		DistanceValue dist;
 	};
 
 }
