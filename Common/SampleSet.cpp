@@ -32,7 +32,7 @@ namespace Common {
 	void SampleSet::populateSamples(ifstream& infile, int s)
 	{
 		//TODO Refactor populaton of SampleSet
-		
+
 		infile >> nrClasses;
 		infile >> nrDims;
 		infile >> nrSamples;
@@ -40,7 +40,8 @@ namespace Common {
 		if (s != 0)
 			nrSamples = s;
 
-		samples = new Sample[nrSamples];
+		if (samples == NULL)
+			samples = new Sample[nrSamples];
 
 		for (int i = 0; i < nrSamples; i++)
 		{
@@ -51,7 +52,7 @@ namespace Common {
 			samples[i].setLabel(label);
 			samples[i].setNrDims(nrDims);
 
-			samples[i].populateDims(infile);
+			samples[i].populateDimsFromFile(infile);
 
 			//TODO check this implementation
 			//Sample dataobj(label, nrDims);
@@ -99,6 +100,37 @@ namespace Common {
 		}
 
 		return *this;
+	}
+
+	bool SampleSet::operator==(const SampleSet& s) const
+	{
+		if ((nrClasses != s.nrClasses) && (nrDims != s.nrDims) 
+			&& (nrSamples != s.nrSamples)) {
+			return false;
+		}
+
+		if (samples[0] == s.samples[0])
+		{
+			int sampleIndex = 1;
+
+			while (sampleIndex < nrSamples)
+			{
+				if (samples[sampleIndex] != s.samples[sampleIndex]) {
+					return false;
+				}
+					
+				sampleIndex++;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	bool SampleSet::operator!=(const SampleSet& s) const
+	{
+		return !(*this == s);
 	}
 
 	Sample& SampleSet::operator[] (int i)

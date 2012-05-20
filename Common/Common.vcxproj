@@ -63,6 +63,7 @@
     <ClCompile Include="distance_measure.cpp" />
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="SampleSet.cpp" />
+    <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
@@ -71,6 +72,7 @@
     <ClInclude Include="Sample.h" />
     <ClInclude Include="SampleSet.h" />
     <ClInclude Include="sse_util.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

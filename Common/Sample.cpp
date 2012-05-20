@@ -1,4 +1,5 @@
 #include "Sample.h"
+#include "util.h"
 
 namespace Common {
 
@@ -12,53 +13,50 @@ namespace Common {
 
 	Sample::Sample(int label, int dims) : label(label), nrDims(dims)
 	{
-		//TODO Get rid of remainder_table, some modulo hack needed
 		//sampleDims = new float[nrDims + remainder_table[nrDims % 4]];
-		sampleDims = (SampleDim*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim), 16);
-		memset(sampleDims, 0, sizeof(SampleDim) * (nrDims + remainder_table[nrDims % 4]));
+		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 	}
 
 	Sample::~Sample()
 	{
-		//delete[] sampleDims;
-		_aligned_free(sampleDims);
+		freeSampleDimsMemory(sampleDims, __FILE__, __LINE__);
 	}
 
-	Sample::Sample(const Sample& copy) : label(copy.label), nrDims(copy.nrDims)
+	Sample::Sample(const Sample& other) : label(other.label), nrDims(other.nrDims)
 		//, sampleDims(new float[copy.nrDims + remainder_table[copy.nrDims % 4]])
 	{
-		sampleDims = (SampleDim*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim), 16);
-		memset(sampleDims, 0, sizeof(SampleDim) * (nrDims + remainder_table[nrDims % 4]));
+		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 
-		for (int i = 0; i < nrDims; i++)
-			sampleDims[i] = copy.sampleDims[i];
+		copySampleDims(other.sampleDims, other.nrDims, sampleDims);
 	}
 
-	void Sample::populateDims(ifstream& infile)
+	void Sample::populateDimsFromArray(SampleDim* inArray)
+	{
+		freeSampleDimsMemory(sampleDims, __FILE__, __LINE__);
+		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
+
+		copySampleDims(inArray, nrDims, sampleDims);
+	}
+
+	void Sample::populateDimsFromFile(ifstream& infile)
 	{
 		//TODO Find out better way to populate dimensions - operator>> ?
 		
 		SampleDim x;
 
-		//float* sampleDimsFirst = new float[nrDims + remainder_table[nrDims % 4]];
-
-		sampleDims = (SampleDim*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim), 16);
-		memset(sampleDims, 0, sizeof(SampleDim) * (nrDims + remainder_table[nrDims % 4]));
+		freeSampleDimsMemory(sampleDims, __FILE__, __LINE__);
+		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 
 		for (int i = 0; i < nrDims; i++)
 		{
 			infile >> x;
 			sampleDims[i] = x;
 		}
-
-		//for (int i = 0; i < nrDims; i++)
-		//	sampleDims[i] = sampleDimsFirst[i];
-
-		//delete[] sampleDimsFirst;
 	}
 
 	SampleDim* Sample::getSampleDims() const
 	{
+		//TODO should getter return shallow copy or deep copy?
 		//float* result = new float[nrDims];
 		//
 		//for (int i = 0; i < nrDims; i++)
@@ -94,25 +92,15 @@ namespace Common {
 	{
 		if (this != &s)
 		{
-			//float* newSampleDims = new float[nrDims + remainder_table[nrDims % 4]];
-			
-			SampleDim* newSampleDims = (SampleDim*) _aligned_malloc((nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim), 16);
-			memset(newSampleDims, 0, sizeof(SampleDim) * (nrDims + remainder_table[nrDims % 4]));
-			
-			for (int i = 0; i < nrDims; i++)
-				newSampleDims[i] = s[i];
-			//TODO copy(s.sampleDims, s.sampleDims + s.nrDims, newSampleDims);
+			SampleDim* newSampleDims = allocateSampleDimsMemory(s.nrDims, __FILE__, __LINE__);
 
-			if (sampleDims)
-				//delete[] sampleDims;
-				_aligned_free(sampleDims);
+			copySampleDims(s.sampleDims, s.nrDims, newSampleDims);
 
+			freeSampleDimsMemory(sampleDims, __FILE__, __LINE__);
+
+			label = s.label;
+			nrDims = s.nrDims;
 			sampleDims = newSampleDims;
-
-			label = s.getLabel();
-			nrDims = s.getNrDims();
-
-
 		}
 
 		return *this;
@@ -168,17 +156,17 @@ namespace Common {
 
 	bool Sample::operator==(const Sample& s) const
 	{
-		if (!(s.nrDims == nrDims) && (s.label == label))
+		if ((nrDims != s.nrDims) && (label != s.label))
 			return false;
 
-		if (s[0] == sampleDims[0])
+		if (sampleDims[0] == s.sampleDims[0])
 		{
 			int dimIndex = 1;
 
 			while (dimIndex < nrDims)
 			{
-				if (sampleDims[dimIndex] != s[dimIndex])
-					break;
+				if (sampleDims[dimIndex] != s.sampleDims[dimIndex])
+					return false;
 				dimIndex++;
 			}
 
@@ -186,6 +174,11 @@ namespace Common {
 		}
 
 		return false;
+	}
+
+	bool Sample::operator!=(const Sample& s) const
+	{
+		return !operator==(s);
 	}
 
 	SampleDim& Sample::operator[](int i)
@@ -202,5 +195,4 @@ namespace Common {
 	{
 		return out << s.getSampleDims() << " " << s.getLabel() << " " << s.getNrDims();
 	}
-
 }

@@ -11,8 +11,6 @@ using namespace std;
 
 namespace Common {
 
-	static int remainder_table[] = { 0, 3, 2, 1 };
-
 	class Sample
 	{
 		SampleDim* sampleDims;
@@ -26,7 +24,8 @@ namespace Common {
 		~Sample();
 		Sample(const Sample& copy);
 
-		void populateDims(ifstream& infile);
+		void populateDimsFromFile(ifstream& infile);
+		void populateDimsFromArray(SampleDim* inArray);
 		int getLabel() const;
 		int getNrDims() const;
 		void setLabel(int l);
@@ -38,6 +37,7 @@ namespace Common {
 		Sample& operator=(const Sample& s);
 		//Sample& operator=(Sample* s);
 		bool Sample::operator==(const Sample& s) const;
+		bool Sample::operator!=(const Sample& s) const;
 		SampleDim& operator[] (int i);
 		const SampleDim& operator[](int i) const;
 	};

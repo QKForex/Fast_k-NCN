@@ -26,6 +26,8 @@ namespace Common {
 		int getNrSamples() const;
 
 		SampleSet& operator=(const SampleSet& rhs);
+		bool operator==(const SampleSet& s) const;
+		bool operator!=(const SampleSet& s) const;
 		Sample& operator[] (int i);
 		const Sample& operator[](int i) const;
 		
