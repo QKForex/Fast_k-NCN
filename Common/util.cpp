@@ -12,8 +12,9 @@ namespace Common {
 		SampleDim* sampleDimsPtr = (SampleDim*) _aligned_malloc(size, 16);
 
 		//TODO OutOfMemoryException(size)
-		if (sampleDimsPtr == NULL)
+		if (sampleDimsPtr == NULL) {
 			throw "Not enough memory for sampleDims\n";
+		}
 
 		memset(sampleDimsPtr, 0, size);
 

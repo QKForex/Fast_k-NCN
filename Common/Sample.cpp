@@ -156,7 +156,9 @@ namespace Common {
 
 	bool Sample::operator==(const Sample& s) const
 	{
-		if ((nrDims != s.nrDims) && (label != s.label))
+		
+		
+		if ((nrDims != s.nrDims) || (label != s.label))
 			return false;
 
 		if (sampleDims[0] == s.sampleDims[0])

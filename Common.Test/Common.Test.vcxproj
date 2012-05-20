@@ -100,7 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ftest01.txt" />
+    <None Include="ftest02.txt" />
     <None Include="ftrain01.txt" />
+    <None Include="ftrain02.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

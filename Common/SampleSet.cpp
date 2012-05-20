@@ -10,6 +10,11 @@ namespace Common {
 	SampleSet::SampleSet(int c, int d, int s) : nrClasses(c), nrDims(d), nrSamples(s)
 	{
 		samples = new Sample[s];
+
+		#ifdef LOGGING
+		cerr << "Allocated " << s * sizeof(Sample) << " byte(s) at address " << samples
+			<< " in " << __FILE__ << ":" << __LINE__ << endl;
+		#endif
 	}
 
 
@@ -18,14 +23,21 @@ namespace Common {
 	{
 		if (this != &copy)
 		{
-			for (int i = 0; i < nrSamples; i++)
+			for (int i = 0; i < nrSamples; i++) {
 				samples[i] = copy.samples[i];
+			}
 		}
 	}
 
 	SampleSet::~SampleSet()
 	{
 		delete[] samples;
+
+		#ifdef LOGGING
+		cerr << "Freed memory at address " << samples
+			<< " in "<< __FILE__ << ":" << __LINE__ << endl;
+		#endif
+
 		samples = NULL;
 	}
 
@@ -37,11 +49,13 @@ namespace Common {
 		infile >> nrDims;
 		infile >> nrSamples;
 
-		if (s != 0)
+		if (s != 0) {
 			nrSamples = s;
+		}
 
-		if (samples == NULL)
+		if (samples == NULL) {
 			samples = new Sample[nrSamples];
+		}
 
 		for (int i = 0; i < nrSamples; i++)
 		{
@@ -93,8 +107,9 @@ namespace Common {
 
 			Sample* newSamples = new Sample[nrSamples];
 
-			for (int i = 0; i < nrSamples; i++)
+			for (int i = 0; i < nrSamples; i++) {
 				newSamples[i] = rhs[i];
+			}
 
 			samples = newSamples;
 		}
@@ -104,13 +119,12 @@ namespace Common {
 
 	bool SampleSet::operator==(const SampleSet& s) const
 	{
-		if ((nrClasses != s.nrClasses) && (nrDims != s.nrDims) 
-			&& (nrSamples != s.nrSamples)) {
+		if ((nrClasses != s.nrClasses) || (nrDims != s.nrDims) 
+			|| (nrSamples != s.nrSamples)) {
 			return false;
 		}
 
-		if (samples[0] == s.samples[0])
-		{
+		if (samples[0] == s.samples[0]) {
 			int sampleIndex = 1;
 
 			while (sampleIndex < nrSamples)
