@@ -26,6 +26,7 @@ SampleDim secondSampleDims[] = {-0.3490,     0.6482,     0.2710,    -0.3151,
 								-0.0261,    -0.3483,   -0.0400,    -0.3543,
 								-0.0515,    -0.3601}; // last dim value is different
 
+BOOST_AUTO_TEST_SUITE(SampleTest)
 
 BOOST_AUTO_TEST_CASE(InitializeSample)
 {
@@ -150,3 +151,5 @@ BOOST_AUTO_TEST_CASE(UnequalSample)
 	BOOST_CHECK_EQUAL_COLLECTIONS(otherSampleDims, otherSampleDims + otherSample.getNrDims(),
 		firstSampleDims, firstSampleDims + (sizeof(firstSampleDims)/sizeof(SampleDim)));
 }
+
+BOOST_AUTO_TEST_SUITE_END()

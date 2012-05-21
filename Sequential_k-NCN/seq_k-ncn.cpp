@@ -1,4 +1,4 @@
-#include "Sample.h"
+#include "Fast_k-NCN_Common.h"
 
 using namespace Common;
 

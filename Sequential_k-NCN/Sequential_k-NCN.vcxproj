@@ -11,12 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2A75E450-0FB5-46A9-A4E6-C9D67BDFE634}</ProjectGuid>
-    <RootNamespace>Common</RootNamespace>
+    <ProjectGuid>{175812E5-B1AF-4236-9C19-0FD0E872EEA1}</ProjectGuid>
+    <RootNamespace>Sequential_kNCN</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -60,20 +60,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="distance_measure.cpp" />
-    <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="SampleSet.cpp" />
-    <ClCompile Include="util.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="config.h" />
-    <ClInclude Include="Distance.h" />
-    <ClInclude Include="distance_measure.h" />
-    <ClInclude Include="Fast_k-NCN_Common.h" />
-    <ClInclude Include="Sample.h" />
-    <ClInclude Include="SampleSet.h" />
-    <ClInclude Include="sse_util.h" />
-    <ClInclude Include="util.h" />
+    <ClCompile Include="seq_k-ncn.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

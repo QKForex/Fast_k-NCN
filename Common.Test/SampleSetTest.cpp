@@ -8,6 +8,8 @@ using namespace Common;
 
 SampleSet testSampleSet;
 
+BOOST_AUTO_TEST_SUITE(SampleSetTest)
+
 BOOST_AUTO_TEST_CASE(InitializeSampleSet)
 {
 	ifstream trainfile("ftrain01.txt");
@@ -110,3 +112,5 @@ BOOST_AUTO_TEST_CASE(UnequalSampleDiffNrSamplesSet)
 
 	BOOST_CHECK_NE(testSampleSet, otherSampleSet2);
 }
+
+BOOST_AUTO_TEST_SUITE_END()
