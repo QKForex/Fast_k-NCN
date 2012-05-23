@@ -62,6 +62,9 @@
   <ItemGroup>
     <ClCompile Include="seq_k-ncn.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="seq_k-ncn.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

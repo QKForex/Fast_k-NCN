@@ -21,10 +21,10 @@
     <ClCompile Include="SampleSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="distance_measure.cpp">
+    <ClCompile Include="util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.cpp">
+    <ClCompile Include="distance_calculation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,9 +41,6 @@
     <ClInclude Include="SampleSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="distance_measure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -51,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Fast_k-NCN_Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="distance_calculation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

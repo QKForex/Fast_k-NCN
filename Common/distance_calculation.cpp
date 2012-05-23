@@ -1,10 +1,10 @@
-#include "distance_measure.h"
+#include "distance_calculation.h"
 
 namespace Common {
 
 	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, int nrDims)
 	{
-		int registersNumber = nrDims >> 2;
+		int registersNumber = (nrDims >> 2) + 1;
 
 		//TODO needs refactoring
 		const __m128* pSrc1 = (__m128*) train.getSampleDims();
@@ -47,4 +47,32 @@ namespace Common {
 		return result; // dropped sqrt for performance reasons (real distance not required)
 	}
 
+	const Distance* countDistances(const SampleSet& trainSet, const Sample& testSample)
+	{
+		const int trainSetSize = trainSet.getNrSamples();
+		const int nrDims = trainSet.getNrDims();
+
+		Distance* distances = new Distance[trainSetSize];
+
+		Distance d;
+		int samIndex;
+
+		//#pragma omp parallel for default(none) private(samIndex, d) shared(distances, trainSet, testSample) 
+		for (samIndex = 0; samIndex < trainSetSize; samIndex++)
+		{
+			d.sampleIndex = samIndex;
+			
+			#ifdef MANHATTAN_DIST
+			d.distValue = countManhattanDistance(trainSet[samIndex], testSample, nrDims);
+			#elif EUCLIDEAN_DIST
+			d.dist = countEuclideanDistance(trainSet[samIndex], test, nrDims);
+			#endif
+
+			d.sampleLabel = trainSet[samIndex].getLabel();
+
+			distances[samIndex] = d;
+		}
+
+		return distances;
+	}
 }

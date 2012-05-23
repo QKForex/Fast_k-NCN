@@ -60,7 +60,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="distance_measure.cpp" />
+    <ClCompile Include="distance_calculation.cpp" />
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="SampleSet.cpp" />
     <ClCompile Include="util.cpp" />
@@ -68,7 +68,7 @@
   <ItemGroup>
     <ClInclude Include="config.h" />
     <ClInclude Include="Distance.h" />
-    <ClInclude Include="distance_measure.h" />
+    <ClInclude Include="distance_calculation.h" />
     <ClInclude Include="Fast_k-NCN_Common.h" />
     <ClInclude Include="Sample.h" />
     <ClInclude Include="SampleSet.h" />

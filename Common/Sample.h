@@ -21,11 +21,11 @@ namespace Common {
 	public:
 		Sample();
 		Sample(int label, int dims);
+		Sample(int label, int dims, SampleDim* sampleDimsArray);
 		~Sample();
 		Sample(const Sample& copy);
 
 		void populateDimsFromFile(ifstream& infile);
-		void populateDimsFromArray(SampleDim* inArray);
 		int getLabel() const;
 		int getNrDims() const;
 		void setLabel(int l);

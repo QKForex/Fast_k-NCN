@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common.Test.cpp" />
+    <ClCompile Include="DistanceCalculationTest.cpp" />
     <ClCompile Include="SampleSetTest.cpp" />
     <ClCompile Include="SampleTest.cpp" />
     <ClCompile Include="stdafx.cpp">

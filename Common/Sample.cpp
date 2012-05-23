@@ -17,6 +17,15 @@ namespace Common {
 		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 	}
 
+	Sample::Sample(int label, int dims, SampleDim* sampleDimsArray)
+		: label(label), nrDims(dims)
+	{
+		//sampleDims = new float[nrDims + remainder_table[nrDims % 4]];
+		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
+
+		copySampleDims(sampleDimsArray, nrDims, sampleDims);
+	}
+
 	Sample::~Sample()
 	{
 		freeSampleDimsMemory(sampleDims, __FILE__, __LINE__);
@@ -28,14 +37,6 @@ namespace Common {
 		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 
 		copySampleDims(other.sampleDims, other.nrDims, sampleDims);
-	}
-
-	void Sample::populateDimsFromArray(SampleDim* inArray)
-	{
-		freeSampleDimsMemory(sampleDims, __FILE__, __LINE__);
-		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
-
-		copySampleDims(inArray, nrDims, sampleDims);
 	}
 
 	void Sample::populateDimsFromFile(ifstream& infile)

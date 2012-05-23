@@ -2,7 +2,7 @@
 #include "Sample.h"
 #include "config.h"
 
-#define BOOST_TEST_MODULE SampleSet testSample
+#define BOOST_TEST_MODULE SampleSet testSampleSet
 
 using namespace Common; 
 
@@ -74,11 +74,9 @@ BOOST_AUTO_TEST_CASE(ConstructorSample)
 	BOOST_CHECK_EQUAL(1, testSample.getLabel());
 	BOOST_CHECK_EQUAL(30, testSample.getNrDims());
 	
-	Sample testSample2(1,30);
+	Sample testSample2(1,30, firstSampleDims);
 	BOOST_CHECK_EQUAL(1, testSample2.getLabel());
 	BOOST_CHECK_EQUAL(30, testSample2.getNrDims());
-
-	testSample2.populateDimsFromArray(firstSampleDims);
 
 	SampleDim* testSample2Dims = testSample2.getSampleDims();
 
@@ -134,15 +132,11 @@ BOOST_AUTO_TEST_CASE(ExplicitEqualityOperatorSample)
 
 BOOST_AUTO_TEST_CASE(UnequalSample)
 {
-	Sample otherSample(1, 30);
-
-	otherSample.populateDimsFromArray(secondSampleDims);
+	Sample otherSample(1, 30, secondSampleDims);
 
 	BOOST_CHECK_NE(testSample, otherSample);
 
-	Sample otherSample2(2, 30);
-
-	otherSample2.populateDimsFromArray(firstSampleDims);
+	Sample otherSample2(2, 30, firstSampleDims);
 
 	BOOST_CHECK_NE(testSample, otherSample2);
 

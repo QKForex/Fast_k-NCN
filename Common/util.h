@@ -3,6 +3,7 @@
 #define COMMON_UTIL_H_
 
 #include <iostream>
+#include "SampleSet.h"
 #include "config.h"
 
 using namespace std;
@@ -28,6 +29,8 @@ namespace Common {
 	void freeSampleDimsMemory(SampleDim* sampleDims, char* file, unsigned int line);
 
 	void copySampleDims(SampleDim* src, int nrDims, SampleDim* dst);
+
+	void standardize(SampleSet* train, SampleSet* test);
 };
 
 #endif /* COMMON_UTIL_H_ */

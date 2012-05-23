@@ -2,13 +2,15 @@
 #ifndef COMMON_DISTANCE_H_
 #define COMMON_DISTANCE_H_
 
+#include "config.h"
+
 namespace Common {
 
 	struct Distance
 	{
-		int index;
-		int label;
-		DistanceValue dist;
+		int sampleIndex;
+		int sampleLabel;
+		DistanceValue distValue;
 	};
 
 }
