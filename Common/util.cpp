@@ -6,9 +6,8 @@ namespace Common {
 
 	SampleDim* allocateSampleDimsMemory(int nrDims, char* file, unsigned int line)
 	{
-		//SampleDim* newSampleDims = new SampleDim[nrDims + remainder_table[nrDims % 4]];
 		size_t size = (nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim);
-
+		#ifdef SSE
 		SampleDim* sampleDimsPtr = (SampleDim*) _aligned_malloc(size, 16);
 
 		//TODO OutOfMemoryException(size)
@@ -17,6 +16,16 @@ namespace Common {
 		}
 
 		memset(sampleDimsPtr, 0, size);
+
+		#else
+		 // initialized with zero
+		SampleDim* sampleDimsPtr = new SampleDim[nrDims + remainder_table[nrDims % 4]]();
+
+		//TODO OutOfMemoryException(size)
+		if (sampleDimsPtr == NULL) {
+			throw "Not enough memory for sampleDims\n";
+		}
+		#endif
 
 		#ifdef LOGGING
 		cerr << "Allocated " << size << " byte(s) at address " << sampleDimsPtr 
@@ -31,8 +40,11 @@ namespace Common {
 
 		if (sampleDims != NULL)
 		{
-			//delete[] sampleDims;
+			#ifdef SSE
 			_aligned_free(sampleDims);
+			#else
+			delete[] sampleDims;
+			#endif
 
 			#ifdef LOGGING
 			cerr << "Freed memory at address " << sampleDims

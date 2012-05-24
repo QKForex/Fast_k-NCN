@@ -4,7 +4,6 @@
 namespace Common {
 
 	//TODO Add Comments
-	//TODO IFDefs for alternative not-aligned sse Sample
 
 	Sample::Sample() : label(0), nrDims(0)
 	{
@@ -13,14 +12,12 @@ namespace Common {
 
 	Sample::Sample(int label, int dims) : label(label), nrDims(dims)
 	{
-		//sampleDims = new float[nrDims + remainder_table[nrDims % 4]];
 		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 	}
 
 	Sample::Sample(int label, int dims, SampleDim* sampleDimsArray)
 		: label(label), nrDims(dims)
 	{
-		//sampleDims = new float[nrDims + remainder_table[nrDims % 4]];
 		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 
 		copySampleDims(sampleDimsArray, nrDims, sampleDims);
@@ -32,7 +29,6 @@ namespace Common {
 	}
 
 	Sample::Sample(const Sample& other) : label(other.label), nrDims(other.nrDims)
-		//, sampleDims(new float[copy.nrDims + remainder_table[copy.nrDims % 4]])
 	{
 		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 
@@ -58,6 +54,7 @@ namespace Common {
 	SampleDim* Sample::getSampleDims() const
 	{
 		//TODO should getter return shallow copy or deep copy?
+		
 		//float* result = new float[nrDims];
 		//
 		//for (int i = 0; i < nrDims; i++)
@@ -106,6 +103,8 @@ namespace Common {
 
 		return *this;
 	}
+
+	//TODO Are these two version of operator= necessary? 
 
 	//Sample& Sample::operator=(Sample& s)
 	//{
