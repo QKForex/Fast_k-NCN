@@ -2,8 +2,9 @@
 #ifndef COMMON_CONFIG_H_
 #define COMMON_CONFIG_H_
 
-#define LOGGING
+//#define LOGGING
 #define MANHATTAN_DIST
+//#define EUCLIDEAN_DIST
 #define SSE
 typedef float SampleDim;
 typedef float DistanceValue;

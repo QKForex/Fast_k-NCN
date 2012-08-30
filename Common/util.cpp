@@ -55,7 +55,7 @@ namespace Common {
 		}
 	}
 
-	void copySampleDims(SampleDim* src, int nrDims, SampleDim* dst)
+	void copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst)
 	{
 		for (int i = 0; i < nrDims; i++)
 			dst[i] = src[i];

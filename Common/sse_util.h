@@ -7,8 +7,7 @@
 
 namespace Common {
 
-	const union ieee754_qnan
-	{
+	const union ieee754_qnan {
 		const SampleDim f;
 		struct
 		{

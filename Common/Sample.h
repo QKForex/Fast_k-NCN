@@ -21,7 +21,7 @@ namespace Common {
 	public:
 		Sample();
 		Sample(int label, int dims);
-		Sample(int label, int dims, SampleDim* sampleDimsArray);
+		Sample(int label, int dims, const SampleDim* sampleDimsArray);
 		~Sample();
 		Sample(const Sample& copy);
 
@@ -30,7 +30,7 @@ namespace Common {
 		int getNrDims() const;
 		void setLabel(int l);
 		void setNrDims(int n);
-		void getSampleDims(SampleDim* result) const;
+		//void getSampleDims(SampleDim* result) const;
 		SampleDim* getSampleDims() const;
 
 		//Sample& operator=(Sample& s);

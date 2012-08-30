@@ -28,7 +28,7 @@ namespace Common {
 
 	void freeSampleDimsMemory(SampleDim* sampleDims, char* file, unsigned int line);
 
-	void copySampleDims(SampleDim* src, int nrDims, SampleDim* dst);
+	void copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst);
 
 	void standardize(SampleSet* train, SampleSet* test);
 };

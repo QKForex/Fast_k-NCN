@@ -5,6 +5,7 @@
 #include "config.h"
 #include "Distance.h"
 #include "distance_calculation.h"
+#include "Sample.h"
 #include "SampleSet.h"
 #include "util.h"
 

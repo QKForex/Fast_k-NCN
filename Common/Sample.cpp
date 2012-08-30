@@ -15,7 +15,7 @@ namespace Common {
 		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 	}
 
-	Sample::Sample(int label, int dims, SampleDim* sampleDimsArray)
+	Sample::Sample(int label, int dims, const SampleDim* sampleDimsArray)
 		: label(label), nrDims(dims)
 	{
 		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
