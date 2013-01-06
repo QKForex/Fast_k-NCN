@@ -65,7 +65,7 @@ namespace Common {
 			#ifdef MANHATTAN_DIST
 			d.distValue = countManhattanDistance(trainSet[samIndex], testSample, nrDims);
 			#elif EUCLIDEAN_DIST
-			d.dist = countEuclideanDistance(trainSet[samIndex], test, nrDims);
+			d.distValue = countEuclideanDistance(trainSet[samIndex], testSample, nrDims);
 			#endif
 
 			d.sampleLabel = trainSet[samIndex].getLabel();

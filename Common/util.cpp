@@ -17,6 +17,10 @@ namespace Common {
 
 		memset(sampleDimsPtr, 0, size);
 
+		//TODO considered unsafe to use memset; intialize with fill() or look for SIMD instruction
+		// fill does not work yet
+		//fill(sampleDimsPtr, sampleDimsPtr+size, (SampleDim)0.0);
+
 		#else
 		 // initialized with zero
 		SampleDim* sampleDimsPtr = new SampleDim[nrDims + remainder_table[nrDims % 4]]();

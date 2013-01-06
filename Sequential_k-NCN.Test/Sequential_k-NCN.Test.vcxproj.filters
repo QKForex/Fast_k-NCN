@@ -29,5 +29,8 @@
     <ClCompile Include="Sequential_k-NCN.Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FindkNCNTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

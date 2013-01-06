@@ -2,6 +2,7 @@
 #ifndef COMMON_UTIL_H_
 #define COMMON_UTIL_H_
 
+//#include <algorithm>
 #include <iostream>
 #include "SampleSet.h"
 #include "config.h"

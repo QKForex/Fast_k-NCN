@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Fast_k-NCN_Common.h"
-#include "config.h"
 
 using namespace Common;
 
