@@ -13,7 +13,7 @@ namespace Common {
 
 	DistanceValue countEuclideanDistance(const Sample& train, const Sample& test, const int nrDims);
 
-	const Distance* countDistances(const SampleSet& trainSet, const Sample& testSample);
+	Distance* countDistances(const SampleSet& trainSet, const Sample& testSample);
 
 }
 

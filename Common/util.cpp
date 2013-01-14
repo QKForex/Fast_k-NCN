@@ -4,6 +4,8 @@ namespace Common {
 
 	//TODO Get rid of remainder_table, some modulo hack needed
 
+	//TODO check and use Agner Fog alloc functions
+
 	SampleDim* allocateSampleDimsMemory(int nrDims, char* file, unsigned int line)
 	{
 		size_t size = (nrDims + remainder_table[nrDims % 4]) * sizeof(SampleDim);

@@ -47,7 +47,8 @@ namespace Common {
 		return result; // dropped sqrt for performance reasons (real distance not required)
 	}
 
-	const Distance* countDistances(const SampleSet& trainSet, const Sample& testSample)
+	//TODO maybe should be const and array should not changed anywhere else in the code
+	Distance* countDistances(const SampleSet& trainSet, const Sample& testSample)
 	{
 		const int trainSetSize = trainSet.getNrSamples();
 		const int nrDims = trainSet.getNrDims();

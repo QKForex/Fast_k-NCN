@@ -13,7 +13,7 @@
 using namespace Common;
 using namespace std;
 
-const Distance find1NN(const Distance* dists, int distsSize)
+const Distance find1NN(Distance* dists, int distsSize)
 {
 	Distance nndists;
 	nndists = dists[0];	
@@ -24,18 +24,16 @@ const Distance find1NN(const Distance* dists, int distsSize)
 		}
 	}
 
-	delete[] dists;
-
 	return nndists;
 }
 
 /*
- *	Find k Nearest Centroid Neighbors 
+ *	Find k Nearest Neighbors 
  *
  *	Input: list of precomputed distances for given sample
- *	Output: list of k nearest centroid neighbors
+ *	Output: list of k nearest neighbors
  */
-const Distance* findkNN(const Distance* dists, int distsSize, int k)
+const Distance* findkNN(Distance* dists, int distsSize, int k)
 {
 	// sorted list of k NNs (ascending, smallest first)
 	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
@@ -66,10 +64,172 @@ const Distance* findkNN(const Distance* dists, int distsSize, int k)
 		}
 	}
 
-	delete[] dists; //TODO Should get rid off this delete
+	return nndists;
+}
+
+/*
+ *	Find k Nearest Centroid Neighbors 
+ *
+ *	Input: list of precomputed distances for given sample
+ *	Output: list of k nearest centroid neighbors
+ */
+const Distance* findkNCN(Distance* dists, int distsSize, int k)
+{
+	// sorted list of k NNs (ascending, smallest first)
+	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
+	// initialize with max float
+	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
+
+	//Sample* centroids = (Sample*) malloc(k * sizeof(Sample));
+	DistanceValue* centroids = (DistanceValue*) malloc(k * sizeof(DistanceValue));
+
+	// first kNCN (is equal to kNN)
+	nndists[0] = find1NN(dists, distsSize);
+	centroids[0] = nndists[0].distValue;
+
+	// instead of comparing current kNCN candidate to already chosen kNCNs
+	// distsSize times in loop, 
+	// we set the distance to FLT_MAX for chosen kNCN sample in dists once
+	// this excludes first kNCN from being chosen again
+	// this action will be repeated for the rest 
+	//dists[nndists[0].sampleIndex].distValue = FLT_MAX;
+
+	DistanceValue* tempCentroids = (DistanceValue*) malloc(distsSize * sizeof(DistanceValue));
+	DistanceValue* tempCentroidsDistances = (DistanceValue*) malloc(distsSize * sizeof(DistanceValue));
+
+	DistanceValue sum = 0;
+	Distance minCentroidDistance = Distance(-1,-1,FLT_MAX);
+
+	bool iskNCN = false;
+
+	int sampleDims = 30; //TODO hardcoded
+
+	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
+
+		sum = 0;
+		//minCentroidDistance = Sample(-1, sampleDims, ;
+
+		for (int previousCentroidIndex = 0; previousCentroidIndex < centroidIndex; previousCentroidIndex++) {
+			sum += centroids[previousCentroidIndex];
+		}
+
+		for (int distsIndex = 0; distsIndex < distsSize; distsIndex++) {
+
+			iskNCN = false;
+
+			// check if given sample is not kNCN already
+			for (int i = 0; i < centroidIndex; i++) {
+				if (nndists[i].sampleIndex == distsIndex) {
+					iskNCN = true;
+					break;
+				}
+			}
+
+			// inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
+
+
+			if (!iskNCN) {			
+				tempCentroids[distsIndex] = (dists[distsIndex].distValue + sum)/centroidIndex;
+				tempCentroidsDistances[distsIndex] =
+					(dists[distsIndex].distValue - tempCentroids[distsIndex]) * 
+					(dists[distsIndex].distValue - tempCentroids[distsIndex]);
+				if (minCentroidDistance.distValue > tempCentroidsDistances[distsIndex]) {
+					minCentroidDistance = dists[distsIndex];
+					minCentroidDistance.distValue = tempCentroidsDistances[distsIndex];
+				}
+			}
+
+		}
+
+		nndists[centroidIndex] = dists[minCentroidDistance.sampleIndex];
+
+		//dists[nndists[centroidIndex].sampleIndex].distValue = FLT_MAX;
+	}
+
+
+
+	//for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
+
+	//	sum = 0;
+	//	minCentroidDistance = Distance(-1,-1,FLT_MAX);
+
+	//	for (int previousCentroidIndex = 0; previousCentroidIndex < centroidIndex; previousCentroidIndex++) {
+	//		sum += centroids[previousCentroidIndex];
+	//	}
+
+	//	for (int distsIndex = 0; distsIndex < distsSize; distsIndex++) {
+
+	//		iskNCN = false;
+
+	//		// check if given sample is not kNCN already
+	//		for (int i = 0; i < centroidIndex; i++) {
+	//			if (nndists[i].sampleIndex == distsIndex) {
+	//				iskNCN = true;
+	//				break;
+	//			}
+	//		}
+
+
+	//		if (!iskNCN) {			
+	//			tempCentroids[distsIndex] = (dists[distsIndex].distValue + sum)/centroidIndex;
+	//			tempCentroidsDistances[distsIndex] =
+	//				(dists[distsIndex].distValue - tempCentroids[distsIndex]) * 
+	//				(dists[distsIndex].distValue - tempCentroids[distsIndex]);
+	//			if (minCentroidDistance.distValue > tempCentroidsDistances[distsIndex]) {
+	//				minCentroidDistance = dists[distsIndex];
+	//				minCentroidDistance.distValue = tempCentroidsDistances[distsIndex];
+	//			}
+	//		}
+
+	//	}
+
+	//	nndists[centroidIndex] = dists[minCentroidDistance.sampleIndex];
+
+	//	//dists[nndists[centroidIndex].sampleIndex].distValue = FLT_MAX;
+	//}
+
+
+
+
+
+
+
+	//DistanceValue tempCentroid = nndists[0].distValue;
+
+	//centroids[1] = (tempCentroid + dists[0].distValue)/2;
+	//nndists[1] = dists[0];
+
+	//for (int distsIndex = 1; distsIndex < distsSize; distsIndex++) {
+	//	// calculate centroid		
+	//	if (centroids[1] > (tempCentroid + dists[distsIndex].distValue)/2) {
+	//		centroids[1] = (tempCentroid + dists[distsIndex].distValue)/2;
+	//		nndists[1] = dists[distsIndex];
+	//	}
+	//}
+
+	//dists[nndists[1].sampleIndex].distValue = FLT_MAX;
+	//
+	//// remaining kNCNs
+	//for (int centroidIndex = 2; centroidIndex < k; centroidIndex++) {
+	//	tempCentroid = centroids[centroidIndex - 1] * ((DistanceValue)(centroidIndex - 1)/(centroidIndex));
+	//	
+	//	centroids[centroidIndex] = tempCentroid + (dists[0].distValue/centroidIndex);
+	//	nndists[centroidIndex] = dists[0];
+
+	//	for (int distsIndex = 1; distsIndex < distsSize; distsIndex++) {
+	//		// calculate centroid		
+	//		if (centroids[centroidIndex] > tempCentroid + (dists[distsIndex].distValue/centroidIndex)) {
+	//			centroids[centroidIndex] = tempCentroid + (dists[distsIndex].distValue/centroidIndex);
+	//			nndists[centroidIndex] = dists[distsIndex];
+	//		}
+	//	}
+
+	//	dists[nndists[centroidIndex].sampleIndex].distValue = FLT_MAX;
+	//}
 
 	return nndists;
 }
+
 
 /*	
  *	Assigns sample to most frequent label
@@ -121,10 +281,15 @@ int assignLabel(const Distance* dists, int distsSize)
 int classify(const SampleSet& trainSet, const Sample& testSam, const int k) // wrapper function
 {
 	const int trainSize = trainSet.getNrSamples();
+	
+	Distance* dists = countDistances(trainSet, testSam);
+	
 	if (k == 1)
-		return find1NN(countDistances(trainSet, testSam), trainSize).sampleLabel;
+		return find1NN(dists, trainSize).sampleLabel;
 	else
-		return assignLabel(findkNN(countDistances(trainSet, testSam), trainSize, k), k);
+		return assignLabel(findkNN(dists, trainSize, k), k);
+
+	delete[] dists;
 }
 
 int countError(int* const& result, const SampleSet& orig)
