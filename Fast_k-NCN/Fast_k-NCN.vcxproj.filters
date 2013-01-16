@@ -13,14 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Classifiers">
-      <UniqueIdentifier>{93021a8a-72be-4177-a5ad-0b51c2dbf2c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Utility">
       <UniqueIdentifier>{7f190df9-0022-4d66-9038-276c19a5c6fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Common">
-      <UniqueIdentifier>{6a983cf7-a10b-472c-a021-ae0b0d43663e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Classifiers">
       <UniqueIdentifier>{eaf45fa3-8692-440c-8302-edaff4b22586}</UniqueIdentifier>
@@ -31,51 +25,126 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{4eab0bb5-bd2e-47b4-a985-7c9f8c8638a5}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="common\common.h">
-      <Filter>Header Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="common\distance.h">
-      <Filter>Header Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="common\distance_calculation.h">
-      <Filter>Header Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="common\sample.h">
-      <Filter>Header Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="common\sampleset.h">
-      <Filter>Header Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="classifiers\seq_k-ncn.h">
-      <Filter>Header Files\Classifiers</Filter>
-    </ClInclude>
-    <ClInclude Include="utility\sse_util.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="utility\util.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="utility\config.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
+    <Filter Include="Header Files\Common">
+      <UniqueIdentifier>{6a983cf7-a10b-472c-a021-ae0b0d43663e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Classifiers">
+      <UniqueIdentifier>{93021a8a-72be-4177-a5ad-0b51c2dbf2c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="common\distance_calculation.cpp">
+    <ClCompile Include="CacheEfficient_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="Classifier.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="LimitedV1_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="LimitedV2_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="Parallel_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomizedSelect_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequential_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequential_kNN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="DistanceCalculation.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
-    <ClCompile Include="common\sample.cpp">
+    <ClCompile Include="Sample.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
-    <ClCompile Include="common\sampleset .cpp">
+    <ClCompile Include="SampleSet.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
-    <ClCompile Include="utility\util.cpp">
+    <ClCompile Include="InputReader.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryAllocation.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputWriter.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="PerformanceTimer.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CacheEfficient_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Classifier.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="LimitedV1_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="LimitedV2_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Parallel_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomizedSelect_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequential_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequential_kNN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DistanceCalculation.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Sample.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleSet.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="InputReader.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryAllocation.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputWriter.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="PerformanceTimer.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

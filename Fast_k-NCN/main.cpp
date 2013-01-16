@@ -1,7 +1,12 @@
-#include "main.h"
+#include <iostream>
 
-using namespace Common;
+#include <Windows.h>
+
+//#include "Classifier.h"
+#include "Sequential_kNN.h"
+
 using namespace std;
+using namespace Common;
 
 int main(int argc, char** argv)
 {
@@ -65,21 +70,21 @@ int main(int argc, char** argv)
 	int nrTestSamples = testSet.getNrSamples();
 	int nrDims = trainSet.getNrDims();
 
-	//standarize(&trainSet, &testSet);
+	//standarizeSamples(&trainSet, &testSet);
 
-	int* result = new int[nrTestSamples];
+	// main objects
+	Sequential_kNN* classifier(); // hardcoded kNN classifer
+	Distance* distances;
+	int* results;
+	
 
 	__int64 frequency, classStart, classStop;
 
 	QueryPerformanceFrequency((LARGE_INTEGER*) &frequency);
 	QueryPerformanceCounter((LARGE_INTEGER*) &classStart);
 
-	int sam;
-
-	for (sam = 0; sam < nrTestSamples; sam++)
-	{
-		result[sam] = classify(trainSet, testSet[sam], k);
-	}
+	distances =	classifier.preprocess(trainSet, testSet);
+	results = classifier.classify(trainSet, testSet, k);
 
 	QueryPerformanceCounter((LARGE_INTEGER*) &classStop);
 
