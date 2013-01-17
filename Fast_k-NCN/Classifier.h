@@ -22,16 +22,19 @@ public:
 	SampleSet* testSet;
 	int k;
 	
+	virtual ~Classifier();
+	virtual Distance** preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
+	virtual int* classify(const SampleSet& trainSet, const SampleSet& testSet,
+		const int k, Distance** dists) = 0;
+
+	int countError(int* const& result, const SampleSet& orig);
+
+protected:
 	Classifier();
-	~Classifier();
+	Classifier(SampleSet* train, SampleSet* test, int k);
 
-	virtual Distance* preprocess(const Common::SampleSet& trainSet, const Sample& testSam) = 0;
-	virtual int classify(const Common::SampleSet& trainSet, const Sample& testSam, const int k) = 0;
-
-private:
 	const Distance find1NN(Distance* dists, int distsSize);
 	int assignLabel(const Distance* dists, int distsSize);
-	int countError(int* const& result, const SampleSet& orig);
 
 };
 

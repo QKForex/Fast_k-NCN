@@ -32,6 +32,8 @@ namespace Utility {
 
 	//TODO remove remainder_table
 	// try using alignas/alignof
+
+	//TODO do it!
 	const static int REMAINDER_TABLE[] = { 0, 3, 2, 1 };
 
 	SampleDim* allocateSampleDimsMemory(int nrDims, char* file, unsigned int line);

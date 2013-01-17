@@ -14,6 +14,7 @@ namespace Common {
 
 	class Sample
 	{
+	private:
 		SampleDim* sampleDims;
 
 		int label;

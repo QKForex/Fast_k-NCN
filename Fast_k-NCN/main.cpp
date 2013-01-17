@@ -73,8 +73,8 @@ int main(int argc, char** argv)
 	//standarizeSamples(&trainSet, &testSet);
 
 	// main objects
-	Sequential_kNN* classifier(); // hardcoded kNN classifer
-	Distance* distances;
+	Sequential_kNN classifier; // hardcoded kNN classifer
+	Distance** distances;
 	int* results;
 	
 
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 	QueryPerformanceCounter((LARGE_INTEGER*) &classStart);
 
 	distances =	classifier.preprocess(trainSet, testSet);
-	results = classifier.classify(trainSet, testSet, k);
+	results = classifier.classify(trainSet, testSet, k, distances);
 
 	QueryPerformanceCounter((LARGE_INTEGER*) &classStop);
 
@@ -97,13 +97,13 @@ int main(int argc, char** argv)
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
 
-	int error = countError(result, testSet);
+	int error = classifier.countError(results, testSet);
 
-	delete[] result;
+	delete[] results;
 
 	float errorRate = (float) error / nrTestSamples * 100;
 
-	logfile.precision(prec);
+	logfile.precision(prec); //TODO Logger
 
 	logfile << errorRate << "%\t"
 		<< error << "\t"

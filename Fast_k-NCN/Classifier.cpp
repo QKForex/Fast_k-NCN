@@ -1,5 +1,17 @@
 #include "Classifier.h"
 
+Classifier::Classifier()
+	: k(1) {
+	trainSet = NULL;
+	testSet = NULL;
+}
+
+Classifier::Classifier(SampleSet* train, SampleSet* test, int k) 
+	: k(k) {
+	trainSet = train;
+	testSet = test;
+}
+
 //
 //	Find first Nearest Neighbor - simplified version 
 //

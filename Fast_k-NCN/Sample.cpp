@@ -94,13 +94,9 @@ namespace Common {
 		return !operator==(s);
 	}
 
-	SampleDim& Sample::operator[](int i) {
-		return sampleDims[i];
-	}
+	SampleDim& Sample::operator[](int i) { return sampleDims[i]; }
 
-	const SampleDim& Sample::operator[](int i) const {
-		return sampleDims[i];
-	}
+	const SampleDim& Sample::operator[](int i) const { return sampleDims[i]; }
 
 	ostream& operator<<(ostream& out, const Sample& s) {
 		return out << s.getSampleDims() << " " << s.getLabel() << " " << s.getNrDims();

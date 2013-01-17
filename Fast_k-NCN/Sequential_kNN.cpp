@@ -1,27 +1,44 @@
 #include "Sequential_kNN.h"
 
-Sequential_kNN::Sequential_kNN() {}
+Sequential_kNN::Sequential_kNN()
+	: Classifier() {}
 
-Sequential_kNN::~Sequential_kNN() {}
+Sequential_kNN::Sequential_kNN(SampleSet* train, SampleSet* test, int k)
+	: Classifier(train, test, k) {}
 
-Distance* Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	return countDistances(trainSet, testSam);
+Sequential_kNN::~Sequential_kNN() {
+	trainSet = NULL;
+	testSet = NULL; // Classifier should not free memory for sets
 }
 
-int Sequential_kNN::classify(const SampleSet& trainSet, const SampleSet& testSam, 
-							 const int k, Distance* dists) {
-	int* results = new int[nrTestSamples];
+Distance** Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
+	const int nrTrainSamples = trainSet.getNrSamples();
+	const int nrTestSamples = testSet.getNrSamples();
+
+	Distance** distancesToTestSamples = new Distance*[nrTestSamples];
 	
-	const int trainSize = trainSet.getNrSamples();
-	if (k == 1)
-		for (int sam = 0; sam < nrTestSamples; sam++)
-		{
-			results[sam find1NN(dists, trainSize).sampleLabel;
-	else
-		return assignLabel(findkNN(dists, trainSize, k), k);
+	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		distancesToTestSamples[samIndex] = countDistances(trainSet, testSet[samIndex]);
+	}
+	
+	return distancesToTestSamples;
+}
 
+int* Sequential_kNN::classify(const SampleSet& trainSet, const SampleSet& testSet, const int k, Distance** dists) {
+	const int nrTrainSamples = trainSet.getNrSamples();
+	const int nrTestSamples = testSet.getNrSamples();		  
+	int* results = new int[nrTestSamples];
+
+	if (k == 1) {
+		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+			results[samIndex] = find1NN(dists[samIndex], nrTrainSamples).sampleLabel;
+		}
+	} else {
+		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+			results[samIndex] = assignLabel(findkNN(dists[samIndex], nrTrainSamples, k), k);
+		}
+	}
 	return results;
-
 }
 
 //

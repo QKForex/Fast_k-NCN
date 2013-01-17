@@ -6,6 +6,7 @@ namespace Common {
 
 	class SampleSet
 	{
+	private:
 		Sample* samples;
 
 		int nrClasses;

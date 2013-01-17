@@ -4,18 +4,34 @@ Sequential_kNCN::Sequential_kNCN() {}
 
 Sequential_kNCN::~Sequential_kNCN() {}
 
-Distance* Sequential_kNCN::preprocess(const SampleSet& trainSet, const Sample& testSam) {
-	return countDistances(trainSet, testSam);
+Distance** Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
+	const int nrTrainSamples = trainSet.getNrSamples();
+	const int nrTestSamples = testSet.getNrSamples();
+
+	Distance** distancesToTestSamples = new Distance*[nrTestSamples];
+	
+	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		distancesToTestSamples[samIndex] = countDistances(trainSet, testSet[samIndex]);
+	}
+	
+	return distancesToTestSamples;
 }
 
-int Sequential_kNCN::classify(const SampleSet& trainSet, const Sample& testSam, const int k, const Distance* dists) {
-	const int trainSize = trainSet.getNrSamples();
-	if (k == 1)
-		return find1NN(dists, trainSize).sampleLabel;
-	else
-		return assignLabel(findkNN(dists, trainSize, k), k);
+int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet, const int k, Distance** dists) {
+	const int nrTrainSamples = trainSet.getNrSamples();
+	const int nrTestSamples = testSet.getNrSamples();		  
+	int* results = new int[nrTestSamples];
 
-	delete[] dists;
+	if (k == 1) {
+		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+			results[samIndex] = find1NN(dists[samIndex], nrTrainSamples).sampleLabel;
+		}
+	} else {
+		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+			results[samIndex] = assignLabel(findkNCN(dists[samIndex], nrTrainSamples, k), k);
+		}
+	}
+	return results;
 }
 
 //
@@ -37,7 +53,7 @@ int Sequential_kNCN::classify(const SampleSet& trainSet, const Sample& testSam, 
 //
 //TODO inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
 
-const Distance* findkNCN(Distance* dists, int distsSize, int k) {
+const Distance* Sequential_kNCN::findkNCN(Distance* dists, int distsSize, int k) {
 	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
 	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
 
