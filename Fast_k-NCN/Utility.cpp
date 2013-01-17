@@ -2,10 +2,6 @@
 
 namespace Utility {
 
-	void copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst) {
-		for (int i = 0; i < nrDims; i++) { dst[i] = src[i]; }
-	}
-
 	//void crossvalidateSamples(SampleSet* train, SampleSet* test) {
 	//
 	//}

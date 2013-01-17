@@ -2,7 +2,6 @@
 
 #include <Windows.h>
 
-//#include "Classifier.h"
 #include "Sequential_kNN.h"
 
 using namespace std;
@@ -10,6 +9,8 @@ using namespace Common;
 
 int main(int argc, char** argv)
 {
+	// InputReader
+	
 	if (argc < 5)
 	{
 		cout << "Insufficient number of parameters." << endl;
@@ -60,7 +61,7 @@ int main(int argc, char** argv)
 	SampleSet testSet;
 	testSet.populateSamples(testfile, nrLoadTestSamples);
 
-	cout << "\n";
+	cout << endl;
 
 	ofstream logfile(logFilename, fstream::app);
 
@@ -100,6 +101,8 @@ int main(int argc, char** argv)
 	int error = classifier.countError(results, testSet);
 
 	delete[] results;
+	for (int i = 0; i < nrTestSamples; i++) { delete distances[i]; }
+	delete[] distances;
 
 	float errorRate = (float) error / nrTestSamples * 100;
 

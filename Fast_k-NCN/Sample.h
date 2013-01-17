@@ -7,16 +7,14 @@
 #include "MemoryAllocation.h"
 #include "Utility.h"
 
-using namespace std;
 using namespace Utility;
 
 namespace Common {
-
-	class Sample
-	{
+	//TODO Remove getters and setters in final version, no need for such encapsulation
+	//TODO Make variables public, classes should be only containers
+	class Sample {
 	private:
 		SampleDim* sampleDims;
-
 		int label;
 		int nrDims;
 
@@ -25,9 +23,9 @@ namespace Common {
 		Sample(int label, int dims);
 		Sample(int label, int dims, const SampleDim* sampleDimsArray);
 		~Sample();
-		Sample(const Sample& copy);
+		Sample(const Sample& other);
 
-		void populateDimsFromFile(ifstream& infile);
+		void populateDimsFromFile(std::ifstream& infile);
 		int getLabel() const;
 		int getNrDims() const;
 		void setLabel(int l);
@@ -42,7 +40,12 @@ namespace Common {
 		bool operator!=(const Sample& s) const;
 		SampleDim& operator[] (int i);
 		const SampleDim& operator[](int i) const;
+
+	private:
+		void copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst);
+
 	};
 
-	ostream& operator<<(ostream& out, const Sample& s);
+	std::ostream& operator<<(std::ostream& out, const Sample& s);
+
 }

@@ -3,7 +3,7 @@
 namespace Common {
 
 	//TODO Add Comments
-
+	
 	Sample::Sample() : label(0), nrDims(0) {
 		sampleDims = NULL;
 	}
@@ -27,7 +27,7 @@ namespace Common {
 		copySampleDims(other.sampleDims, other.nrDims, sampleDims);
 	}
 
-	void Sample::populateDimsFromFile(ifstream& infile)	{
+	void Sample::populateDimsFromFile(std::ifstream& infile)	{
 		//TODO Find out better way to populate dimensions - operator>> ?
 		SampleDim x;
 
@@ -98,8 +98,12 @@ namespace Common {
 
 	const SampleDim& Sample::operator[](int i) const { return sampleDims[i]; }
 
-	ostream& operator<<(ostream& out, const Sample& s) {
+	std::ostream& operator<<(std::ostream& out, const Sample& s) {
 		return out << s.getSampleDims() << " " << s.getLabel() << " " << s.getNrDims();
+	}
+
+	void Sample::copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst) {
+		for (int i = 0; i < nrDims; i++) { dst[i] = src[i]; }
 	}
 
 }

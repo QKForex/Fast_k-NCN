@@ -3,10 +3,6 @@
 #include <iostream>
 
 #include "Config.h"
-#include "SampleSet.h"
-
-using namespace std;
-using namespace Common;
 
 namespace Utility {
 
@@ -23,7 +19,7 @@ namespace Utility {
 	//	SampleData samples;
 	//};
 
-	void copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst);
+	
 
 	//void crossValidateSamples(SampleSet* train, SampleSet* test);
 	

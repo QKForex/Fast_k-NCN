@@ -22,7 +22,7 @@ public:
 	SampleSet* testSet;
 	int k;
 	
-	virtual ~Classifier();
+	virtual ~Classifier() {}; // cannot implmenet pure virtual destructor
 	virtual Distance** preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
 	virtual int* classify(const SampleSet& trainSet, const SampleSet& testSet,
 		const int k, Distance** dists) = 0;

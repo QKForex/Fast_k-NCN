@@ -35,7 +35,7 @@ namespace Common {
 		samples = NULL;
 	}
 
-	void SampleSet::populateSamples(ifstream& infile, int s) {
+	void SampleSet::populateSamples(std::ifstream& infile, int s) {
 		//TODO Refactor populaton of SampleSet
 		infile >> nrClasses;
 		infile >> nrDims;
@@ -114,7 +114,7 @@ namespace Common {
 
 	const Sample& SampleSet::operator[](int i) const { return samples[i]; }
 
-	ostream& operator<<(ostream& out, const SampleSet& s) {
+	std::ostream& operator<<(std::ostream& out, const SampleSet& s) {
 		return out << s.getNrClasses() << " " << s.getNrDims() << " " << s.getNrSamples();
 	}
 

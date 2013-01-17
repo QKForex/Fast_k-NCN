@@ -4,11 +4,9 @@
 
 namespace Common {
 
-	class SampleSet
-	{
+	class SampleSet	{
 	private:
 		Sample* samples;
-
 		int nrClasses;
 		int nrDims;
 		int nrSamples;
@@ -19,7 +17,7 @@ namespace Common {
 		SampleSet(const SampleSet& copy);
 		~SampleSet();
 
-		void populateSamples(ifstream& infile, int samples = 0);
+		void populateSamples(std::ifstream& infile, int samples = 0);
 		int getNrClasses() const;
 		int getNrDims() const;
 		int getNrSamples() const;
@@ -32,6 +30,6 @@ namespace Common {
 		
 	};
 
-	ostream& operator<<(ostream& out, const SampleSet& s);
+	std::ostream& operator<<(std::ostream& out, const SampleSet& s);
 
 }
