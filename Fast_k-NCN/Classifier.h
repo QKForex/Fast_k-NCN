@@ -16,7 +16,7 @@ using namespace Common;
 //
 //	Abstract base class for Classifiers
 //
-class Classifier {
+class Classifier { //TODO singleton
 public:
 	int k;
 	Distance** distances;

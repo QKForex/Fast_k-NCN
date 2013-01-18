@@ -1,6 +1,7 @@
 #include <iostream>
 
-#include "Sequential_kNN.h"
+#include "InputReader.h"
+#include "Sequential_kNCN.h"
 #include "PerformanceAnalyzer.h"
 
 using namespace std;
@@ -9,56 +10,19 @@ using namespace Utility;
 
 int main(int argc, char** argv)
 {
-
+	InputReader ir;				
 	
-	// InputReader
-	
-	if (argc < 5)
-	{
-		cout << "Insufficient number of parameters." << endl;
-		exit(-1);
-	}
+	if (ir.validateInput(argc, argv) {
+		ir.readInput(argv[1]);
+	};
 
-	// General
-	const char* trainFilename = argv[1];
-	const char* testFilename = argv[2];
-	const char* logFilename = argv[4];
-
-	const int nrLoadTrainSamples = 0; // 0 if all, cannot be smaller than 1
-	const int nrLoadTestSamples = 0;
-
-	// k-NN
-	if ((int)argv[3] < 2)
-	{
-		cout << "k >= 2" << endl;
-		exit(-1);
-	}
-
-	const int k = atoi(argv[3]);
-
-	// Utility
-	const int prec = 4;
-
-	cout << "train " << trainFilename << " ";
-
-	ifstream trainfile(trainFilename);
-	if (trainfile == NULL)
-	{
-		cout << "Trainfile does not exist." << endl;
-		exit(-1);
-	}
 
 	SampleSet trainSet;
 	trainSet.populateSamples(trainfile, nrLoadTrainSamples);
 
 	cout << " test " << testFilename << " ";
 
-	ifstream testfile(testFilename);
-	if (testfile == NULL)
-	{
-		cout << "Testfile does not exist" << endl;
-		exit(-1);
-	}
+
 
 	SampleSet testSet;
 	testSet.populateSamples(testfile, nrLoadTestSamples);
@@ -75,9 +39,7 @@ int main(int argc, char** argv)
 
 	//standarizeSamples(&trainSet, &testSet);
 
-	// main objects
-	Sequential_kNN classifier(k); // hardcoded kNN classifer
-	//Distance** distances;
+	Sequential_kNCN classifier(k); // hardcoded, should be option
 	int* results;
 	
 	PerformanceAnalyzer pa;

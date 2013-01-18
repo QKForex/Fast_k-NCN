@@ -8,7 +8,7 @@ using namespace Common;
 
 namespace Utility {
 
-	class PerformanceAnalyzer {
+	class PerformanceAnalyzer { //TODO singleton
 	private:
 		__int64 frequency, startTime, stopTime;
 		unsigned long totalTime;

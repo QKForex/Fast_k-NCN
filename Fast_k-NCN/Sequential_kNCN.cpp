@@ -59,8 +59,9 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet,
 		Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
 	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
 
-	//Sample* centroids = (Sample*) malloc(k * sizeof(Sample));
-	DistanceValue* centroids = (DistanceValue*) malloc(k * sizeof(DistanceValue));
+	SampleSet centroids = (Sample*) malloc(k * sizeof(Sample));
+	
+	//DistanceValue* centroids = (DistanceValue*) malloc(k * sizeof(DistanceValue));
 	nndists[0] = find1NN(trainSet, nrTrainSamples, testSample);
 	centroids[0] = nndists[0].distValue;
 	DistanceValue* tempCentroids = (DistanceValue*) malloc(nrTrainSamples * sizeof(DistanceValue));
