@@ -1,15 +1,11 @@
 #include "Classifier.h"
 
-Classifier::Classifier()
-	: k(1) {
-	trainSet = NULL;
-	testSet = NULL;
+Classifier::Classifier() : k(1) {
+	distances = NULL;
 }
 
-Classifier::Classifier(SampleSet* train, SampleSet* test, int k) 
-	: k(k) {
-	trainSet = train;
-	testSet = test;
+Classifier::Classifier(const int k) : k(k) {
+	distances = NULL;
 }
 
 //
@@ -18,15 +14,18 @@ Classifier::Classifier(SampleSet* train, SampleSet* test, int k)
 //	Input: list of precomputed distances for given sample
 //	Output: list of k nearest neighbors
 //
-const Distance Classifier::find1NN(Distance* dists, int distsSize) {
-	Distance nndists;
-	nndists = dists[0];	
-	for (int distsIndex = 1; distsIndex < distsSize; distsIndex++) {
-		if (dists[distsIndex].distValue < nndists.distValue) {
-			nndists = dists[distsIndex];
+const Distance Classifier::find1NN(const SampleSet& trainSet, const int nrTrainSamples,
+	const Sample& testSample) {
+	int testSampleIndex = testSample.getIndex();									   
+	Distance nearestNeighbourDist = distances[testSampleIndex][0];
+	//TODO to parallelize somehow, e.g. compare in 4 threads,
+	// and then compare 4 results in the end
+	for (int distsIndex = 1; distsIndex < nrTrainSamples; distsIndex++) {
+		if (distances[testSampleIndex][distsIndex].distValue < nearestNeighbourDist.distValue) {
+			nearestNeighbourDist = distances[testSampleIndex][distsIndex];
 		}
 	}
-	return nndists;
+	return nearestNeighbourDist;
 }
 
 //	
@@ -36,16 +35,15 @@ const Distance Classifier::find1NN(Distance* dists, int distsSize) {
 //	Input:
 //	Output:
 // 
-int Classifier::assignLabel(const Distance* dists, int distsSize)
-{
-	if (distsSize == 1) { return dists[0].sampleLabel; }
+int Classifier::assignLabel(const Distance* dists) {
+	if (k == 1) { return dists[0].sampleLabel; }
 
 	//  first find largest class label
 	// 	create array of distsSize of the greatest class label so that we can increase
 	//	the value under that index every time that label is met
 	int i = 0;
 	int largestLabel = dists[i].sampleLabel;
-	for (i = 1; i < distsSize; i++) {
+	for (i = 1; i < k; i++) {
 		if (largestLabel < dists[i].sampleLabel) {
 			largestLabel = dists[i].sampleLabel;
 		}
@@ -55,7 +53,7 @@ int Classifier::assignLabel(const Distance* dists, int distsSize)
 	for (i = 0; i < largestLabel + 1; i++) { freqs[i] = 0; }
 
 	int result = 0;
-	for (i = 0; i < distsSize; i++)	{
+	for (i = 0; i < k; i++)	{
 		// in case of draw choose the label with smallest distance,
 		// change ">" to ">=" to choose the last, largest
 		if (++freqs[dists[i].sampleLabel] > freqs[result]) {
@@ -64,7 +62,6 @@ int Classifier::assignLabel(const Distance* dists, int distsSize)
 	}
 
 	delete[] freqs;
-	delete[] dists;
 
 	return result;
 }

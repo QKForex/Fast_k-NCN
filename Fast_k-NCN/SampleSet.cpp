@@ -20,8 +20,8 @@ namespace Common {
 	SampleSet::SampleSet(const SampleSet& copy) : nrClasses(copy.nrClasses),
 		nrDims(copy.nrDims), nrSamples(copy.nrSamples), samples(new Sample[copy.nrSamples])	{
 		if (this != &copy) {
-			for (int i = 0; i < nrSamples; i++) {
-				samples[i] = copy.samples[i];
+			for (int samIndex = 0; samIndex < nrSamples; samIndex++) {
+				samples[samIndex] = copy.samples[samIndex];
 			}
 		}
 	}
@@ -47,19 +47,20 @@ namespace Common {
 		if (samples == NULL) {
 			samples = new Sample[nrSamples];
 		}
-		for (int i = 0; i < nrSamples; i++) {
+		for (int samIndex = 0; samIndex < nrSamples; samIndex++) {
 			int label = 0;
 			infile >> label;
-			samples[i].setLabel(label);
-			samples[i].setNrDims(nrDims);
-			samples[i].populateDimsFromFile(infile);
+			samples[samIndex].setIndex(samIndex);
+			samples[samIndex].setLabel(label);
+			samples[samIndex].setNrDims(nrDims);
+			samples[samIndex].populateSampleDimsFromFile(infile);
 
 			//TODO check this implementation
 			//Sample dataobj(label, nrDims);
 
 			//dataobj.populateDims(infile);
 
-			//samples[i] = dataobj;
+			//samples[samIndex] = dataobj;
 		}
 	}
 
@@ -80,8 +81,8 @@ namespace Common {
 			nrSamples = rhs.getNrSamples();
 			
 			Sample* newSamples = new Sample[nrSamples];
-			for (int i = 0; i < nrSamples; i++) {
-				newSamples[i] = rhs[i];
+			for (int samIndex = 0; samIndex < nrSamples; samIndex++) {
+				newSamples[samIndex] = rhs[samIndex];
 			}
 			samples = newSamples;
 		}

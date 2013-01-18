@@ -18,23 +18,22 @@ using namespace Common;
 //
 class Classifier {
 public:
-	SampleSet* trainSet;
-	SampleSet* testSet;
 	int k;
-	
-	virtual ~Classifier() {}; // cannot implmenet pure virtual destructor
-	virtual Distance** preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
-	virtual int* classify(const SampleSet& trainSet, const SampleSet& testSet,
-		const int k, Distance** dists) = 0;
+	Distance** distances;
+
+	virtual ~Classifier() {}; // cannot implement pure virtual destructor
+	virtual void preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
+	virtual int* classify(const SampleSet& trainSet, const SampleSet& testSet) = 0;
 
 	int countError(int* const& result, const SampleSet& orig);
 
 protected:
 	Classifier();
-	Classifier(SampleSet* train, SampleSet* test, int k);
+	Classifier(const int k);
 
-	const Distance find1NN(Distance* dists, int distsSize);
-	int assignLabel(const Distance* dists, int distsSize);
+	const Distance find1NN(const SampleSet& trainSet, const int nrTrainSamples,
+		const Sample& testSample);
+	int assignLabel(const Distance* dists);
 
 };
 

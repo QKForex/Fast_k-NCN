@@ -14,20 +14,23 @@ namespace Common {
 	//TODO Make variables public, classes should be only containers
 	class Sample {
 	private:
-		SampleDim* sampleDims;
+		SampleDim* dims;
+		int index;
 		int label;
 		int nrDims;
 
 	public:
 		Sample();
-		Sample(int label, int dims);
-		Sample(int label, int dims, const SampleDim* sampleDimsArray);
+		Sample(int index, int label, int dims);
+		Sample(int index, int label, int dims, const SampleDim* sampleDimsArray);
 		~Sample();
 		Sample(const Sample& other);
 
-		void populateDimsFromFile(std::ifstream& infile);
+		void populateSampleDimsFromFile(std::ifstream& infile);
+		int getIndex() const;
 		int getLabel() const;
 		int getNrDims() const;
+		void setIndex(int i);
 		void setLabel(int l);
 		void setNrDims(int n);
 		//void getSampleDims(SampleDim* result) const;

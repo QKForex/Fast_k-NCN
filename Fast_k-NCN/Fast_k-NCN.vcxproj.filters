@@ -81,10 +81,10 @@
     <ClCompile Include="OutputWriter.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="PerformanceTimer.cpp">
+    <ClCompile Include="Utility.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Utility.cpp">
+    <ClCompile Include="PerformanceAnalyzer.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,10 +140,10 @@
     <ClInclude Include="OutputWriter.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="PerformanceTimer.h">
+    <ClInclude Include="Utility.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Utility.h">
+    <ClInclude Include="PerformanceAnalyzer.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>

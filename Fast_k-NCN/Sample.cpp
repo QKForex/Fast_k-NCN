@@ -4,38 +4,39 @@ namespace Common {
 
 	//TODO Add Comments
 	
-	Sample::Sample() : label(0), nrDims(0) {
-		sampleDims = NULL;
+	Sample::Sample() : index(-1), label(0), nrDims(0) {
+		dims = NULL;
 	}
 
-	Sample::Sample(int label, int dims) : label(label), nrDims(dims) {
-		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
+	Sample::Sample(int index, int label, int nrDims)
+		: index(index), label(label), nrDims(nrDims) {
+		dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 	}
 
-	Sample::Sample(int label, int dims, const SampleDim* sampleDimsArray)
-		: label(label), nrDims(dims) {
-		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
-		copySampleDims(sampleDimsArray, nrDims, sampleDims);
+	Sample::Sample(int index, int label, int nrDims, const SampleDim* sampleDimsArray)
+		: index(index), label(label), nrDims(nrDims) {
+		dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
+		copySampleDims(sampleDimsArray, nrDims, dims);
 	}
 
 	Sample::~Sample() {
-		freeSampleDimsMemory(sampleDims, __FILE__, __LINE__);
+		freeSampleDimsMemory(dims, __FILE__, __LINE__);
 	}
 
 	Sample::Sample(const Sample& other) : label(other.label), nrDims(other.nrDims) {
-		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
-		copySampleDims(other.sampleDims, other.nrDims, sampleDims);
+		dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
+		copySampleDims(other.dims, other.nrDims, dims);
 	}
 
-	void Sample::populateDimsFromFile(std::ifstream& infile)	{
+	void Sample::populateSampleDimsFromFile(std::ifstream& infile)	{
 		//TODO Find out better way to populate dimensions - operator>> ?
 		SampleDim x;
 
-		freeSampleDimsMemory(sampleDims, __FILE__, __LINE__);
-		sampleDims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
+		freeSampleDimsMemory(dims, __FILE__, __LINE__);
+		dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 		for (int i = 0; i < nrDims; i++) {
 			infile >> x;
-			sampleDims[i] = x;
+			dims[i] = x;
 		}
 	}
 
@@ -46,16 +47,20 @@ namespace Common {
 		//
 		//for (int i = 0; i < nrDims; i++)
 		//{
-		//	result[i] = sampleDims[i];
+		//	result[i] = dims[i];
 		//}
 
 		//return result;
-		return sampleDims;
+		return dims;
 	}
+
+	int Sample::getIndex() const { return index; }
 
 	int Sample::getLabel() const { return label; }
 
 	int Sample::getNrDims() const {	return nrDims; }
+
+	void Sample::setIndex(int i) { index = i; }
 
 	void Sample::setLabel(int l) { label = l; }
 
@@ -64,11 +69,11 @@ namespace Common {
 	Sample& Sample::operator=(const Sample& s) {
 		if (this != &s)	{
 			SampleDim* newSampleDims = allocateSampleDimsMemory(s.nrDims, __FILE__, __LINE__);
-			copySampleDims(s.sampleDims, s.nrDims, newSampleDims);
-			freeSampleDimsMemory(sampleDims, __FILE__, __LINE__);
+			copySampleDims(s.dims, s.nrDims, newSampleDims);
+			freeSampleDimsMemory(dims, __FILE__, __LINE__);
 			label = s.label;
 			nrDims = s.nrDims;
-			sampleDims = newSampleDims;
+			dims = newSampleDims;
 		}
 
 		return *this;
@@ -78,10 +83,10 @@ namespace Common {
 		if ((nrDims != s.nrDims) || (label != s.label)) {
 			return false;
 		}
-		if (sampleDims[0] == s.sampleDims[0]) {
+		if (dims[0] == s.dims[0]) {
 			int dimIndex = 1;
 			while (dimIndex < nrDims) {
-				if (sampleDims[dimIndex] != s.sampleDims[dimIndex])
+				if (dims[dimIndex] != s.dims[dimIndex])
 					return false;
 				dimIndex++;
 			}
@@ -94,9 +99,9 @@ namespace Common {
 		return !operator==(s);
 	}
 
-	SampleDim& Sample::operator[](int i) { return sampleDims[i]; }
+	SampleDim& Sample::operator[](int i) { return dims[i]; }
 
-	const SampleDim& Sample::operator[](int i) const { return sampleDims[i]; }
+	const SampleDim& Sample::operator[](int i) const { return dims[i]; }
 
 	std::ostream& operator<<(std::ostream& out, const Sample& s) {
 		return out << s.getSampleDims() << " " << s.getLabel() << " " << s.getNrDims();

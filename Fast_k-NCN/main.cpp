@@ -74,18 +74,17 @@ int main(int argc, char** argv)
 	//standarizeSamples(&trainSet, &testSet);
 
 	// main objects
-	Sequential_kNN classifier; // hardcoded kNN classifer
-	Distance** distances;
+	Sequential_kNN classifier(k); // hardcoded kNN classifer
+	//Distance** distances;
 	int* results;
 	
-
 	__int64 frequency, classStart, classStop;
 
 	QueryPerformanceFrequency((LARGE_INTEGER*) &frequency);
 	QueryPerformanceCounter((LARGE_INTEGER*) &classStart);
 
-	distances =	classifier.preprocess(trainSet, testSet);
-	results = classifier.classify(trainSet, testSet, k, distances);
+	classifier.preprocess(trainSet, testSet);
+	results = classifier.classify(trainSet, testSet);
 
 	QueryPerformanceCounter((LARGE_INTEGER*) &classStop);
 
@@ -101,8 +100,8 @@ int main(int argc, char** argv)
 	int error = classifier.countError(results, testSet);
 
 	delete[] results;
-	for (int i = 0; i < nrTestSamples; i++) { delete distances[i]; }
-	delete[] distances;
+	//for (int i = 0; i < nrTestSamples; i++) { delete distances[i]; }
+	//delete[] distances;
 
 	float errorRate = (float) error / nrTestSamples * 100;
 

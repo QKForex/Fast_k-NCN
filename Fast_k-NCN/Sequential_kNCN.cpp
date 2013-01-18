@@ -1,34 +1,34 @@
 #include "Sequential_kNCN.h"
 
-Sequential_kNCN::Sequential_kNCN() {}
+Sequential_kNCN::Sequential_kNCN() : Classifier() {}
+
+Sequential_kNCN::Sequential_kNCN(const int k)
+	: Classifier(k) {}
 
 Sequential_kNCN::~Sequential_kNCN() {}
 
-Distance** Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	const int nrTrainSamples = trainSet.getNrSamples();
+void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
 	const int nrTestSamples = testSet.getNrSamples();
 
-	Distance** distancesToTestSamples = new Distance*[nrTestSamples];
+	distances = new Distance*[nrTestSamples];
 	
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-		distancesToTestSamples[samIndex] = countDistances(trainSet, testSet[samIndex]);
+		distances[samIndex] = countDistances(trainSet, testSet[samIndex]);
 	}
-	
-	return distancesToTestSamples;
 }
 
-int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet, const int k, Distance** dists) {
+int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {
 	const int nrTrainSamples = trainSet.getNrSamples();
 	const int nrTestSamples = testSet.getNrSamples();		  
 	int* results = new int[nrTestSamples];
 
 	if (k == 1) {
 		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = find1NN(dists[samIndex], nrTrainSamples).sampleLabel;
+			results[samIndex] = find1NN(trainSet, nrTrainSamples, testSet[samIndex]).sampleLabel;
 		}
 	} else {
 		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = assignLabel(findkNCN(dists[samIndex], nrTrainSamples, k), k);
+			results[samIndex] = assignLabel(findkNCN(trainSet, nrTrainSamples, testSet[samIndex]));
 		}
 	}
 	return results;
@@ -45,24 +45,26 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 //	first kNCN (is equal to kNN)
 //	instead of comparing current kNCN candidate to already chosen kNCNs
 //	distsSize times in loop, 
-//	we set the distance to FLT_MAX for chosen kNCN sample in dists once
+//	we set the distance to FLT_MAX for chosen kNCN sample in distances once
 //	this excludes first kNCN from being chosen again
 //	this action will be repeated for the rest 
-//	dists[nndists[0].sampleIndex].distValue = FLT_MAX;
+//	distances[nndists[0].sampleIndex].distValue = FLT_MAX;
 //	check if given sample is not kNCN already
 //
 //TODO inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
 
-const Distance* Sequential_kNCN::findkNCN(Distance* dists, int distsSize, int k) {
-	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
+const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet,
+	const int nrTrainSamples, const Sample& testSample) {
+	int testSampleIndex = testSample.getIndex();	
+		Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
 	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
 
 	//Sample* centroids = (Sample*) malloc(k * sizeof(Sample));
 	DistanceValue* centroids = (DistanceValue*) malloc(k * sizeof(DistanceValue));
-	nndists[0] = find1NN(dists, distsSize);
+	nndists[0] = find1NN(trainSet, nrTrainSamples, testSample);
 	centroids[0] = nndists[0].distValue;
-	DistanceValue* tempCentroids = (DistanceValue*) malloc(distsSize * sizeof(DistanceValue));
-	DistanceValue* tempCentroidsDistances = (DistanceValue*) malloc(distsSize * sizeof(DistanceValue));
+	DistanceValue* tempCentroids = (DistanceValue*) malloc(nrTrainSamples * sizeof(DistanceValue));
+	DistanceValue* tempCentroidsDistances = (DistanceValue*) malloc(nrTrainSamples * sizeof(DistanceValue));
 	DistanceValue sum = 0;
 	Distance minCentroidDistance = Distance(-1,-1,FLT_MAX);
 	bool iskNCN = false;
@@ -73,7 +75,7 @@ const Distance* Sequential_kNCN::findkNCN(Distance* dists, int distsSize, int k)
 		for (int previousCentroidIndex = 0; previousCentroidIndex < centroidIndex; previousCentroidIndex++) {
 			sum += centroids[previousCentroidIndex];
 		}
-		for (int distsIndex = 0; distsIndex < distsSize; distsIndex++) {
+		for (int distsIndex = 0; distsIndex < nrTrainSamples; distsIndex++) {
 			iskNCN = false;
 			for (int i = 0; i < centroidIndex; i++) {
 				if (nndists[i].sampleIndex == distsIndex) {
@@ -82,24 +84,22 @@ const Distance* Sequential_kNCN::findkNCN(Distance* dists, int distsSize, int k)
 				}
 			}
 
-
-
 			if (!iskNCN) {			
-				tempCentroids[distsIndex] = (dists[distsIndex].distValue + sum)/centroidIndex;
+				tempCentroids[distsIndex] = (distances[testSampleIndex][distsIndex].distValue + sum)/centroidIndex;
 				tempCentroidsDistances[distsIndex] =
-					(dists[distsIndex].distValue - tempCentroids[distsIndex]) * 
-					(dists[distsIndex].distValue - tempCentroids[distsIndex]);
+					(distances[testSampleIndex][distsIndex].distValue - tempCentroids[distsIndex]) * 
+					(distances[testSampleIndex][distsIndex].distValue - tempCentroids[distsIndex]);
 				if (minCentroidDistance.distValue > tempCentroidsDistances[distsIndex]) {
-					minCentroidDistance = dists[distsIndex];
+					minCentroidDistance = distances[testSampleIndex][distsIndex];
 					minCentroidDistance.distValue = tempCentroidsDistances[distsIndex];
 				}
 			}
 
 		}
 
-		nndists[centroidIndex] = dists[minCentroidDistance.sampleIndex];
+		nndists[centroidIndex] = distances[testSampleIndex][minCentroidDistance.sampleIndex];
 
-		//dists[nndists[centroidIndex].sampleIndex].distValue = FLT_MAX;
+		//distances[nndists[centroidIndex].sampleIndex].distValue = FLT_MAX;
 	}
 
 
