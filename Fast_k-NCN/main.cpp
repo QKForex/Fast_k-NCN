@@ -1,14 +1,16 @@
 #include <iostream>
 
-#include <Windows.h>
-
 #include "Sequential_kNN.h"
+#include "PerformanceAnalyzer.h"
 
 using namespace std;
 using namespace Common;
+using namespace Utility;
 
 int main(int argc, char** argv)
 {
+
+	
 	// InputReader
 	
 	if (argc < 5)
@@ -78,30 +80,24 @@ int main(int argc, char** argv)
 	//Distance** distances;
 	int* results;
 	
-	__int64 frequency, classStart, classStop;
-
-	QueryPerformanceFrequency((LARGE_INTEGER*) &frequency);
-	QueryPerformanceCounter((LARGE_INTEGER*) &classStart);
+	PerformanceAnalyzer pa;
+	pa.startTimer();
 
 	classifier.preprocess(trainSet, testSet);
 	results = classifier.classify(trainSet, testSet);
 
-	QueryPerformanceCounter((LARGE_INTEGER*) &classStop);
+	pa.stopTimer();
 
-	unsigned long classTime =
-		(unsigned long) (((classStop - classStart) * 1000) / frequency);
 
-	time_t rawtime;
+	time_t rawtime; // Logger
 	struct tm * timeinfo;
 
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
 
-	int error = classifier.countError(results, testSet);
+	int error = pa.calculateError(results, testSet);
 
 	delete[] results;
-	//for (int i = 0; i < nrTestSamples; i++) { delete distances[i]; }
-	//delete[] distances;
 
 	float errorRate = (float) error / nrTestSamples * 100;
 
@@ -109,7 +105,7 @@ int main(int argc, char** argv)
 
 	logfile << errorRate << "%\t"
 		<< error << "\t"
-		<< classTime << "ms\t";
+		<< pa.getTotalTime() << "ms\t";
 
 	logfile << nrTrainSamples << "\t"
 		<< nrTestSamples << "\t"
@@ -119,7 +115,7 @@ int main(int argc, char** argv)
 
 	cout.precision(prec);
 
-	cout << errorRate << "% " << error << " " << classTime << " ms " << "\n";
+	cout << errorRate << "% " << error << " " << pa.getTotalTime() << " ms " << "\n";
 
 	cout << endl;
 

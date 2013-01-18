@@ -5,21 +5,21 @@ Sequential_kNCN::Sequential_kNCN() : Classifier() {}
 Sequential_kNCN::Sequential_kNCN(const int k)
 	: Classifier(k) {}
 
-Sequential_kNCN::~Sequential_kNCN() {}
+Sequential_kNCN::~Sequential_kNCN() {
+	for (int i = 0; i < nrTestSamples; i++) { delete distances[i]; }
+	delete[] distances;
+}
 
 void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	const int nrTestSamples = testSet.getNrSamples();
-
+	nrTrainSamples = trainSet.getNrSamples();
+	nrTestSamples = testSet.getNrSamples();
 	distances = new Distance*[nrTestSamples];
-	
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		distances[samIndex] = countDistances(trainSet, testSet[samIndex]);
 	}
 }
 
-int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {
-	const int nrTrainSamples = trainSet.getNrSamples();
-	const int nrTestSamples = testSet.getNrSamples();		  
+int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
 	int* results = new int[nrTestSamples];
 
 	if (k == 1) {
@@ -52,7 +52,7 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 //	check if given sample is not kNCN already
 //
 //TODO inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
-
+//
 const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet,
 	const int nrTrainSamples, const Sample& testSample) {
 	int testSampleIndex = testSample.getIndex();	

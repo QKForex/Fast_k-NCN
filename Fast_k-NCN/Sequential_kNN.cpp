@@ -5,20 +5,21 @@ Sequential_kNN::Sequential_kNN() : Classifier() {}
 Sequential_kNN::Sequential_kNN(const int k)
 	: Classifier(k) {}
 
-// Classifier should not free memory for sets
-Sequential_kNN::~Sequential_kNN() {}
+Sequential_kNN::~Sequential_kNN() {
+	for (int i = 0; i < nrTestSamples; i++) { delete distances[i]; }
+	delete[] distances;
+}
 
 void Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	const int nrTestSamples = testSet.getNrSamples();
+	nrTrainSamples = trainSet.getNrSamples();
+	nrTestSamples = testSet.getNrSamples();
 	distances = new Distance*[nrTestSamples];
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		distances[samIndex] = countDistances(trainSet, testSet[samIndex]);
 	}
 }
 
-int* Sequential_kNN::classify(const SampleSet& trainSet, const SampleSet& testSet) {
-	const int nrTrainSamples = trainSet.getNrSamples();
-	const int nrTestSamples = testSet.getNrSamples();		  
+int* Sequential_kNN::classify(const SampleSet& trainSet, const SampleSet& testSet) {  
 	int* results = new int[nrTestSamples];
 
 	if (k == 1) {

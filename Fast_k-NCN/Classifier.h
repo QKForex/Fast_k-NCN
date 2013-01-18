@@ -20,6 +20,8 @@ class Classifier {
 public:
 	int k;
 	Distance** distances;
+	int nrTrainSamples;
+	int nrTestSamples;
 
 	virtual ~Classifier() {}; // cannot implement pure virtual destructor
 	virtual void preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;

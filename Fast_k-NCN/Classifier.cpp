@@ -1,10 +1,10 @@
 #include "Classifier.h"
 
-Classifier::Classifier() : k(1) {
+Classifier::Classifier() : k(1), nrTrainSamples(0), nrTestSamples(0) {
 	distances = NULL;
 }
 
-Classifier::Classifier(const int k) : k(k) {
+Classifier::Classifier(const int k) : k(k), nrTrainSamples(0), nrTestSamples(0) {
 	distances = NULL;
 }
 
