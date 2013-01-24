@@ -13,6 +13,7 @@ namespace Utility {
 		std::string propertiesFilename;
 		std::string trainFilename;
 		std::string testFilename;
+		std::string logFilename;
 		ClassifierType classifier;
 		int k;
 

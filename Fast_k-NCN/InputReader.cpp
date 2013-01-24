@@ -60,6 +60,8 @@ namespace Utility {
 			std::cout << "Number of test samples to load must be larger than 0. (Default: 0 == all)" << std::endl;
 			return false;
 		}
+		// Log filename
+		propertiesFile >> logFilename;
 		propertiesFile.close();
 		return true;
 	}

@@ -11,10 +11,11 @@ namespace Utility {
 	class PerformanceAnalyzer { //TODO singleton
 	private:
 		__int64 frequency, startTime, stopTime;
+	public:
 		unsigned long totalTime;
 		int nrClassificationErrors;
+		float errorRate;
 
-	public:
 		PerformanceAnalyzer();
 		~PerformanceAnalyzer();
 
@@ -22,8 +23,7 @@ namespace Utility {
 		
 		void startTimer();
 		void stopTimer();
-		unsigned long getTotalTime() const;
-		int calculateError(const SampleSet& orig);
+		void calculateError(const SampleSet& orig);
 	};
 
 }

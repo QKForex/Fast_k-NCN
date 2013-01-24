@@ -19,11 +19,8 @@ namespace Utility {
 		totalTime = (unsigned long) (((stopTime - startTime) * 1000) / frequency);
 	}
 
-	unsigned long PerformanceAnalyzer::getTotalTime() const { return totalTime; }
-
-	int PerformanceAnalyzer::calculateError(const SampleSet& orig) {
+	void PerformanceAnalyzer::calculateError(const SampleSet& orig) {
 		int nrError = 0;
-
 		// comments in this function - uncomment for more verbose logging purposes
 		//ofstream file("result.txt");
 		for (int origIndex = 0; origIndex < orig.nrSamples; origIndex++) {
@@ -35,7 +32,7 @@ namespace Utility {
 			//file << std::endl;
 		}
 		//file << "Number of errors: " << nrError << std::endl;
-		return nrClassificationErrors;
+		errorRate = (float) nrClassificationErrors / orig.nrSamples * 100;
 	}
 
 }

@@ -2,6 +2,8 @@
 
 #include "InputReader.h"
 #include "SampleSetFactory.h"
+#include "Logger.h"
+#include "OutputWriter.h"
 #include "Sequential_kNN.h"
 #include "PerformanceAnalyzer.h"
 
@@ -16,7 +18,7 @@ int main(int argc, char** argv)
 	if (!ir.readProperties(argv[1])) {
 		std::cout << "Reading properties unsuccesful." << std::endl;
 		exit(-1);
-	};
+	}
 	std::cout << "Reading properties succesful." << std::endl;
 
 	SampleSetFactory ssf;
@@ -25,17 +27,17 @@ int main(int argc, char** argv)
 	if (&trainSet == NULL) {
 		std::cout << "Reading training samples unsuccesful." << std::endl;
 		exit(-1);
-	};
+	}
 	std::cout << "Reading " << trainSet.nrSamples << " training samples succesful." << std::endl;
 
 	SampleSet testSet = ssf.createSampleSet(ir.testFilename, ir.nrLoadTestSamples);
 	if (&testSet == NULL) {
 		std::cout << "Reading test samples unsuccesful." << std::endl;
 		exit(-1);
-	};
+	}
 	std::cout << "Reading " << testSet.nrSamples << " test samples succesful." << std::endl;
 
-	ofstream logfile("Logs\logkncn.txt", fstream::app); //TODO Logger class
+	ofstream logfile(ir.logFilename, fstream::app); //TODO Logger class
 
 	// -----------------------------------------------------------
 
@@ -45,38 +47,23 @@ int main(int argc, char** argv)
 
 	PerformanceAnalyzer pa;
 	pa.startTimer();
-
 	classifier.preprocess(trainSet, testSet);
 	pa.results = classifier.classify(trainSet, testSet);
-
 	pa.stopTimer();
-
-	time_t rawtime; // Logger
-	struct tm * timeinfo;
-
-	time(&rawtime);
-	timeinfo = localtime(&rawtime);
-
-	int error = pa.calculateError(testSet);
-
-	float errorRate = (float) error / testSet.nrSamples * 100;
+	pa.calculateError(testSet);
 
 	logfile.precision(LOGGER_PRECISION); //TODO Logger
+	logfile << pa.errorRate << "%\t" << pa.nrClassificationErrors << "\t" << pa.totalTime << "ms\t";
+	logfile << trainSet.nrSamples << "\t" << testSet.nrSamples << "\t"	<< classifier.k << "-NN\t";
 
-	logfile << errorRate << "%\t"
-		<< error << "\t"
-		<< pa.getTotalTime() << "ms\t";
-
-	logfile << trainSet.nrSamples << "\t"
-		<< testSet.nrSamples << "\t"
-		<< classifier.k << "-NN\t";
-
+	time_t rawtime; // Logger, OutputWriter
+	struct tm * timeinfo;
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
 	logfile << asctime(timeinfo);
 
 	cout.precision(LOGGER_PRECISION);
-
-	cout << errorRate << "% " << error << " " << pa.getTotalTime() << " ms " << "\n";
-
+	cout << pa.errorRate << "% " << pa.nrClassificationErrors << " " << pa.totalTime << " ms " << "\n";
 	cout << endl;
 
 	return 0;
