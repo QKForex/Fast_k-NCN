@@ -1,7 +1,8 @@
 #include <iostream>
 
 #include "InputReader.h"
-#include "Sequential_kNCN.h"
+#include "SampleSetFactory.h"
+#include "Sequential_kNN.h"
 #include "PerformanceAnalyzer.h"
 
 using namespace std;
@@ -12,44 +13,43 @@ int main(int argc, char** argv)
 {
 	InputReader ir;				
 	
-	if (ir.validateInput(argc, argv) {
-		ir.readInput(argv[1]);
+	if (!ir.readProperties(argv[1])) {
+		std::cout << "Reading properties unsuccesful." << std::endl;
+		exit(-1);
 	};
+	std::cout << "Reading properties succesful." << std::endl;
 
+	SampleSetFactory ssf;
 
-	SampleSet trainSet;
-	trainSet.populateSamples(trainfile, nrLoadTrainSamples);
+	SampleSet trainSet = ssf.createSampleSet(ir.trainFilename, ir.nrLoadTrainSamples);
+	if (&trainSet == NULL) {
+		std::cout << "Reading training samples unsuccesful." << std::endl;
+		exit(-1);
+	};
+	std::cout << "Reading " << trainSet.nrSamples << " training samples succesful." << std::endl;
 
-	cout << " test " << testFilename << " ";
+	SampleSet testSet = ssf.createSampleSet(ir.testFilename, ir.nrLoadTestSamples);
+	if (&testSet == NULL) {
+		std::cout << "Reading test samples unsuccesful." << std::endl;
+		exit(-1);
+	};
+	std::cout << "Reading " << testSet.nrSamples << " test samples succesful." << std::endl;
 
-
-
-	SampleSet testSet;
-	testSet.populateSamples(testfile, nrLoadTestSamples);
-
-	cout << endl;
-
-	ofstream logfile(logFilename, fstream::app);
+	ofstream logfile("Logs\logkncn.txt", fstream::app); //TODO Logger class
 
 	// -----------------------------------------------------------
 
-	int nrTrainSamples = trainSet.getNrSamples();
-	int nrTestSamples = testSet.getNrSamples();
-	int nrDims = trainSet.getNrDims();
-
 	//standarizeSamples(&trainSet, &testSet);
 
-	Sequential_kNCN classifier(k); // hardcoded, should be option
-	int* results;
-	
+	Sequential_kNN classifier(ir.k, trainSet.nrSamples, testSet.nrSamples); // hardcoded, should be option
+
 	PerformanceAnalyzer pa;
 	pa.startTimer();
 
 	classifier.preprocess(trainSet, testSet);
-	results = classifier.classify(trainSet, testSet);
+	pa.results = classifier.classify(trainSet, testSet);
 
 	pa.stopTimer();
-
 
 	time_t rawtime; // Logger
 	struct tm * timeinfo;
@@ -57,25 +57,23 @@ int main(int argc, char** argv)
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
 
-	int error = pa.calculateError(results, testSet);
+	int error = pa.calculateError(testSet);
 
-	delete[] results;
+	float errorRate = (float) error / testSet.nrSamples * 100;
 
-	float errorRate = (float) error / nrTestSamples * 100;
-
-	logfile.precision(prec); //TODO Logger
+	logfile.precision(LOGGER_PRECISION); //TODO Logger
 
 	logfile << errorRate << "%\t"
 		<< error << "\t"
 		<< pa.getTotalTime() << "ms\t";
 
-	logfile << nrTrainSamples << "\t"
-		<< nrTestSamples << "\t"
-		<< k << "-NN\t";
+	logfile << trainSet.nrSamples << "\t"
+		<< testSet.nrSamples << "\t"
+		<< classifier.k << "-NN\t";
 
 	logfile << asctime(timeinfo);
 
-	cout.precision(prec);
+	cout.precision(LOGGER_PRECISION);
 
 	cout << errorRate << "% " << error << " " << pa.getTotalTime() << " ms " << "\n";
 

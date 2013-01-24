@@ -34,6 +34,7 @@
     <ClCompile Include="RandomizedSelect_kNCN.cpp" />
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="SampleSet.cpp" />
+    <ClCompile Include="SampleSetFactory.cpp" />
     <ClCompile Include="Sequential_kNCN.cpp" />
     <ClCompile Include="Sequential_kNN.cpp" />
     <ClCompile Include="Utility.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="RandomizedSelect_kNCN.h" />
     <ClInclude Include="Sample.h" />
     <ClInclude Include="SampleSet.h" />
+    <ClInclude Include="SampleSetFactory.h" />
     <ClInclude Include="Sequential_kNCN.h" />
     <ClInclude Include="Sequential_kNN.h" />
     <ClInclude Include="Utility.h" />
@@ -109,15 +111,31 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <IncludePath>C:\Program Files\boost\boost_1_52_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\Program Files\boost\boost_1_52_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Program Files\boost\boost_1_52_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Program Files\boost\boost_1_52_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <BrowseInformation>true</BrowseInformation>
+      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib32\</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -128,9 +146,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <BrowseInformation>true</BrowseInformation>
+      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib64\</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -142,11 +162,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib32\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -156,11 +178,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnablePREfast>true</EnablePREfast>
+      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib64\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

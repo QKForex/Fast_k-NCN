@@ -4,7 +4,8 @@ Classifier::Classifier() : k(1), nrTrainSamples(0), nrTestSamples(0) {
 	distances = NULL;
 }
 
-Classifier::Classifier(const int k) : k(k), nrTrainSamples(0), nrTestSamples(0) {
+Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSamples)
+	: k(k), nrTrainSamples(nrTrainSamples), nrTestSamples(nrTestSamples) {
 	distances = NULL;
 }
 
@@ -15,14 +16,13 @@ Classifier::Classifier(const int k) : k(k), nrTrainSamples(0), nrTestSamples(0) 
 //	Output: list of k nearest neighbors
 //
 const Distance Classifier::find1NN(const SampleSet& trainSet, const int nrTrainSamples,
-	const Sample& testSample) {
-	int testSampleIndex = testSample.getIndex();									   
-	Distance nearestNeighbourDist = distances[testSampleIndex][0];
+	const Sample& testSample) {							   
+	Distance nearestNeighbourDist = distances[testSample.index][0];
 	//TODO to parallelize somehow, e.g. compare in 4 threads,
 	// and then compare 4 results in the end
 	for (int distsIndex = 1; distsIndex < nrTrainSamples; distsIndex++) {
-		if (distances[testSampleIndex][distsIndex].distValue < nearestNeighbourDist.distValue) {
-			nearestNeighbourDist = distances[testSampleIndex][distsIndex];
+		if (distances[testSample.index][distsIndex].distValue < nearestNeighbourDist.distValue) {
+			nearestNeighbourDist = distances[testSample.index][distsIndex];
 		}
 	}
 	return nearestNeighbourDist;
@@ -64,23 +64,4 @@ int Classifier::assignLabel(const Distance* dists) {
 	delete[] freqs;
 
 	return result;
-}
-
-int Classifier::countError(int* const& result, const SampleSet& orig) {
-	const int origSize = orig.getNrSamples();
-	int error = 0;
-
-	// comments in this function - uncomment for more verbose logging purposes
-	//ofstream file("result.txt");
-	for (int origIndex = 0; origIndex < origSize; origIndex++) {
-		//file << orig[origIndex].getLabel() << " " << result[origIndex];
-		if (orig[origIndex].getLabel() != result[origIndex])
-		{
-			error++;
-			//file << " error";
-		}
-		//file << "\n";
-	}
-	//file << "Number of errors: " << error << endl;
-	return error;
 }

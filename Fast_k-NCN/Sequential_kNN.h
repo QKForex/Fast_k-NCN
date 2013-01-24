@@ -5,7 +5,7 @@
 class Sequential_kNN: public Classifier {
 public:
 	Sequential_kNN();
-	Sequential_kNN(const int k);
+	Sequential_kNN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~Sequential_kNN();
 
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);

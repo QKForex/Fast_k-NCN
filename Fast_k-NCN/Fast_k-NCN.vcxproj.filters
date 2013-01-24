@@ -87,6 +87,9 @@
     <ClCompile Include="PerformanceAnalyzer.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="SampleSetFactory.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CacheEfficient_kNCN.h">
@@ -145,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="PerformanceAnalyzer.h">
       <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleSetFactory.h">
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -13,28 +13,26 @@ namespace Common {
 	//TODO Remove getters and setters in final version, no need for such encapsulation
 	//TODO Make variables public, classes should be only containers
 	class Sample {
-	private:
+	public:
 		SampleDim* dims;
 		int index;
 		int label;
 		int nrDims;
 
-	public:
 		Sample();
-		Sample(int index, int label, int dims);
-		Sample(int index, int label, int dims, const SampleDim* sampleDimsArray);
+		Sample(const int i, const int l, const int n);
+		Sample(const int i, const int l, const int n, const SampleDim* sampleDimsArray);
 		~Sample();
 		Sample(const Sample& other);
 
-		void populateSampleDimsFromFile(std::ifstream& infile);
-		int getIndex() const;
-		int getLabel() const;
-		int getNrDims() const;
-		void setIndex(int i);
-		void setLabel(int l);
-		void setNrDims(int n);
+		//int getIndex() const;
+		//int getLabel() const;
+		//int getNrDims() const;
+		//void setIndex(int i);
+		//void setLabel(int l);
+		//void setNrDims(int n);
 		//void getSampleDims(SampleDim* result) const;
-		SampleDim* getSampleDims() const;
+		//SampleDim* getSampleDims() const;
 
 		//Sample& operator=(Sample& s);
 		Sample& operator=(const Sample& s);
@@ -44,11 +42,10 @@ namespace Common {
 		SampleDim& operator[] (int i);
 		const SampleDim& operator[](int i) const;
 
+		friend std::ostream& operator<<(std::ostream& out, const Sample& s);
+
 	private:
 		void copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst);
 
 	};
-
-	std::ostream& operator<<(std::ostream& out, const Sample& s);
-
 }

@@ -8,12 +8,12 @@ namespace Common {
 		dims = NULL;
 	}
 
-	Sample::Sample(int index, int label, int nrDims)
-		: index(index), label(label), nrDims(nrDims) {
+	Sample::Sample(const int i, const int l, const int n)
+		: index(i), label(l), nrDims(n) {
 		dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 	}
 
-	Sample::Sample(int index, int label, int nrDims, const SampleDim* sampleDimsArray)
+	Sample::Sample(const int i, const int l, const int n, const SampleDim* sampleDimsArray)
 		: index(index), label(label), nrDims(nrDims) {
 		dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 		copySampleDims(sampleDimsArray, nrDims, dims);
@@ -28,49 +28,38 @@ namespace Common {
 		copySampleDims(other.dims, other.nrDims, dims);
 	}
 
-	void Sample::populateSampleDimsFromFile(std::ifstream& infile)	{
-		//TODO Find out better way to populate dimensions - operator>> ?
-		SampleDim x;
+	//SampleDim* Sample::getSampleDims() const {
+	//	//TODO should getter return shallow copy or deep copy?
+	//	
+	//	//float* result = new float[nrDims];
+	//	//
+	//	//for (int i = 0; i < nrDims; i++)
+	//	//{
+	//	//	result[i] = dims[i];
+	//	//}
 
-		freeSampleDimsMemory(dims, __FILE__, __LINE__);
-		dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
-		for (int i = 0; i < nrDims; i++) {
-			infile >> x;
-			dims[i] = x;
-		}
-	}
+	//	//return result;
+	//	return dims;
+	//}
 
-	SampleDim* Sample::getSampleDims() const {
-		//TODO should getter return shallow copy or deep copy?
-		
-		//float* result = new float[nrDims];
-		//
-		//for (int i = 0; i < nrDims; i++)
-		//{
-		//	result[i] = dims[i];
-		//}
+	//int Sample::getIndex() const { return index; }
 
-		//return result;
-		return dims;
-	}
+	//int Sample::getLabel() const { return label; }
 
-	int Sample::getIndex() const { return index; }
+	//int Sample::getNrDims() const {	return nrDims; }
 
-	int Sample::getLabel() const { return label; }
+	//void Sample::setIndex(int i) { index = i; }
 
-	int Sample::getNrDims() const {	return nrDims; }
+	//void Sample::setLabel(int l) { label = l; }
 
-	void Sample::setIndex(int i) { index = i; }
-
-	void Sample::setLabel(int l) { label = l; }
-
-	void Sample::setNrDims(int n) { nrDims = n; }
+	//void Sample::setNrDims(int n) { nrDims = n; }
 
 	Sample& Sample::operator=(const Sample& s) {
 		if (this != &s)	{
 			SampleDim* newSampleDims = allocateSampleDimsMemory(s.nrDims, __FILE__, __LINE__);
 			copySampleDims(s.dims, s.nrDims, newSampleDims);
 			freeSampleDimsMemory(dims, __FILE__, __LINE__);
+			index = s.index;
 			label = s.label;
 			nrDims = s.nrDims;
 			dims = newSampleDims;
@@ -104,7 +93,7 @@ namespace Common {
 	const SampleDim& Sample::operator[](int i) const { return dims[i]; }
 
 	std::ostream& operator<<(std::ostream& out, const Sample& s) {
-		return out << s.getSampleDims() << " " << s.getLabel() << " " << s.getNrDims();
+		return out << s.dims << " " << s.label << " " << s.nrDims;
 	}
 
 	void Sample::copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst) {

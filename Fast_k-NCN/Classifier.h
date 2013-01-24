@@ -27,11 +27,9 @@ public:
 	virtual void preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
 	virtual int* classify(const SampleSet& trainSet, const SampleSet& testSet) = 0;
 
-	int countError(int* const& result, const SampleSet& orig);
-
 protected:
 	Classifier();
-	Classifier(const int k);
+	Classifier(const int k, const int nrTrainSamples, const int nrTestSamples);
 
 	const Distance find1NN(const SampleSet& trainSet, const int nrTrainSamples,
 		const Sample& testSample);

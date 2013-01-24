@@ -2,8 +2,8 @@
 
 Sequential_kNCN::Sequential_kNCN() : Classifier() {}
 
-Sequential_kNCN::Sequential_kNCN(const int k)
-	: Classifier(k) {}
+Sequential_kNCN::Sequential_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples)
+	: Classifier(k, nrTrainSamples, nrTestSamples) {}
 
 Sequential_kNCN::~Sequential_kNCN() {
 	for (int i = 0; i < nrTestSamples; i++) { delete distances[i]; }
@@ -11,8 +11,6 @@ Sequential_kNCN::~Sequential_kNCN() {
 }
 
 void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	nrTrainSamples = trainSet.getNrSamples();
-	nrTestSamples = testSet.getNrSamples();
 	distances = new Distance*[nrTestSamples];
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		distances[samIndex] = countDistances(trainSet, testSet[samIndex]);
@@ -52,16 +50,14 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 //	check if given sample is not kNCN already
 //
 //TODO inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
-//
-const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet,
-	const int nrTrainSamples, const Sample& testSample) {
-	int testSampleIndex = testSample.getIndex();	
-		Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
+// 
+const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const int nrTrainSamples, const Sample& testSample) {
+	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
 	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
 
-	SampleSet centroids = (Sample*) malloc(k * sizeof(Sample));
+	//SampleSet centroids = (Sample*) malloc(k * sizeof(Sample));
 	
-	//DistanceValue* centroids = (DistanceValue*) malloc(k * sizeof(DistanceValue));
+	DistanceValue* centroids = (DistanceValue*) malloc(k * sizeof(DistanceValue));
 	nndists[0] = find1NN(trainSet, nrTrainSamples, testSample);
 	centroids[0] = nndists[0].distValue;
 	DistanceValue* tempCentroids = (DistanceValue*) malloc(nrTrainSamples * sizeof(DistanceValue));
@@ -74,7 +70,7 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet,
 		sum = 0;
 		//minCentroidDistance = Sample(-1, sampleDims, ;
 		for (int previousCentroidIndex = 0; previousCentroidIndex < centroidIndex; previousCentroidIndex++) {
-			sum += centroids[previousCentroidIndex];
+			//sum += centroids[previousCentroidIndex];
 		}
 		for (int distsIndex = 0; distsIndex < nrTrainSamples; distsIndex++) {
 			iskNCN = false;
@@ -86,19 +82,19 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet,
 			}
 
 			if (!iskNCN) {			
-				tempCentroids[distsIndex] = (distances[testSampleIndex][distsIndex].distValue + sum)/centroidIndex;
+				tempCentroids[distsIndex] = (distances[testSample.index][distsIndex].distValue + sum)/centroidIndex;
 				tempCentroidsDistances[distsIndex] =
-					(distances[testSampleIndex][distsIndex].distValue - tempCentroids[distsIndex]) * 
-					(distances[testSampleIndex][distsIndex].distValue - tempCentroids[distsIndex]);
+					(distances[testSample.index][distsIndex].distValue - tempCentroids[distsIndex]) * 
+					(distances[testSample.index][distsIndex].distValue - tempCentroids[distsIndex]);
 				if (minCentroidDistance.distValue > tempCentroidsDistances[distsIndex]) {
-					minCentroidDistance = distances[testSampleIndex][distsIndex];
+					minCentroidDistance = distances[testSample.index][distsIndex];
 					minCentroidDistance.distValue = tempCentroidsDistances[distsIndex];
 				}
 			}
 
 		}
 
-		nndists[centroidIndex] = distances[testSampleIndex][minCentroidDistance.sampleIndex];
+		nndists[centroidIndex] = distances[testSample.index][minCentroidDistance.sampleIndex];
 
 		//distances[nndists[centroidIndex].sampleIndex].distValue = FLT_MAX;
 	}

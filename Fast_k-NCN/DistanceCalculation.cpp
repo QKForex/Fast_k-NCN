@@ -5,8 +5,8 @@ namespace Common {
 	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, int nrDims) {
 		int registersNumber = (nrDims >> 2) + 1;
 		//TODO needs refactoring
-		const __m128* pSrc1 = (__m128*) train.getSampleDims();
-		const __m128* pSrc2 = (__m128*) test.getSampleDims();
+		const __m128* pSrc1 = (__m128*) train.dims;
+		const __m128* pSrc2 = (__m128*) test.dims;
 		__m128 tmp;
 		union xmmregister
 		{
@@ -37,22 +37,19 @@ namespace Common {
 
 	//TODO maybe should be const and array should not changed anywhere else in the code
 	Distance* countDistances(const SampleSet& trainSet, const Sample& testSample) {
-		const int trainSetSize = trainSet.getNrSamples();
-		const int nrDims = trainSet.getNrDims();
-		Distance* distances = new Distance[trainSetSize];
+		Distance* distances = new Distance[trainSet.nrSamples];
 		Distance d;
 		int samIndex;
-		
 		//TODO introduce multithreading
 		//#pragma omp parallel for default(none) private(samIndex, d) shared(distances, trainSet, testSample) 
-		for (samIndex = 0; samIndex < trainSetSize; samIndex++) {
+		for (samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
 			d.sampleIndex = samIndex;
 #ifdef MANHATTAN_DIST
-			d.distValue = countManhattanDistance(trainSet[samIndex], testSample, nrDims);
+			d.distValue = countManhattanDistance(trainSet[samIndex], testSample, trainSet.nrDims);
 #elif EUCLIDEAN_DIST
-			d.distValue = countEuclideanDistance(trainSet[samIndex], testSample, nrDims);
+			d.distValue = countEuclideanDistance(trainSet[samIndex], testSample, trainSet.nrDims);
 #endif
-			d.sampleLabel = trainSet[samIndex].getLabel();
+			d.sampleLabel = trainSet[samIndex].label;
 			distances[samIndex] = d;
 		}
 		return distances;

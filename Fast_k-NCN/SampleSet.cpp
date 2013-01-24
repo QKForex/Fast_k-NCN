@@ -35,40 +35,11 @@ namespace Common {
 		samples = NULL;
 	}
 
-	void SampleSet::populateSamples(std::ifstream& infile, int s) {
-		//TODO Refactor populaton of SampleSet
-		infile >> nrClasses;
-		infile >> nrDims;
-		infile >> nrSamples;
+	//int SampleSet::getNrClasses() const { return nrClasses;	}
 
-		if (s != 0) {
-			nrSamples = s;
-		}
-		if (samples == NULL) {
-			samples = new Sample[nrSamples];
-		}
-		for (int samIndex = 0; samIndex < nrSamples; samIndex++) {
-			int label = 0;
-			infile >> label;
-			samples[samIndex].setIndex(samIndex);
-			samples[samIndex].setLabel(label);
-			samples[samIndex].setNrDims(nrDims);
-			samples[samIndex].populateSampleDimsFromFile(infile);
+	//int SampleSet::getNrDims() const { return nrDims; }
 
-			//TODO check this implementation
-			//Sample dataobj(label, nrDims);
-
-			//dataobj.populateDims(infile);
-
-			//samples[samIndex] = dataobj;
-		}
-	}
-
-	int SampleSet::getNrClasses() const { return nrClasses;	}
-
-	int SampleSet::getNrDims() const { return nrDims; }
-
-	int SampleSet::getNrSamples() const { return nrSamples;	}
+	//int SampleSet::getNrSamples() const { return nrSamples;	}
 
 	SampleSet& SampleSet::operator=(const SampleSet& rhs) {
 		if (this != &rhs) {
@@ -76,9 +47,9 @@ namespace Common {
 				delete[] samples;
 				samples = NULL;
 			}
-			nrClasses = rhs.getNrClasses();
-			nrDims = rhs.getNrDims();
-			nrSamples = rhs.getNrSamples();
+			nrClasses = rhs.nrClasses;
+			nrDims = rhs.nrDims;
+			nrSamples = rhs.nrSamples;
 			
 			Sample* newSamples = new Sample[nrSamples];
 			for (int samIndex = 0; samIndex < nrSamples; samIndex++) {
@@ -116,7 +87,7 @@ namespace Common {
 	const Sample& SampleSet::operator[](int i) const { return samples[i]; }
 
 	std::ostream& operator<<(std::ostream& out, const SampleSet& s) {
-		return out << s.getNrClasses() << " " << s.getNrDims() << " " << s.getNrSamples();
+		return out << s.nrClasses << " " << s.nrDims << " " << s.nrSamples;
 	}
 
 }

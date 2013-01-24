@@ -5,7 +5,9 @@ namespace Utility {
 	PerformanceAnalyzer::PerformanceAnalyzer()
 		: frequency(0), startTime(0), stopTime(0), totalTime(0), nrClassificationErrors(0) {}
 
-	PerformanceAnalyzer::~PerformanceAnalyzer() {}
+	PerformanceAnalyzer::~PerformanceAnalyzer() {
+		delete[] results; //TODO Bad practice should not be deleted here, if not created in this class
+	}
 
 	void PerformanceAnalyzer::startTimer() {
 		QueryPerformanceFrequency((LARGE_INTEGER*) &frequency);
@@ -19,22 +21,20 @@ namespace Utility {
 
 	unsigned long PerformanceAnalyzer::getTotalTime() const { return totalTime; }
 
-	int PerformanceAnalyzer::calculateError(int* const& result, const SampleSet& orig) {
-		const int origSize = orig.getNrSamples();
+	int PerformanceAnalyzer::calculateError(const SampleSet& orig) {
 		int nrError = 0;
 
 		// comments in this function - uncomment for more verbose logging purposes
 		//ofstream file("result.txt");
-		for (int origIndex = 0; origIndex < origSize; origIndex++) {
+		for (int origIndex = 0; origIndex < orig.nrSamples; origIndex++) {
 			//file << orig[origIndex].getLabel() << " " << result[origIndex];
-			if (orig[origIndex].getLabel() != result[origIndex])
-			{
+			if (orig[origIndex].label != results[origIndex]) {
 				nrClassificationErrors++;
 				//file << " error";
 			}
-			//file << "\n";
+			//file << std::endl;
 		}
-		//file << "Number of errors: " << nrError << endl;
+		//file << "Number of errors: " << nrError << std::endl;
 		return nrClassificationErrors;
 	}
 
