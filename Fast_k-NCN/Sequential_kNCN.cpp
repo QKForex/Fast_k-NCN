@@ -66,7 +66,6 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sampl
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
 		Sample currentCentroid(-1, -1, trainSet.nrDims);
 		for (int samIndex = 0; samIndex < trainSet.nrSamples - centroidIndex; samIndex++) {
-
 			for (int dimIndex = 0; dimIndex < trainSet.nrDims; dimIndex++) {
 				currentCentroid[dimIndex] =
 					(centroids[centroidIndex-1][dimIndex] * ((float)centroidIndex/(centroidIndex+1)))
@@ -74,7 +73,7 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sampl
 				//currentCentroid[dimIndex] =	centroids[centroidIndex-1][dimIndex] + trainSet[samIndex][dimIndex];
 			}
 			Distance currentNNdist(trainSet[samIndex].index, trainSet[samIndex].label,
-				countManhattanDistance(currentCentroid, trainSet[samIndex], trainSet.nrDims)); //TODO: hardcoded Manhattan
+				countManhattanDistance(currentCentroid, testSample, trainSet.nrDims)); //TODO: hardcoded Manhattan
 			if (currentNNdist.distValue < nndists[centroidIndex].distValue) {
 				currentCentroid.index = trainSet[samIndex].index; // do not need to do that
 				currentCentroid.label = trainSet[samIndex].label;
@@ -93,42 +92,3 @@ void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndexToMoveT
 	trainSet[samIndexToMoveToBack] = trainSet[samIndexToMoveFromBack];
 	trainSet[samIndexToMoveFromBack] = tempSample;
 }
-
-//for (int previousCentroidIndex = 0; previousCentroidIndex < centroidIndex; previousCentroidIndex++) {
-
-		//}
-			//sum += centroids[previousCentroidIndex];
-
-	//	for (int distsIndex = 0; distsIndex < nrTrainSamples; distsIndex++) {
-	//		iskNCN = false;
-	//		for (int i = 0; i < centroidIndex; i++) {
-	//			if (nndists[i].sampleIndex == distsIndex) {
-	//				iskNCN = true;
-	//				break;
-	//			}
-	//		}
-
-	//		if (!iskNCN) {			
-	//			tempCentroids[distsIndex] = (distances[testSample.index][distsIndex].distValue + sum)/centroidIndex;
-	//			tempCentroidsDistances[distsIndex] =
-	//				(distances[testSample.index][distsIndex].distValue - tempCentroids[distsIndex]) * 
-	//				(distances[testSample.index][distsIndex].distValue - tempCentroids[distsIndex]);
-	//			if (minCentroidDistance.distValue > tempCentroidsDistances[distsIndex]) {
-	//				minCentroidDistance = distances[testSample.index][distsIndex];
-	//				minCentroidDistance.distValue = tempCentroidsDistances[distsIndex];
-	//			}
-	//		}
-
-
-	//DistanceValue* tempCentroids = (DistanceValue*) malloc(nrTrainSamples * sizeof(DistanceValue));
-	//DistanceValue* tempCentroidsDistances = (DistanceValue*) malloc(nrTrainSamples * sizeof(DistanceValue));
-	//DistanceValue sum = 0;
-	//Distance minCentroidDistance = Distance(-1,-1,FLT_MAX);
-	//bool iskNCN = false;
-	//int sampleDims = 30; //TODO: hardcoded
-
-	//	}
-
-	//	nndists[centroidIndex] = distances[testSample.index][minCentroidDistance.sampleIndex];
-
-	//	//distances[nndists[centroidIndex].sampleIndex].distValue = FLT_MAX;
