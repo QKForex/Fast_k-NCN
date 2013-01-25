@@ -4,8 +4,15 @@
 #include "SampleSetFactory.h"
 #include "Logger.h"
 #include "OutputWriter.h"
-#include "Sequential_kNN.h"
 #include "PerformanceAnalyzer.h"
+
+#include "Sequential_kNN.h"
+#include "Sequential_kNCN.h"
+#include "Parallel_kNCN.h"
+#include "RandomizedSelect_kNCN.h"
+#include "LimitedV1_kNCN.h"
+#include "LimitedV2_kNCN.h"
+#include "CacheEfficient_kNCN.h"
 
 using namespace std;
 using namespace Common;
@@ -39,22 +46,36 @@ int main(int argc, char** argv)
 
 	ofstream logfile(ir.logFilename, fstream::app); //TODO Logger class
 
-	// -----------------------------------------------------------
+	Classifier* classifier;
 
-	//standarizeSamples(&trainSet, &testSet);
+	switch (ir.classifier) {
+	case KNN:
+		classifier = new Sequential_kNN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+	case SEQ_KNCN:
+		classifier = new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		//case PAR_KNCN:
+		//	return new Parallel_kNCN;
+		//case RAND_KNCN:
+		//	return new RandomizedSelect_kNCN;
+		//case LIMV1_KNCN:
+		//	return new LimitedV1_kNCN;
+		//case LIMV2_KNCN:
+		//	return new LimitedV1_kNCN;
+		//case CACHE_KNCN:
+		//	return new CacheEfficient_kNCN;
+	}
 
-	Sequential_kNN classifier(ir.k, trainSet.nrSamples, testSet.nrSamples); // hardcoded, should be option
 
 	PerformanceAnalyzer pa;
 	pa.startTimer();
-	classifier.preprocess(trainSet, testSet);
-	pa.results = classifier.classify(trainSet, testSet);
+	classifier->preprocess(trainSet, testSet);
+	pa.results = classifier->classify(trainSet, testSet);
 	pa.stopTimer();
 	pa.calculateError(testSet);
 
 	logfile.precision(LOGGER_PRECISION); //TODO Logger
 	logfile << pa.errorRate << "%\t" << pa.nrClassificationErrors << "\t" << pa.totalTime << "ms\t";
-	logfile << trainSet.nrSamples << "\t" << testSet.nrSamples << "\t"	<< classifier.k << "-NN\t";
+	logfile << trainSet.nrSamples << "\t" << testSet.nrSamples << "\t"	<< ir.k << "-NN\t";
 
 	time_t rawtime; // Logger, OutputWriter
 	struct tm * timeinfo;
