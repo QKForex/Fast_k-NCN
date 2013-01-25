@@ -26,7 +26,7 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 		}
 	} else {
 		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = assignLabel(findkNCN(trainSet, nrTrainSamples, testSet[samIndex]));
+			results[samIndex] = assignLabel(findkNCN((SampleSet&)trainSet, testSet[samIndex]));
 		}
 	}
 	return results;
@@ -51,21 +51,52 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 //
 //TODO: inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
 // 
-const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const int nrTrainSamples, const Sample& testSample) {
+//	trainSet needs to be changed, moving already used to the back of array, swap samples
+//
+const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sample& testSample) {
 	Distance* nndists = new Distance[k];
-	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
+	fill(nndists, nndists+k, Distance(-1, -1, FLT_MAX));
 
 	SampleSet centroids(trainSet.nrClasses, trainSet.nrDims, k);
 	
-	nndists[0] = find1NN(trainSet, nrTrainSamples, testSample);
+	nndists[0] = find1NN(trainSet, trainSet.nrSamples, testSample);
 	centroids[0] = trainSet[nndists[0].sampleIndex];
+	swapSamples(const_cast<SampleSet&> (trainSet), nndists[0].sampleIndex, trainSet.nrSamples - 1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
-	//	sum = 0;
-	//	//minCentroidDistance = Sample(-1, sampleDims, ;
-	//	for (int previousCentroidIndex = 0; previousCentroidIndex < centroidIndex; previousCentroidIndex++) {
-	//		//sum += centroids[previousCentroidIndex];
-	//	}
+		Sample currentCentroid(-1, -1, trainSet.nrDims);
+		for (int samIndex = 0; samIndex < trainSet.nrSamples - centroidIndex; samIndex++) {
+			currentCentroid.index = trainSet[samIndex].index; // do not need to do that
+			currentCentroid.label = trainSet[samIndex].label;
+			for (int dimIndex = 0; dimIndex < trainSet.nrDims; dimIndex++) {
+				currentCentroid[dimIndex] =
+					(centroids[centroidIndex-1][dimIndex] * (centroidIndex/(centroidIndex+1)))
+					+ (trainSet[samIndex][dimIndex] / (centroidIndex+1));
+			}
+			Distance currentNNdist(trainSet[samIndex].index, trainSet[samIndex].label,
+				countManhattanDistance(trainSet[samIndex], currentCentroid, trainSet.nrDims)); //TODO: hardcoded Manhattan
+			if (currentNNdist.distValue < nndists[centroidIndex].distValue) {
+				nndists[centroidIndex] = currentNNdist;
+				centroids[centroidIndex] = currentCentroid;
+			}
+		}
+		swapSamples(const_cast<SampleSet&> (trainSet), nndists[centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
+	}
+
+	return nndists;
+}
+
+void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
+	Sample tempSample(trainSet[samIndexToMoveToBack]);
+	trainSet[samIndexToMoveToBack] = trainSet[samIndexToMoveFromBack];
+	trainSet[samIndexToMoveFromBack] = tempSample;
+}
+
+//for (int previousCentroidIndex = 0; previousCentroidIndex < centroidIndex; previousCentroidIndex++) {
+
+		//}
+			//sum += centroids[previousCentroidIndex];
+
 	//	for (int distsIndex = 0; distsIndex < nrTrainSamples; distsIndex++) {
 	//		iskNCN = false;
 	//		for (int i = 0; i < centroidIndex; i++) {
@@ -86,17 +117,6 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const int n
 	//			}
 	//		}
 
-	//	}
-
-	//	nndists[centroidIndex] = distances[testSample.index][minCentroidDistance.sampleIndex];
-
-	//	//distances[nndists[centroidIndex].sampleIndex].distValue = FLT_MAX;
-	}
-
-
-	return nndists;
-}
-
 
 	//DistanceValue* tempCentroids = (DistanceValue*) malloc(nrTrainSamples * sizeof(DistanceValue));
 	//DistanceValue* tempCentroidsDistances = (DistanceValue*) malloc(nrTrainSamples * sizeof(DistanceValue));
@@ -104,3 +124,9 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const int n
 	//Distance minCentroidDistance = Distance(-1,-1,FLT_MAX);
 	//bool iskNCN = false;
 	//int sampleDims = 30; //TODO: hardcoded
+
+	//	}
+
+	//	nndists[centroidIndex] = distances[testSample.index][minCentroidDistance.sampleIndex];
+
+	//	//distances[nndists[centroidIndex].sampleIndex].distValue = FLT_MAX;
