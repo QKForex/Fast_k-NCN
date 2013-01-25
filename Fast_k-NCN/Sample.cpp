@@ -14,7 +14,7 @@ namespace Common {
 	}
 
 	Sample::Sample(const int i, const int l, const int n, const SampleDim* sampleDimsArray)
-		: index(index), label(label), nrDims(nrDims) {
+		: index(i), label(l), nrDims(n) {
 		dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 		copySampleDims(sampleDimsArray, nrDims, dims);
 	}
@@ -23,7 +23,7 @@ namespace Common {
 		freeSampleDimsMemory(dims, __FILE__, __LINE__);
 	}
 
-	Sample::Sample(const Sample& other) : label(other.label), nrDims(other.nrDims) {
+	Sample::Sample(const Sample& other) : index(other.index), label(other.label), nrDims(other.nrDims) {
 		dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 		copySampleDims(other.dims, other.nrDims, dims);
 	}
@@ -69,7 +69,7 @@ namespace Common {
 	}
 
 	bool Sample::operator==(const Sample& s) const {
-		if ((nrDims != s.nrDims) || (label != s.label)) {
+		if ((nrDims != s.nrDims) || (label != s.label)) { // can also compare on index
 			return false;
 		}
 		if (dims[0] == s.dims[0]) {
@@ -93,7 +93,7 @@ namespace Common {
 	const SampleDim& Sample::operator[](int i) const { return dims[i]; }
 
 	std::ostream& operator<<(std::ostream& out, const Sample& s) {
-		return out << s.dims << " " << s.label << " " << s.nrDims;
+		return out << s.dims << " " << s.index << " " << s.label << " " << s.nrDims;
 	}
 
 	void Sample::copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst) {

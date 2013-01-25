@@ -4,8 +4,8 @@
 
 #include "InputReader.h"
 #include "SampleSetFactory.h"
-#include "Logger.h"
-#include "OutputWriter.h"
+//#include "Logger.h"
+//#include "OutputWriter.h"
 #include "PerformanceAnalyzer.h"
 
 #include "Sequential_kNN.h"
@@ -49,18 +49,27 @@ int main(int argc, char** argv)
 	switch (ir.classifier) {
 	case KNN:
 		classifier = new Sequential_kNN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		break;
 	case SEQ_KNCN:
 		classifier = new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		break;
 	case PAR_KNCN:
 		classifier = new Parallel_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		break;
 	case RAND_KNCN:
 		classifier = new RandomizedSelect_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		break;
 	case LIMV1_KNCN:
 		classifier = new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		break;
 	case LIMV2_KNCN:
 		classifier = new LimitedV2_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		break;
 	case CACHE_KNCN:
 		classifier = new CacheEfficient_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		break;
+	default:
+		exit(-1);
 	}
 
 	PerformanceAnalyzer pa;
