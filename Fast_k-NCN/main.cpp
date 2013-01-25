@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+#include <ctime>
 
 #include "InputReader.h"
 #include "SampleSetFactory.h"
@@ -68,20 +70,20 @@ int main(int argc, char** argv)
 	pa.stopTimer();
 	pa.calculateError(testSet);
 
-	logfile.precision(LOGGER_PRECISION); //TODO: Logger
+	logfile.precision(LOGGER_PRECISION);
 	logfile << pa.errorRate << "%\t" << pa.nrClassificationErrors << "\t" << pa.totalTime << "ms\t";
-	logfile << trainSet.nrSamples << "\t" << testSet.nrSamples << "\t"	<< ir.k << "\t" << ir.classifierName;
+	logfile << trainSet.nrSamples << "\t" << testSet.nrSamples << "\t";
+	logfile	<< ir.k << "\t" << ir.classifierName << "\t";
 
-	time_t rawtime; // Logger, OutputWriter
-	struct tm * timeinfo;
-	time(&rawtime);
-	timeinfo = localtime(&rawtime);
-	logfile << asctime(timeinfo);
+	std::chrono::time_point<std::chrono::system_clock> current_time = std::chrono::system_clock::now();
+	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
+	logfile << std::ctime(&current_time_c) << std::endl;
 
-	cout.precision(LOGGER_PRECISION);
+	std::cout.precision(LOGGER_PRECISION);
 	std::cout << "Error rate: " << pa.errorRate << "%" << std::endl;
 	std::cout << "Classification error: " << pa.nrClassificationErrors << "/" << testSet.nrSamples << std::endl;
 	std::cout << "Total time: " << pa.totalTime << " ms" << std::endl;
+	std::cout << std::ctime(&current_time_c) << std::endl;
 
 	return 0;
 }
