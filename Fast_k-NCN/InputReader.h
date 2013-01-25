@@ -14,9 +14,9 @@ namespace Utility {
 		std::string trainFilename;
 		std::string testFilename;
 		std::string logFilename;
+		std::string classifierName;
 		ClassifierType classifier;
 		int k;
-
 		int nrLoadTrainSamples;
 		int nrLoadTestSamples;
 

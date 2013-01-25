@@ -1,7 +1,7 @@
 #include "SampleSetFactory.h"
 
 namespace Common {
-	//TODO: catch exceptions
+	//TODO: catch exceptions: bad_alloc on new
 	//TODO: should not use assignment operator, redundant copying
 	// int nrLoadSamples = 0 default: all samples
 	SampleSet SampleSetFactory::createSampleSet(std::string inputFilename, int nrLoadSamples) {

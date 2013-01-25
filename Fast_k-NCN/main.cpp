@@ -22,21 +22,21 @@ int main(int argc, char** argv)
 {
 	InputReader ir;				
 	if (!ir.readProperties(argv[1])) {
-		std::cout << "Reading properties unsuccesful." << std::endl;
+		std::cerr << "Reading properties unsuccesful." << std::endl;
 		exit(-1);
 	}
-	std::cout << "Reading properties succesful." << std::endl;
+	std::cout << "Reading properties for " << ir.classifierName << " from " << ir.propertiesFilename << " succesful." << std::endl;
 
 	SampleSetFactory ssf;
 	SampleSet trainSet = ssf.createSampleSet(ir.trainFilename, ir.nrLoadTrainSamples);
 	if (&trainSet == NULL) {
-		std::cout << "Reading training samples unsuccesful." << std::endl;
+		std::cerr << "Reading training samples unsuccesful." << std::endl;
 		exit(-1);
 	}
 	std::cout << "Reading " << trainSet.nrSamples << " training samples succesful." << std::endl;
 	SampleSet testSet = ssf.createSampleSet(ir.testFilename, ir.nrLoadTestSamples);
 	if (&testSet == NULL) {
-		std::cout << "Reading test samples unsuccesful." << std::endl;
+		std::cerr << "Reading test samples unsuccesful." << std::endl;
 		exit(-1);
 	}
 	std::cout << "Reading " << testSet.nrSamples << " test samples succesful." << std::endl;
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 
 	logfile.precision(LOGGER_PRECISION); //TODO: Logger
 	logfile << pa.errorRate << "%\t" << pa.nrClassificationErrors << "\t" << pa.totalTime << "ms\t";
-	logfile << trainSet.nrSamples << "\t" << testSet.nrSamples << "\t"	<< ir.k << "-NN\t";
+	logfile << trainSet.nrSamples << "\t" << testSet.nrSamples << "\t"	<< ir.k << "\t" << ir.classifierName;
 
 	time_t rawtime; // Logger, OutputWriter
 	struct tm * timeinfo;
@@ -79,8 +79,9 @@ int main(int argc, char** argv)
 	logfile << asctime(timeinfo);
 
 	cout.precision(LOGGER_PRECISION);
-	cout << pa.errorRate << "% " << pa.nrClassificationErrors << " " << pa.totalTime << " ms " << "\n";
-	cout << endl;
+	std::cout << "Error rate: " << pa.errorRate << "%" << std::endl;
+	std::cout << "Classification error: " << pa.nrClassificationErrors << "/" << testSet.nrSamples << std::endl;
+	std::cout << "Total time: " << pa.totalTime << " ms" << std::endl;
 
 	return 0;
 }

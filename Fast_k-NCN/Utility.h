@@ -43,29 +43,16 @@ namespace Utility {
 	EnumParser<ClassifierType>::EnumParser()
 	{
 		enumMap["kNN"] = KNN;
-		enumMap["Seq_kNCN"] = SEQ_KNCN;
-		enumMap["Par_kNCN"] = PAR_KNCN;
-		enumMap["Rand_kNCN"] = RAND_KNCN;
-		enumMap["LimV1_kNCN"] = LIMV1_KNCN;
-		enumMap["LimV2_kNCN"] = LIMV2_KNCN;
-		enumMap["Cache_kNCN"] = CACHE_KNCN;
+		enumMap["Sequential_kNCN"] = SEQ_KNCN;
+		enumMap["Parallel_kNCN"] = PAR_KNCN;
+		enumMap["RandomizedSelect_kNCN"] = RAND_KNCN;
+		enumMap["LimitedV1_kNCN"] = LIMV1_KNCN;
+		enumMap["LimitedV2_kNCN"] = LIMV2_KNCN;
+		enumMap["CacheEfficient_kNCN"] = CACHE_KNCN;
 	}
 
-	//struct SampleData {
-	//	int label;
-	//	SampleDim sampleDims;
-	//};
-
-	//struct SampleSetData {
-	//	int nrLabels;
-	//	int nrDims;
-	//	int nrSamples;
-
-	//	SampleData samples;
-	//};
-
-	//void crossValidateSamples(SampleSet* train, SampleSet* test);
+	//void crossValidateSamples(SampleSet* train, SampleSet* test); //TODO: implement
 	
-	//void standardizeSamples(SampleSet* train, SampleSet* test);
+	//void standardizeSamples(SampleSet* train, SampleSet* test); //TODO: fix
 
 }
