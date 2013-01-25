@@ -55,7 +55,11 @@ int* Sequential_kNN::classify(const SampleSet& trainSet, const SampleSet& testSe
 const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const int nrTrainSamples,
 		const Sample& testSample) {	
 	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
-	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
+	if (nndists != NULL) {
+		fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
+	} else {
+		throw bad_alloc();
+	}
 
 	for (int distsIndex = 0; distsIndex < nrTrainSamples; distsIndex++) {
 		if (distances[testSample.index][distsIndex].distValue < nndists[k - 1].distValue) {
