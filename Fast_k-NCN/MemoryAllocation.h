@@ -26,14 +26,14 @@ namespace Utility {
 
 	static const __m128 abs4mask = _mm_load1_ps(&absmask.f);
 
-	//TODO int (4-bytes) and double (8-bytes) SSE data vector (?)
+	//TODO: int (4-bytes) and double (8-bytes) SSE data vector (?)
 
-	//TODO AVX 
+	//TODO: AVX 
 
-	//TODO remove remainder_table
+	//TODO: remove remainder_table
 	// try using alignas/alignof
 
-	//TODO do it!
+	//TODO: do it!
 	const static int REMAINDER_TABLE[] = { 0, 3, 2, 1 };
 
 	SampleDim* allocateSampleDimsMemory(int nrDims, char* file, unsigned int line);

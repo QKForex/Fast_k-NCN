@@ -8,7 +8,7 @@
 
 namespace Utility {
 
-	class InputReader { //TODO singleton
+	class InputReader { //TODO: singleton
 	public:
 		std::string propertiesFilename;
 		std::string trainFilename;

@@ -10,8 +10,8 @@
 using namespace Utility;
 
 namespace Common {
-	//TODO Remove getters and setters in final version, no need for such encapsulation
-	//TODO Make variables public, classes should be only containers
+	//TODO: Remove getters and setters in final version, no need for such encapsulation
+	//TODO: Make variables public, classes should be only containers
 	class Sample {
 	public:
 		SampleDim* dims;

@@ -51,7 +51,7 @@ int* Sequential_kNN::classify(const SampleSet& trainSet, const SampleSet& testSe
 //	move NNs to make place for current new NN
 //	this should happen just once
 //
-//TODO extend interface by train and test samples
+//TODO: extend interface by train and test samples
 const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const int nrTrainSamples,
 		const Sample& testSample) {	
 	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));

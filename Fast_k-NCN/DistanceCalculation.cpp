@@ -4,7 +4,7 @@ namespace Common {
 
 	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, int nrDims) {
 		int registersNumber = (nrDims >> 2) + 1;
-		//TODO needs refactoring
+		//TODO: needs refactoring
 		const __m128* pSrc1 = (__m128*) train.dims;
 		const __m128* pSrc2 = (__m128*) test.dims;
 		__m128 tmp;
@@ -35,12 +35,12 @@ namespace Common {
 		return result; // dropped sqrt for performance reasons (real distance not required)
 	}
 
-	//TODO maybe should be const and array should not changed anywhere else in the code
+	//TODO: maybe should be const and array should not changed anywhere else in the code
 	Distance* countDistances(const SampleSet& trainSet, const Sample& testSample) {
 		Distance* distances = new Distance[trainSet.nrSamples];
 		Distance d;
 		int samIndex;
-		//TODO introduce multithreading
+		//TODO: introduce multithreading
 		//#pragma omp parallel for default(none) private(samIndex, d) shared(distances, trainSet, testSample) 
 		for (samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
 			d.sampleIndex = samIndex;

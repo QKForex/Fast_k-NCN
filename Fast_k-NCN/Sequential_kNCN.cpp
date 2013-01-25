@@ -49,7 +49,7 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 //	distances[nndists[0].sampleIndex].distValue = FLT_MAX;
 //	check if given sample is not kNCN already
 //
-//TODO inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
+//TODO: inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
 // 
 const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const int nrTrainSamples, const Sample& testSample) {
 	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
@@ -65,7 +65,7 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const int n
 	DistanceValue sum = 0;
 	Distance minCentroidDistance = Distance(-1,-1,FLT_MAX);
 	bool iskNCN = false;
-	int sampleDims = 30; //TODO hardcoded
+	int sampleDims = 30; //TODO: hardcoded
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
 		sum = 0;
 		//minCentroidDistance = Sample(-1, sampleDims, ;

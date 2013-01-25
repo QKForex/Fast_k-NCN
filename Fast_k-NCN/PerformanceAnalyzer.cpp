@@ -6,7 +6,7 @@ namespace Utility {
 		: frequency(0), startTime(0), stopTime(0), totalTime(0), nrClassificationErrors(0) {}
 
 	PerformanceAnalyzer::~PerformanceAnalyzer() {
-		delete[] results; //TODO Bad practice should not be deleted here, if not created in this class
+		delete[] results; //TODO: Bad practice should not be deleted here, if not created in this class
 	}
 
 	void PerformanceAnalyzer::startTimer() {

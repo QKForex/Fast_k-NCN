@@ -2,7 +2,7 @@
 
 namespace Common {
 
-	//TODO Add Comments
+	//TODO: Add Comments
 	
 	Sample::Sample() : index(-1), label(0), nrDims(0) {
 		dims = NULL;
@@ -29,7 +29,7 @@ namespace Common {
 	}
 
 	//SampleDim* Sample::getSampleDims() const {
-	//	//TODO should getter return shallow copy or deep copy?
+	//	//TODO: should getter return shallow copy or deep copy?
 	//	
 	//	//float* result = new float[nrDims];
 	//	//

@@ -1,8 +1,8 @@
 #include "SampleSetFactory.h"
 
 namespace Common {
-	//TODO catch exceptions
-	//TODO should not use assignment operator, redundant copying
+	//TODO: catch exceptions
+	//TODO: should not use assignment operator, redundant copying
 	// int nrLoadSamples = 0 default: all samples
 	SampleSet SampleSetFactory::createSampleSet(std::string inputFilename, int nrLoadSamples) {
 		std::ifstream inputFile;

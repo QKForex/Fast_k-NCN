@@ -18,7 +18,7 @@ Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSa
 const Distance Classifier::find1NN(const SampleSet& trainSet, const int nrTrainSamples,
 	const Sample& testSample) {							   
 	Distance nearestNeighbourDist = distances[testSample.index][0];
-	//TODO to parallelize somehow, e.g. compare in 4 threads,
+	//TODO: to parallelize somehow, e.g. compare in 4 threads,
 	// and then compare 4 results in the end
 	for (int distsIndex = 1; distsIndex < nrTrainSamples; distsIndex++) {
 		if (distances[testSample.index][distsIndex].distValue < nearestNeighbourDist.distValue) {
