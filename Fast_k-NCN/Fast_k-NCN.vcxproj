@@ -110,7 +110,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <IncludePath>C:\Program Files\boost\boost_1_52_0;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -177,7 +177,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <EnablePREfast>true</EnablePREfast>
+      <EnablePREfast>false</EnablePREfast>
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

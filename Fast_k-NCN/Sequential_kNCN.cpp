@@ -66,16 +66,18 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sampl
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
 		Sample currentCentroid(-1, -1, trainSet.nrDims);
 		for (int samIndex = 0; samIndex < trainSet.nrSamples - centroidIndex; samIndex++) {
-			currentCentroid.index = trainSet[samIndex].index; // do not need to do that
-			currentCentroid.label = trainSet[samIndex].label;
+
 			for (int dimIndex = 0; dimIndex < trainSet.nrDims; dimIndex++) {
 				currentCentroid[dimIndex] =
-					(centroids[centroidIndex-1][dimIndex] * (centroidIndex/(centroidIndex+1)))
+					(centroids[centroidIndex-1][dimIndex] * ((float)centroidIndex/(centroidIndex+1)))
 					+ (trainSet[samIndex][dimIndex] / (centroidIndex+1));
+				//currentCentroid[dimIndex] =	centroids[centroidIndex-1][dimIndex] + trainSet[samIndex][dimIndex];
 			}
 			Distance currentNNdist(trainSet[samIndex].index, trainSet[samIndex].label,
-				countManhattanDistance(trainSet[samIndex], currentCentroid, trainSet.nrDims)); //TODO: hardcoded Manhattan
+				countManhattanDistance(currentCentroid, trainSet[samIndex], trainSet.nrDims)); //TODO: hardcoded Manhattan
 			if (currentNNdist.distValue < nndists[centroidIndex].distValue) {
+				currentCentroid.index = trainSet[samIndex].index; // do not need to do that
+				currentCentroid.label = trainSet[samIndex].label;
 				nndists[centroidIndex] = currentNNdist;
 				centroids[centroidIndex] = currentCentroid;
 			}

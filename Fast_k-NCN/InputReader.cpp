@@ -54,10 +54,16 @@ namespace Utility {
 			return false;
 		}
 		testFile.close();
-		// Number of test samples
+		// Number of test samples to read
 		propertiesFile >> nrLoadTestSamples;
 		if (nrLoadTestSamples < 0) {
-			std::cerr << "Number of test samples to load must be larger than 0. (Default: 0 == all)" << std::endl;
+			std::cerr << "Number of test samples to read must be larger than 0. (Default: 0 == all)" << std::endl;
+			return false;
+		}
+		// Number of dimensions to read
+		propertiesFile >> nrLoadSampleDims;
+		if (nrLoadSampleDims < 0) {
+			std::cerr << "Number of test sample dims to read must be larger than 0. (Default: 0 == all)" << std::endl;
 			return false;
 		}
 		// Log filename

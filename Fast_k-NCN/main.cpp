@@ -20,28 +20,29 @@ using namespace std;
 using namespace Common;
 using namespace Utility;
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 	InputReader ir;				
 	if (!ir.readProperties(argv[1])) {
 		std::cerr << "Reading properties unsuccesful." << std::endl;
 		exit(-1);
 	}
-	std::cout << "Reading properties for " << ir.classifierName << " from " << ir.propertiesFilename << " succesful." << std::endl;
+	std::cout << "Reading properties from " << ir.propertiesFilename << " succesful." << std::endl;
 
 	SampleSetFactory ssf;
-	SampleSet trainSet = ssf.createSampleSet(ir.trainFilename, ir.nrLoadTrainSamples);
+	SampleSet trainSet = ssf.createSampleSet(ir.trainFilename, ir.nrLoadTrainSamples, ir.nrLoadSampleDims);
 	if (&trainSet == NULL) {
 		std::cerr << "Reading training samples unsuccesful." << std::endl;
 		exit(-1);
 	}
-	std::cout << "Reading " << trainSet.nrSamples << " training samples succesful." << std::endl;
-	SampleSet testSet = ssf.createSampleSet(ir.testFilename, ir.nrLoadTestSamples);
+	std::cout << "Reading " << trainSet.nrSamples << " training samples with "
+		<< trainSet.nrDims << " dimensions each succesful." << std::endl;
+	SampleSet testSet = ssf.createSampleSet(ir.testFilename, ir.nrLoadTestSamples, ir.nrLoadSampleDims);
 	if (&testSet == NULL) {
 		std::cerr << "Reading test samples unsuccesful." << std::endl;
 		exit(-1);
 	}
-	std::cout << "Reading " << testSet.nrSamples << " test samples succesful." << std::endl;
+	std::cout << "Reading " << testSet.nrSamples << " test samples with "
+		<< testSet.nrDims << " dimensions each succesful." << std::endl;
 
 	ofstream logfile(ir.logFilename, fstream::app); //TODO: Logger class
 
@@ -86,9 +87,11 @@ int main(int argc, char** argv)
 
 	std::chrono::time_point<std::chrono::system_clock> current_time = std::chrono::system_clock::now();
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
-	logfile << std::ctime(&current_time_c) << std::endl;
+	logfile << std::ctime(&current_time_c);
 
 	std::cout.precision(LOGGER_PRECISION);
+	std::cout << std::endl;
+	std::cout << "Classifier: " << ir.k << " " << ir.classifierName << std::endl;
 	std::cout << "Error rate: " << pa.errorRate << "%" << std::endl;
 	std::cout << "Classification error: " << pa.nrClassificationErrors << "/" << testSet.nrSamples << std::endl;
 	std::cout << "Total time: " << pa.totalTime << " ms" << std::endl;

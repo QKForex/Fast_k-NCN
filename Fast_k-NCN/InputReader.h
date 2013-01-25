@@ -19,6 +19,7 @@ namespace Utility {
 		int k;
 		int nrLoadTrainSamples;
 		int nrLoadTestSamples;
+		int nrLoadSampleDims;
 
 		InputReader();
 		~InputReader();
