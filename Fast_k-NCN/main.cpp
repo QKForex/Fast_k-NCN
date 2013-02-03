@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
+#include <memory>
 
 #include "InputReader.h"
 #include "SampleSetFactory.h"
@@ -46,28 +47,28 @@ int main(int argc, char** argv) {
 
 	ofstream logfile(ir.logFilename, fstream::app); //TODO: Logger class
 
-	Classifier* classifier = NULL;
+	std::unique_ptr<Classifier> classifier;
 	switch (ir.classifier) {
 	case KNN:
-		classifier = new Sequential_kNN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		classifier = std::unique_ptr<Sequential_kNN>(new Sequential_kNN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case SEQ_KNCN:
-		classifier = new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		classifier = std::unique_ptr<Sequential_kNCN>(new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case PAR_KNCN:
-		classifier = new Parallel_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		classifier = std::unique_ptr<Parallel_kNCN>(new Parallel_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case RAND_KNCN:
-		classifier = new RandomizedSelect_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		classifier = std::unique_ptr<RandomizedSelect_kNCN>(new RandomizedSelect_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case LIMV1_KNCN:
-		classifier = new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		classifier = std::unique_ptr<LimitedV1_kNCN>(new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case LIMV2_KNCN:
-		classifier = new LimitedV2_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		classifier = std::unique_ptr<LimitedV2_kNCN>(new LimitedV2_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case CACHE_KNCN:
-		classifier = new CacheEfficient_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples);
+		classifier = std::unique_ptr<CacheEfficient_kNCN>(new CacheEfficient_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	default:
 		exit(-1);

@@ -87,7 +87,7 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sampl
 	return nndists;
 }
 
-void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
+inline void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
 	Sample tempSample(trainSet[samIndexToMoveToBack]);
 	trainSet[samIndexToMoveToBack] = trainSet[samIndexToMoveFromBack];
 	trainSet[samIndexToMoveFromBack] = tempSample;

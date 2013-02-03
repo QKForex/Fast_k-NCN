@@ -60,5 +60,6 @@ _ReSharper*/
 
 #Visual Studio Performance Sessions
 *.psess
+*.vsp
 
 #Project Resources
