@@ -25,8 +25,12 @@ namespace Common {
 			set.samples = new Sample[set.nrSamples];
 		}
 		for (int samIndex = 0; samIndex < set.nrSamples; samIndex++) {
-			set.samples[samIndex] = createSample(inputFile, samIndex, set.nrDims, nrOriginalDims); 
+			set[samIndex] = createSample(inputFile, samIndex, set.nrDims, nrOriginalDims); 
 		}
+
+		//for (Sample sam : set) {
+		//	sam = createSample(inputFile, samIndex, set.nrDims, nrOriginalDims); 
+		//}
 
 		inputFile.close();
 		return set;
