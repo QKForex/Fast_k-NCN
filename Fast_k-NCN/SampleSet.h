@@ -26,6 +26,14 @@ namespace Common {
 		Sample& operator[] (int i);
 		const Sample& operator[](int i) const;
 
+		// for range-based for loop
+		//inline Sample begin() const { return samples[0]; }
+		//inline Sample end() const { return samples[nrDims-1]; }
+		//const Sample& operator++();
+
 		friend std::ostream& operator<<(std::ostream& out, const SampleSet& s);
+		//friend Sample operator*() const;
 	};
 }
+
+

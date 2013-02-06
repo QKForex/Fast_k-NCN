@@ -9,7 +9,7 @@ namespace Common {
 
 	SampleSet::SampleSet(int c, int d, int s)
 		: nrClasses(c), nrDims(d), nrSamples(s)	{
-		samples = new Sample[s];
+		samples = new Sample[s]; // heap allocation
 
 #ifdef LOGGING
 		cerr << "Allocated " << s * sizeof(Sample) << " byte(s) at address " << samples
@@ -86,8 +86,16 @@ namespace Common {
 
 	const Sample& SampleSet::operator[](int i) const { return samples[i]; }
 
+	//const Sample& SampleSet::operator++() {
+
+	//}
+
 	std::ostream& operator<<(std::ostream& out, const SampleSet& s) {
 		return out << s.nrClasses << " " << s.nrDims << " " << s.nrSamples;
 	}
+
+	//Sample operator*() const {
+	//	return 
+	//}
 
 }

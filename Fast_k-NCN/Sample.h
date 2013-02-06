@@ -44,6 +44,10 @@ namespace Common {
 
 		friend std::ostream& operator<<(std::ostream& out, const Sample& s);
 
+		// for range-based for loop
+		//inline SampleDim begin() const { return dims[0]; }
+		//inline SampleDim end() const { return dims[nrDims-1]; }
+
 	private:
 		void copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst);
 
