@@ -111,31 +111,34 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <IncludePath>C:\Program Files\boost\boost_1_52_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Program Files\boost\boost_1_52_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Program Files\boost\boost_1_52_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Program Files\boost\boost_1_52_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x64_debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <BrowseInformation>true</BrowseInformation>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib32\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib32\;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>apr.lib;aprutil.lib;log4cxx.lib;xml.lib;ws2_32.lib;mswsock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -146,11 +149,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <BrowseInformation>true</BrowseInformation>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib64\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib64\;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x64_debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>apr.lib;aprutil.lib;log4cxx.lib;xml.lib;ws2_32.lib;mswsock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -162,14 +167,16 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib32\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib32\;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_release\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>apr.lib;aprutil.lib;log4cxx.lib;xml.lib;ws2_32.lib;mswsock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -179,16 +186,18 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnablePREfast>false</EnablePREfast>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalOptions>/arch:AVX %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib64\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib64\;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x64_release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>apr.lib;aprutil.lib;log4cxx.lib;xml.lib;ws2_32.lib;mswsock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

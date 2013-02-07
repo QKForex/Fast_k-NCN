@@ -3,7 +3,13 @@
 #include <ctime>
 #include <memory>
 
-#include "boost/format.hpp"
+#include <windows.h>
+
+#include <boost/format.hpp>
+#include <boost/program_options.hpp>
+
+#include <log4cxx\logger.h>
+#include <log4cxx\xml\domconfigurator.h>
 
 #include "InputReader.h"
 #include "SampleSetFactory.h"
@@ -19,15 +25,46 @@
 #include "LimitedV2_kNCN.h"
 #include "CacheEfficient_kNCN.h"
 
+namespace po = boost::program_options;
+
+using namespace log4cxx;
+using namespace log4cxx::xml;
+using namespace log4cxx::helpers;
+
 using namespace Common;
 using namespace Utility;
 
+LoggerPtr loggerToFile(Logger::getLogger("MyLogger"));
+
 int main(int argc, char** argv) {
+
+    //DOMConfigurator::configure("config.xml");
+
+    //LOG4CXX_DEBUG(loggerToFile, "this is a debug message.");
+    //LOG4CXX_INFO (loggerToFile, "this is a info message, just ignore.");
+    //LOG4CXX_WARN (loggerToFile, "this is a warn message, dont worry too much.");
+    //LOG4CXX_ERROR(loggerToFile, "this is a error message, something serious is happening.");
+    //LOG4CXX_FATAL(loggerToFile, "this is a fatal message, crash and burn!!!");
+
+    //loggerToFile->closeNestedAppenders();
+	
 	InputReader ir;				
-	if (!ir.readProperties(argv[1])) {
-		std::cerr << "Reading properties unsuccesful." << std::endl;
-		exit(-1);
-	}
+	//if (argc == 0) {
+
+	//}
+	//if (argc == 1) {
+	//	if (!ir.validateProperties(argv[1])) {
+	//		std::cerr << "Reading properties unsuccesful." << std::endl;
+	//		exit(-1);
+	//	} else {
+	//		ir.readProperties(argv[1]);
+	//	}
+	//} else {
+
+	//}
+
+	ir.readProperties(argv[1]);
+
 	std::cout << boost::format("Reading properties from %1% succesful.") % ir.propertiesFilename << std::endl;
 
 	SampleSetFactory ssf;
@@ -82,21 +119,21 @@ int main(int argc, char** argv) {
 	pa.stopTimer();
 	pa.calculateError(testSet);
 
-	//TODO: introduce library
-	logfile.precision(LOGGER_PRECISION);
-	logfile << pa.errorRate << "%\t" << pa.nrClassificationErrors << "\t" << pa.totalTime << "ms\t";
-	logfile << trainSet.nrSamples << "\t" << testSet.nrSamples << "\t";
-	logfile	<< ir.k << "\t" << ir.classifierName << "\t";
 	std::chrono::time_point<std::chrono::system_clock> current_time = std::chrono::system_clock::now();
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
-	logfile << std::ctime(&current_time_c);
+	logfile << boost::format("%.2f%% %7t %d %15t %6dms %25t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 
+		% pa.errorRate % pa.nrClassificationErrors % pa.totalTime 
+		% ir.k % ir.classifierName
+		% ir.trainFilename % trainSet.nrSamples 
+		% ir.testFilename % testSet.nrSamples 
+		 << std::ctime(&current_time_c);
 	
 	std::cout << std::endl;
-	std::cout << boost::format("Classifier: k=%d %s")  % ir.k % ir.classifierName << std::endl;
-	std::cout << boost::format("Error rate: %.2f%%") % pa.errorRate << std::endl;
-	std::cout << boost::format("Classification error: %d/%d") % pa.nrClassificationErrors % testSet.nrSamples << std::endl;
-	std::cout << boost::format("Total time: %d ms") % pa.totalTime << std::endl;
-	std::cout << std::ctime(&current_time_c) << std::endl;
+	std::cout << boost::format("Classifier:%25tk=%d, %s")  % ir.k % ir.classifierName << std::endl;
+	std::cout << boost::format("Error rate:%25t%.2f%%") % pa.errorRate << std::endl;
+	std::cout << boost::format("Classification error:%25t%d/%d") % pa.nrClassificationErrors % testSet.nrSamples << std::endl;
+	std::cout << boost::format("Total time:%25t%d ms") % pa.totalTime << std::endl;
+	std::cout << std::ctime(&current_time_c);
 
 	return 0;
 }

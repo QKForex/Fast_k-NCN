@@ -31,3 +31,5 @@
 10.48%	472	247ms	1400	4503	11	kNN	Sat Jan 26 11:23:29 2013
 10.46%	471	253ms	1400	4503	13	kNN	Sat Jan 26 11:23:43 2013
 10.7%	482	246ms	1400	4503	15	kNN	Sat Jan 26 11:23:55 2013
+10.13%  456       1174ms  5  kNN                   Datasets\ftrain01.txt        1400  Datasets\ftest01.txt         4503      Thu Feb 07 17:56:47 2013
+10.13%  456       1274ms  5  kNN                   Datasets\ftrain01.txt        1400  Datasets\ftest01.txt         4503      Thu Feb 07 18:07:57 2013

@@ -6,14 +6,20 @@ namespace Utility {
 
 	InputReader::~InputReader() {}
 
-	bool InputReader::readProperties(char* propertiesFilename) {
-		// GENERAL properties
-		// Properties File
+	bool InputReader::validateProperties(char* propertiesFilename) {
 		std::ifstream propertiesFile(propertiesFilename);
 		if (!propertiesFile.is_open()) {
 			std::cerr << "File with properties does not exist." << std::endl;
 			return false;
-		}
+		} 
+		return true;
+	}
+
+	bool InputReader::readProperties(char* propertiesFilename) {
+		// GENERAL properties
+		// Properties File
+		std::ifstream propertiesFile(propertiesFilename);
+
 		this->propertiesFilename = propertiesFilename;
 		// Classifier Type
 		propertiesFile >> classifierName;

@@ -24,6 +24,7 @@ namespace Utility {
 		InputReader();
 		~InputReader();
 
+		bool validateProperties(char* propertiesFilename);
 		bool readProperties(char* propertiesFilename);
 	};
 
