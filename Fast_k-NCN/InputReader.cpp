@@ -6,77 +6,195 @@ namespace Utility {
 
 	InputReader::~InputReader() {}
 
-	bool InputReader::validateProperties(char* propertiesFilename) {
-		std::ifstream propertiesFile(propertiesFilename);
-		if (!propertiesFile.is_open()) {
-			std::cerr << "File with properties does not exist." << std::endl;
-			return false;
-		} 
-		return true;
-	}
-
-	bool InputReader::readProperties(char* propertiesFilename) {
-		// GENERAL properties
-		// Properties File
-		std::ifstream propertiesFile(propertiesFilename);
-
-		this->propertiesFilename = propertiesFilename;
-		// Classifier Type
-		propertiesFile >> classifierName;
-		EnumParser<ClassifierType> parser;
+	bool InputReader::readInput(int argc, char** argv) {
 		try {
+			po::options_description generic("Generic options");
+			generic.add_options()
+				("help", "produce help message")
+				("properties-file,p", po::value<std::string>(&propertiesFilename)->implicit_value(""),
+				"provide filepath to file with properties")
+				("cross-validate,C", po::value<std::string>()->implicit_value(""),	"10-fold cross-validate provided dataset")
+				("standardize,S", po::value<std::string>()->multitoken(),
+				"standardize data in provided dataset")
+				;
+
+			po::options_description config("Configuration options");
+			config.add_options()
+				("result-file,r", po::value<std::string>(&resultFilename)->implicit_value("Results/results_knn.txt"),
+				"provide filepath to file where results should be stored")
+				("training-file,t", po::value<std::string>(&trainFilename)->implicit_value("Datasets/ftrain01.txt"),
+				"provide filepath to file with training samples data")
+				("testing-file,T", po::value<std::string>(&testFilename)->implicit_value("Datasets/ftest01.txt"),
+				"provide filepath to file with testing samples data")
+				("classifier,c", po::value<std::string>(&classifierName)->implicit_value("Sequential_kNN"),
+				"provide name of classifier to use")
+				("number-nn,k", po::value<int>(&k)->default_value(1),
+				"provide number of neares (centroid) neighbours")
+				("nr-load-train-samples", po::value<int>(&nrLoadTrainSamples)->implicit_value(0),
+				"provide number of training samples to load, default (0) - all")
+				("nr-load-test-samples", po::value<int>(&nrLoadTestSamples)->implicit_value(0),
+				"provide number of testing samples to load, default (0) - all")
+				("nr-load-sample-dims", po::value<int>(&nrLoadSampleDims)->implicit_value(0),
+				"provide number of dimensions for each sample to load, default (0) - all")
+				;
+
+			po::options_description cmdline_options;
+			cmdline_options.add(generic).add(config);
+
+			po::options_description config_file_options;
+			config_file_options.add(config);
+
+			po::options_description visible("Allowed options");
+			visible.add(generic).add(config);
+
+			po::positional_options_description p;
+			p.add("properties-file", -1);
+
+			po::store(po::command_line_parser(argc, argv).
+				options(cmdline_options).positional(p).run(), vars);
+			po::notify(vars);
+
+			if (vars.count("help")) 
+			{
+				std::cout << visible;
+				exit(0);
+			}
+
+			if (vars.count("properties-file")) {
+				std::ifstream propertiesFile(propertiesFilename);
+				if (!propertiesFile.is_open()) {
+					std::cerr << "can not open config file: " << propertiesFilename << std::endl;
+					vars.clear();
+					std::cerr << "Reading properties unsuccesful." << std::endl;
+					return false;
+				} else {
+					store(parse_config_file(propertiesFile, config_file_options), vars);
+					notify(vars);
+				}
+			}
+
+			// Check file with training samples
+			if (vars.count("training-file")) {
+				std::cout << "Training file: " << trainFilename << std::endl;
+				std::ifstream trainFile(trainFilename);
+				if (!trainFile.is_open()) {
+					std::cerr << "File with training samples data does not exist." << std::endl;
+					return false;
+				}
+			}
+
+			// Check file with testing samples
+			if (vars.count("testing-file")) {
+				std::cout << "Testing file: " << testFilename << std::endl;
+				std::ifstream testFile(testFilename);
+				if (!testFile.is_open()) {
+					std::cerr << "File with test samples data does not exist" << std::endl;
+					return false;
+				}
+			}
+
+			EnumParser<ClassifierType> parser;
 			classifier = parser.ParseEnum(classifierName);
+
+			// Number of k Nearest Neighbours
+			if (k < 1) {
+				std::cerr << "Number of k Nearest Neighbours must be larger than or equal to 1" << std::endl;
+				return false;
+			}
+
+			// Number of training samples to read
+			if (nrLoadTrainSamples < 0) {
+				std::cerr << "Number of training samples to load must be larger than 0. (Default: 0 == all)" << std::endl;
+				return false;
+			}
+
+			// Number of testing samples to read
+			if (nrLoadTestSamples < 0) {
+				std::cerr << "Number of test samples to read must be larger than 0. (Default: 0 == all)" << std::endl;
+				return false;
+			}
+			// Number of dimensions to read
+			if (nrLoadSampleDims < 0) {
+				std::cerr << "Number of test sample dims to read must be larger than 0. (Default: 0 == all)" << std::endl;
+				return false;
+			}
 		} catch (std::exception& e) {
-			std::cerr << e.what() << classifierName << std::endl;
+			std::cerr << e.what() << std::endl;
+			vars.clear();
+			std::cerr << "Reading properties unsuccesful." << std::endl;
 			return false;
 		}
-		// Number of k Nearest Neighbours
-		propertiesFile >> k; 
-		if (k < 1) {
-			std::cerr << "Number of k Nearest Neighbours must be larger than or equal to 1" << std::endl;
-			return false;
-		}
-		// Check file with training samples
-		propertiesFile >> trainFilename;
-		std::cout << "Train file: " << trainFilename << std::endl;
-		std::ifstream trainFile(trainFilename);
-		if (!trainFile.is_open()) {
-			std::cerr << "File with training samples data does not exist." << std::endl;
-			return false;
-		}
-		trainFile.close();
-		// Number of training samples
-		propertiesFile >> nrLoadTrainSamples;
-		if (nrLoadTrainSamples < 0) {
-			std::cerr << "Number of training samples to load must be larger than 0. (Default: 0 == all)" << std::endl;
-			return false;
-		}
-		// Check file with test samples
-		propertiesFile >> testFilename;
-		std::cout << "Test file: " << testFilename << std::endl;
-		std::ifstream testFile(testFilename);
-		if (!testFile.is_open()) {
-			std::cerr << "File with test samples data does not exist" << std::endl;
-			return false;
-		}
-		testFile.close();
-		// Number of test samples to read
-		propertiesFile >> nrLoadTestSamples;
-		if (nrLoadTestSamples < 0) {
-			std::cerr << "Number of test samples to read must be larger than 0. (Default: 0 == all)" << std::endl;
-			return false;
-		}
-		// Number of dimensions to read
-		propertiesFile >> nrLoadSampleDims;
-		if (nrLoadSampleDims < 0) {
-			std::cerr << "Number of test sample dims to read must be larger than 0. (Default: 0 == all)" << std::endl;
-			return false;
-		}
-		// Log filename
-		propertiesFile >> logFilename;
-		// SPECIFIC properties
-		//TODO: here properties for specific classifiers
-		propertiesFile.close();
+
+		std::cout << boost::format("Reading properties succesful.") << std::endl;
 		return true;
 	}
+
+
+	//bool InputReader::readProperties(char* propertiesFilename) {
+	//	// GENERAL properties
+	//	// Properties File
+	//	std::ifstream propertiesFile(propertiesFilename);
+	//	if (!propertiesFile.is_open()) {
+	//		std::cerr << "File with properties does not exist." << std::endl;
+	//		return false;
+	//	}
+	//	this->propertiesFilename = propertiesFilename;
+	//	// Classifier Type
+	//	propertiesFile >> classifierName;
+	//	EnumParser<ClassifierType> parser;
+	//	try {
+	//		classifier = parser.ParseEnum(classifierName);
+	//	} catch (std::exception& e) {
+	//		std::cerr << e.what() << classifierName << std::endl;
+	//		return false;
+	//	}
+	//	// Number of k Nearest Neighbours
+	//	propertiesFile >> k; 
+	//	if (k < 1) {
+	//		std::cerr << "Number of k Nearest Neighbours must be larger than or equal to 1" << std::endl;
+	//		return false;
+	//	}
+	//	// Check file with training samples
+	//	propertiesFile >> trainFilename;
+	//	std::cout << "Train file: " << trainFilename << std::endl;
+	//	std::ifstream trainFile(trainFilename);
+	//	if (!trainFile.is_open()) {
+	//		std::cerr << "File with training samples data does not exist." << std::endl;
+	//		return false;
+	//	}
+	//	trainFile.close();
+	//	// Number of training samples
+	//	propertiesFile >> nrLoadTrainSamples;
+	//	if (nrLoadTrainSamples < 0) {
+	//		std::cerr << "Number of training samples to load must be larger than 0. (Default: 0 == all)" << std::endl;
+	//		return false;
+	//	}
+	//	// Check file with test samples
+	//	propertiesFile >> testFilename;
+	//	std::cout << "Test file: " << testFilename << std::endl;
+	//	std::ifstream testFile(testFilename);
+	//	if (!testFile.is_open()) {
+	//		std::cerr << "File with test samples data does not exist" << std::endl;
+	//		return false;
+	//	}
+	//	testFile.close();
+	//	// Number of test samples to read
+	//	propertiesFile >> nrLoadTestSamples;
+	//	if (nrLoadTestSamples < 0) {
+	//		std::cerr << "Number of test samples to read must be larger than 0. (Default: 0 == all)" << std::endl;
+	//		return false;
+	//	}
+	//	// Number of dimensions to read
+	//	propertiesFile >> nrLoadSampleDims;
+	//	if (nrLoadSampleDims < 0) {
+	//		std::cerr << "Number of test sample dims to read must be larger than 0. (Default: 0 == all)" << std::endl;
+	//		return false;
+	//	}
+	//	// Result filename
+	//	propertiesFile >> resultFilename;
+	//	// SPECIFIC properties
+	//	//TODO: here properties for specific classifiers
+	//	propertiesFile.close();
+	//	return true;
+	//}
 }

@@ -47,25 +47,11 @@ int main(int argc, char** argv) {
     //LOG4CXX_FATAL(loggerToFile, "this is a fatal message, crash and burn!!!");
 
     //loggerToFile->closeNestedAppenders();
-	
-	InputReader ir;				
-	//if (argc == 0) {
 
-	//}
-	//if (argc == 1) {
-	//	if (!ir.validateProperties(argv[1])) {
-	//		std::cerr << "Reading properties unsuccesful." << std::endl;
-	//		exit(-1);
-	//	} else {
-	//		ir.readProperties(argv[1]);
-	//	}
-	//} else {
-
-	//}
-
-	ir.readProperties(argv[1]);
-
-	std::cout << boost::format("Reading properties from %1% succesful.") % ir.propertiesFilename << std::endl;
+	InputReader ir;	
+	if (!ir.readInput(argc, argv)) {
+		exit(-1);
+	}
 
 	SampleSetFactory ssf;
 	SampleSet trainSet = ssf.createSampleSet(ir.trainFilename, ir.nrLoadTrainSamples, ir.nrLoadSampleDims);
@@ -82,8 +68,6 @@ int main(int argc, char** argv) {
 	}
 	std::cout << boost::format("Reading %1% testing samples with %2% dimensions each succesful.")
 		% testSet.nrSamples % testSet.nrDims << std::endl;
-
-	ofstream logfile(ir.logFilename, fstream::app); //TODO: Logger class
 
 	std::unique_ptr<Classifier> classifier;
 	switch (ir.classifier) {
@@ -121,7 +105,8 @@ int main(int argc, char** argv) {
 
 	std::chrono::time_point<std::chrono::system_clock> current_time = std::chrono::system_clock::now();
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
-	logfile << boost::format("%.2f%% %7t %d %15t %6dms %25t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 
+	ofstream resultFile(ir.resultFilename, fstream::app);
+	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %25t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 
 		% pa.errorRate % pa.nrClassificationErrors % pa.totalTime 
 		% ir.k % ir.classifierName
 		% ir.trainFilename % trainSet.nrSamples 
