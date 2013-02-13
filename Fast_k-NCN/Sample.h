@@ -42,6 +42,8 @@ namespace Common {
 		SampleDim& operator[] (int i);
 		const SampleDim& operator[](int i) const;
 
+		//void swap(Sample& other);
+
 		friend std::ostream& operator<<(std::ostream& out, const Sample& s);
 
 		// for range-based for loop
@@ -50,6 +52,6 @@ namespace Common {
 
 	private:
 		void copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst);
-
 	};
+
 }

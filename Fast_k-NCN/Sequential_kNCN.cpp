@@ -54,6 +54,7 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 //	trainSet needs to be changed, moving already used to the back of array, swap samples
 //
 const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sample& testSample) {
+	using std::swap;
 	Distance* nndists = new Distance[k];
 	fill(nndists, nndists+k, Distance(-1, -1, FLT_MAX));
 
@@ -61,6 +62,7 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sampl
 	
 	nndists[0] = find1NN(trainSet, trainSet.nrSamples, testSample);
 	centroids[0] = trainSet[nndists[0].sampleIndex];
+	//trainSet[nndists[0].sampleIndex].swap(trainSet[trainSet.nrSamples - 1]);
 	swapSamples(const_cast<SampleSet&> (trainSet), nndists[0].sampleIndex, trainSet.nrSamples - 1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
@@ -81,6 +83,7 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sampl
 				centroids[centroidIndex] = currentCentroid;
 			}
 		}
+		//trainSet[nndists[centroidIndex].sampleIndex].swap(trainSet[trainSet.nrSamples-1 - centroidIndex]);
 		swapSamples(const_cast<SampleSet&> (trainSet), nndists[centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
 	}
 
@@ -88,7 +91,9 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sampl
 }
 
 inline void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
+	//trainSet[samIndexToMoveToBack].swap(trainSet[samIndexToMoveFromBack]);
 	Sample tempSample(trainSet[samIndexToMoveToBack]);
 	trainSet[samIndexToMoveToBack] = trainSet[samIndexToMoveFromBack];
 	trainSet[samIndexToMoveFromBack] = tempSample;
+
 }

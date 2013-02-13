@@ -4,10 +4,21 @@ using namespace std;
 
 namespace Utility {
 
+	//TODO: added option, need to implement it
+	//
+	//	Take dataset and randomly (do not care about the number of samples of given class)
+	//	pick samples
+	//
+	//	Perform 10-fold cross-validation seperating samples into 10 seperate files
+	//
 	//void crossvalidateSamples(SampleSet* train, SampleSet* test) {
 	//
 	//}
 
+	//TODO: added option, need to implement it
+	//
+	//	Standarize dataset using mean and standard deviation
+	//
 	//void standardizeSamples(SampleSet* train, SampleSet* test) {
 	//	const int trainSize = train->getNrSamples();
 	//	const int testSize = test->getNrSamples();

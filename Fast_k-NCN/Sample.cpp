@@ -1,5 +1,7 @@
 #include "Sample.h"
 
+
+
 namespace Common {
 
 	//TODO: Add Comments
@@ -91,6 +93,16 @@ namespace Common {
 	SampleDim& Sample::operator[](int i) { return dims[i]; }
 
 	const SampleDim& Sample::operator[](int i) const { return dims[i]; }
+
+	//void Sample::swap(Sample& other) {
+	//	using std::swap;
+	//	swap(index, other.index);
+	//	swap(label, other.label);
+	//	swap(nrDims, other.nrDims);
+	//	swap(dims, other.dims);
+
+	//}   
+
 
 	std::ostream& operator<<(std::ostream& out, const Sample& s) {
 		return out << s.dims << " " << s.index << " " << s.label << " " << s.nrDims;
