@@ -16,17 +16,22 @@ namespace Utility {
 	public:
 		po::variables_map vars;
 		
+		// Filenames
 		std::string propertiesFilename;
 		std::string trainFilename;
 		std::string testFilename;
 		std::string resultFilename;
 		std::string classifierName;
+		
+		// Classifier specific
 		ClassifierType classifier;
 		int k;
+		int largestK;
 		int nrLoadTrainSamples;
 		int nrLoadTestSamples;
 		int nrLoadSampleDims;
 
+		// Dataset cross-valdiation and 
 		std::string toCrossValidateFilename;
 		std::string fromStandarizeFilename;
 		std::string toStandarizeFilename;
