@@ -13,17 +13,12 @@ namespace Utility {
 		__int64 frequency, startTime, stopTime;
 	public:
 		unsigned long totalTime;
-		int nrClassificationErrors;
-		float errorRate;
 
 		PerformanceAnalyzer();
 		~PerformanceAnalyzer();
-
-		int* results;
 		
 		void startTimer();
 		void stopTimer();
-		void calculateError(const SampleSet& orig);
 	};
 
 }
