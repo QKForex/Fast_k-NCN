@@ -17,6 +17,13 @@ void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& tes
 	}
 }
 
+
+//
+//	Perform classification
+//
+//	Input:	trainSet, testSet
+//	Output:	vector of assigned labels
+//
 int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
 	int* results = new int[nrTestSamples];
 
@@ -26,7 +33,7 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 		}
 	} else {
 		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = assignLabel(findkNCN((SampleSet&)trainSet, testSet[samIndex]));
+			results[samIndex] = assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSet[samIndex]));
 		}
 	}
 	return results;
@@ -53,7 +60,7 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 // 
 //	trainSet needs to be changed, moving already used to the back of array, swap samples
 //
-const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sample& testSample) {
+const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
 	using std::swap;
 	Distance* nndists = new Distance[k];
 	fill(nndists, nndists+k, Distance(-1, -1, FLT_MAX));
@@ -63,7 +70,7 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sampl
 	nndists[0] = find1NN(trainSet, trainSet.nrSamples, testSample);
 	centroids[0] = trainSet[nndists[0].sampleIndex];
 	//trainSet[nndists[0].sampleIndex].swap(trainSet[trainSet.nrSamples - 1]);
-	swapSamples(const_cast<SampleSet&> (trainSet), nndists[0].sampleIndex, trainSet.nrSamples - 1);
+	trainSet.swapSamples(nndists[0].sampleIndex, trainSet.nrSamples - 1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
 		Sample currentCentroid(-1, -1, trainSet.nrDims);
@@ -84,7 +91,7 @@ const Distance* Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sampl
 			}
 		}
 		//trainSet[nndists[centroidIndex].sampleIndex].swap(trainSet[trainSet.nrSamples-1 - centroidIndex]);
-		swapSamples(const_cast<SampleSet&> (trainSet), nndists[centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
+		trainSet.swapSamples(nndists[centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
 	}
 
 	return nndists;
@@ -95,5 +102,4 @@ inline void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndex
 	Sample tempSample(trainSet[samIndexToMoveToBack]);
 	trainSet[samIndexToMoveToBack] = trainSet[samIndexToMoveFromBack];
 	trainSet[samIndexToMoveFromBack] = tempSample;
-
 }

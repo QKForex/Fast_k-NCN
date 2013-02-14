@@ -12,7 +12,7 @@ public:
 	int* classify(const SampleSet& trainSet, const SampleSet& testSet);
 
 private:
-	const Distance* findkNCN(const SampleSet& trainSet, const Sample& testSample);
+	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);
 	void swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack);
 
 };
