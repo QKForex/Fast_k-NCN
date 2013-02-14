@@ -1,7 +1,8 @@
 #include <iostream>
 #include <chrono>
-#include <ctime>
 #include <memory>
+
+#include <ctime>
 
 #include <windows.h>
 
@@ -13,8 +14,6 @@
 
 #include "InputReader.h"
 #include "SampleSetFactory.h"
-//#include "Logger.h"
-//#include "OutputWriter.h"
 #include "PerformanceAnalyzer.h"
 
 #include "Sequential_kNN.h"
@@ -38,15 +37,15 @@ LoggerPtr loggerToFile(Logger::getLogger("MyLogger"));
 
 int main(int argc, char** argv) {
 
-    //DOMConfigurator::configure("config.xml");
+	//DOMConfigurator::configure("logger_config.xml");
 
-    //LOG4CXX_DEBUG(loggerToFile, "this is a debug message.");
-    //LOG4CXX_INFO (loggerToFile, "this is a info message, just ignore.");
-    //LOG4CXX_WARN (loggerToFile, "this is a warn message, dont worry too much.");
-    //LOG4CXX_ERROR(loggerToFile, "this is a error message, something serious is happening.");
-    //LOG4CXX_FATAL(loggerToFile, "this is a fatal message, crash and burn!!!");
+	//LOG4CXX_DEBUG(loggerToFile, "this is a debug message.");
+	//LOG4CXX_INFO (loggerToFile, "this is a info message, just ignore.");
+	//LOG4CXX_WARN (loggerToFile, "this is a warn message, dont worry too much.");
+	//LOG4CXX_ERROR(loggerToFile, "this is a error message, something serious is happening.");
+	//LOG4CXX_FATAL(loggerToFile, "this is a fatal message, crash and burn!!!");
 
-    //loggerToFile->closeNestedAppenders();
+	//loggerToFile->closeNestedAppenders();
 
 	InputReader ir;	
 	if (!ir.readInput(argc, argv)) {
@@ -96,27 +95,29 @@ int main(int argc, char** argv) {
 		exit(-1);
 	}
 
+	//classifier->learnOptimalK(trainSet, ir.largestK);
+
 	PerformanceAnalyzer pa;
 	pa.startTimer();
 	classifier->preprocess(trainSet, testSet);
-	pa.results = classifier->classify(trainSet, testSet);
+	classifier->classify(trainSet, testSet);
 	pa.stopTimer();
-	pa.calculateError(testSet);
+	classifier->calculateErrorRate(testSet);
 
 	std::chrono::time_point<std::chrono::system_clock> current_time = std::chrono::system_clock::now();
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
 	ofstream resultFile(ir.resultFilename, fstream::app);
 	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %25t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 
-		% pa.errorRate % pa.nrClassificationErrors % pa.totalTime 
+		% classifier->errorRate % classifier->nrClassificationErrors % pa.totalTime 
 		% ir.k % ir.classifierName
 		% ir.trainFilename % trainSet.nrSamples 
 		% ir.testFilename % testSet.nrSamples 
-		 << std::ctime(&current_time_c);
-	
+		<< std::ctime(&current_time_c);
+
 	std::cout << std::endl;
 	std::cout << boost::format("Classifier:%25tk=%d, %s")  % ir.k % ir.classifierName << std::endl;
-	std::cout << boost::format("Error rate:%25t%.2f%%") % pa.errorRate << std::endl;
-	std::cout << boost::format("Classification error:%25t%d/%d") % pa.nrClassificationErrors % testSet.nrSamples << std::endl;
+	std::cout << boost::format("Error rate:%25t%.2f%%") % classifier->errorRate << std::endl;
+	std::cout << boost::format("Classification error:%25t%d/%d") % classifier->nrClassificationErrors % testSet.nrSamples << std::endl;
 	std::cout << boost::format("Total time:%25t%d ms") % pa.totalTime << std::endl;
 	std::cout << std::ctime(&current_time_c);
 
