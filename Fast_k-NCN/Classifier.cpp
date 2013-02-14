@@ -1,4 +1,6 @@
 #include "Classifier.h"
+#include <vector> //TODO should go from here
+#include <algorithm>
 
 Classifier::Classifier() : k(1), nrTrainSamples(0), nrTestSamples(0) {
 	distances = NULL;
@@ -8,6 +10,48 @@ Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSa
 	: k(k), nrTrainSamples(nrTrainSamples), nrTestSamples(nrTestSamples) {
 	distances = NULL;
 }
+
+//
+//	Find optimal k - number of nearest nieghbors using leave-one-out method
+//	
+//	Input:
+//	Output:
+//
+const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largestK) {
+	int optimalK = 1;
+	// mapa rezultatów
+	vector<int> errorsForK;
+
+	SampleSet remainingTrainSamples(trainSet);
+	remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1;
+	
+	SampleSet currentTrainSample(1, trainSet.nrDims, 1);
+	currentTrainSample.samples = &remainingTrainSamples[trainSet.nrSamples - 1];
+
+	for (k = 1; k <= largestK; k++) {
+		// for every k check all leave-one-out combinations in trainSet
+		errorsForK.push_back(0);
+		for (int samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
+			// for every sample perform leave-one-out and increase counter on error
+			remainingTrainSamples.swapSamples(samIndex, trainSet.nrSamples - 1);
+			int* label = classify(remainingTrainSamples, currentTrainSample);
+			if (*label != currentTrainSample[0].label) {
+				errorsForK[k]++;
+			}
+		}
+	}
+
+	//std::sort(errorsForK.begin(), errorsForK.end(), );
+
+	return optimalK;
+}
+
+//int* Classifier::classifySample(const SampleSet& remainingSamples, const Sample& sample) {
+//	SampleSet singleSampleSet(n
+//
+//	classify(remainingSamples, singleSampleSet);
+//
+//}
 
 //
 //	Find first Nearest Neighbor - simplified version 
@@ -64,4 +108,25 @@ int Classifier::assignLabel(const Distance* dists) {
 	delete[] freqs;
 
 	return result;
+}
+
+int Classifier::calculateError(const int* results, const SampleSet& orig) {
+	int nrError = 0;
+	// comments in this function - uncomment for more verbose logging purposes
+	//ofstream file("result.txt");
+	for (int origIndex = 0; origIndex < orig.nrSamples; origIndex++) {
+		//file << orig[origIndex].getLabel() << " " << result[origIndex];
+		if (orig[origIndex].label != results[origIndex]) {
+			nrError++;
+			//file << " error";
+		}
+		//file << std::endl;
+	}
+	//file << "Number of errors: " << nrError << std::endl;
+	return nrError;
+}
+
+void Classifier::calculateErrorRate(const SampleSet& orig) {
+	nrClassificationErrors = calculateError(results, orig);	
+	errorRate = (float) nrClassificationErrors / orig.nrSamples * 100;
 }

@@ -10,6 +10,24 @@ Sequential_kNN::~Sequential_kNN() {
 	delete[] distances;
 }
 
+//
+//	Find optimal k - number of nearest nieghbors using leave-one-out method
+//	
+//	Input:
+//	Output:
+//
+//const int Sequential_kNN::learnOptimalK(const SampleSet& trainSet, const int largestK) {
+//	int optimalK = 1;
+//	for (int k = 1; k < largestK; k++) {
+//		for (int samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
+//
+//
+//			optimalK = k;
+//		}
+//	}
+//
+//}
+
 void Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
 	nrTrainSamples = trainSet.nrSamples;
 	nrTestSamples = testSet.nrSamples;

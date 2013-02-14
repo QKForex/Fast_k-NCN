@@ -8,6 +8,7 @@ public:
 	Sequential_kNN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~Sequential_kNN();
 
+	//const int learnOptimalK(const SampleSet& trainSet, const int largestK);
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);
 	int* classify(const SampleSet& trainSet, const SampleSet& testSet);
 

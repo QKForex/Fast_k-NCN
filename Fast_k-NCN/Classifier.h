@@ -22,10 +22,17 @@ public:
 	Distance** distances;
 	int nrTrainSamples;
 	int nrTestSamples;
+	int nrClassificationErrors;
+	float errorRate;
+
+	int* results;
 
 	virtual ~Classifier() {}; // cannot implement pure virtual destructor
 	virtual void preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
 	virtual int* classify(const SampleSet& trainSet, const SampleSet& testSet) = 0;
+
+	const int learnOptimalK(const SampleSet& trainSet, const int largestK);
+	void calculateErrorRate(const SampleSet& orig);
 
 protected:
 	Classifier();
@@ -34,7 +41,8 @@ protected:
 	const Distance find1NN(const SampleSet& trainSet, const int nrTrainSamples,
 		const Sample& testSample);
 	int assignLabel(const Distance* dists);
-
+	int calculateError(const int* results, const SampleSet& orig);
+	
 };
 
 
