@@ -2,7 +2,7 @@
 
 namespace Common {
 
-	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, int nrDims) {
+	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, const int nrDims) {
 		int registersNumber = (nrDims >> 2) + 1;
 		//TODO: needs refactoring
 		const __m128* pSrc1 = (__m128*) train.dims;

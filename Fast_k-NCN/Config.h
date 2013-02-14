@@ -1,12 +1,10 @@
 #pragma once
 
-//#define LOGGING
-
 // This should be made a template
-#define MANHATTAN_DIST
-//#define EUCLIDEAN_DIST
+#define MANHATTAN_DIST //TODO: implement AVX version
+//#define EUCLIDEAN_DIST //TODO: Slow should optimize with SSE/AVX
 
-// Cannot have builds for two different architectures in on build
+// Cannot have builds for two different architectures in one build
 #define SSE 
 //#define AVX
 
