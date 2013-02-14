@@ -90,6 +90,13 @@ namespace Common {
 
 	//}
 
+	void SampleSet::swapSamples(const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
+		//trainSet[samIndexToMoveToBack].swap(trainSet[samIndexToMoveFromBack]);
+		Sample tempSample(samples[samIndexToMoveToBack]);
+		samples[samIndexToMoveToBack] = samples[samIndexToMoveFromBack];
+		samples[samIndexToMoveFromBack] = tempSample;
+	}
+
 	std::ostream& operator<<(std::ostream& out, const SampleSet& s) {
 		return out << s.nrClasses << " " << s.nrDims << " " << s.nrSamples;
 	}

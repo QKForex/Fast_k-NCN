@@ -26,6 +26,8 @@ namespace Common {
 		Sample& operator[] (int i);
 		const Sample& operator[](int i) const;
 
+		void swapSamples(const int samIndexToMoveToBack, const int samIndexToMoveFromBack);
+
 		// for range-based for loop
 		//inline Sample begin() const { return samples[0]; }
 		//inline Sample end() const { return samples[nrDims-1]; }
