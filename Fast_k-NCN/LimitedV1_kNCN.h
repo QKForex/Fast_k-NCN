@@ -9,10 +9,9 @@ public:
 	~LimitedV1_kNCN();
 
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);
-	int* classify(const SampleSet& trainSet, const SampleSet& testSet);
+	int classifySample(const SampleSet& trainSet, const Sample& testSample);
 
 private:
-	const Distance* findkNCN(const SampleSet& trainSet, const int nrTrainSamples,
-		const Sample& testSample);
+	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);
 
 };

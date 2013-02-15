@@ -1,14 +1,17 @@
 #include "Classifier.h"
 #include <vector> //TODO should go from here
 #include <algorithm>
+#include <boost\bind.hpp>
 
 Classifier::Classifier() : k(1), nrTrainSamples(0), nrTestSamples(0) {
 	distances = NULL;
+	results = NULL;
 }
 
 Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSamples)
 	: k(k), nrTrainSamples(nrTrainSamples), nrTestSamples(nrTestSamples) {
 	distances = NULL;
+	results = NULL;
 }
 
 //
@@ -18,40 +21,47 @@ Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSa
 //	Output:
 //
 const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largestK) {
-	int optimalK = 1;
-	// mapa rezultatów
-	vector<int> errorsForK;
-
-	SampleSet remainingTrainSamples(trainSet);
-	remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1;
-	
-	SampleSet currentTrainSample(1, trainSet.nrDims, 1);
-	currentTrainSample.samples = &remainingTrainSamples[trainSet.nrSamples - 1];
+	vector< pair<int,int> > errorsForK;
 
 	for (k = 1; k <= largestK; k++) {
+		SampleSet remainingTrainSamples(trainSet);
+		remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1;
+
+		Sample currentTrainSample(remainingTrainSamples[remainingTrainSamples.nrSamples - 1]);
+
 		// for every k check all leave-one-out combinations in trainSet
-		errorsForK.push_back(0);
+		pair<int, int> p(k,0);
+		errorsForK.push_back(p);
 		for (int samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
 			// for every sample perform leave-one-out and increase counter on error
 			remainingTrainSamples.swapSamples(samIndex, trainSet.nrSamples - 1);
-			int* label = classify(remainingTrainSamples, currentTrainSample);
-			if (*label != currentTrainSample[0].label) {
-				errorsForK[k]++;
+			int label = classifySample(remainingTrainSamples, currentTrainSample);
+			if (label != currentTrainSample.label) {
+				errorsForK[k].second++;
 			}
 		}
 	}
 
-	//std::sort(errorsForK.begin(), errorsForK.end(), );
+	std::sort(errorsForK.begin(), errorsForK.end(), 
+          boost::bind(&std::pair<int, int>::second, _1) <
+          boost::bind(&std::pair<int, int>::second, _2));
+
+	const int optimalK = errorsForK[0].first;
 
 	return optimalK;
 }
 
-//int* Classifier::classifySample(const SampleSet& remainingSamples, const Sample& sample) {
-//	SampleSet singleSampleSet(n
 //
-//	classify(remainingSamples, singleSampleSet);
+//	Perform classification
 //
-//}
+//	Input:	trainSet, testSet
+//	Output:	vector of assigned labels
+//
+void Classifier::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
+		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+			results[samIndex] = classifySample(trainSet, testSet[samIndex]);
+		}
+}
 
 //
 //	Find first Nearest Neighbor - simplified version 
@@ -129,4 +139,8 @@ int Classifier::calculateError(const int* results, const SampleSet& orig) {
 void Classifier::calculateErrorRate(const SampleSet& orig) {
 	nrClassificationErrors = calculateError(results, orig);	
 	errorRate = (float) nrClassificationErrors / orig.nrSamples * 100;
+}
+
+int Classifier::classifySample(const SampleSet& trainSet, const SampleSet& testSet) {
+
 }

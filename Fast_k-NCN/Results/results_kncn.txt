@@ -124,3 +124,5 @@
 11.75%  529       3871ms  5  Sequential_kNCN       Datasets\ftrain01.txt        1400  Datasets\ftest01.txt         4503      Sun Feb 10 15:55:06 2013
 11.75%  529       3847ms  5  Sequential_kNCN       Datasets\ftrain01.txt        1400  Datasets\ftest01.txt         4503      Sun Feb 10 15:55:13 2013
 11.75%  529     126933ms  5  Sequential_kNCN       Datasets\ftrain01.txt        1400  Datasets\ftest01.txt         4503      Wed Feb 13 11:20:25 2013
+11.75%  529       4001ms  5  Sequential_kNCN       Datasets\ftrain01.txt        1400  Datasets\ftest01.txt         4503      Fri Feb 15 12:08:45 2013
+11.75%  529       3998ms  5  Sequential_kNCN       Datasets\ftrain01.txt        1400  Datasets\ftest01.txt         4503      Fri Feb 15 12:08:56 2013

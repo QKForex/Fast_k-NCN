@@ -3,11 +3,15 @@
 Sequential_kNN::Sequential_kNN() : Classifier() {}
 
 Sequential_kNN::Sequential_kNN(const int k, const int nrTrainSamples, const int nrTestSamples)
-	: Classifier(k, nrTrainSamples, nrTestSamples) {}
+	: Classifier(k, nrTrainSamples, nrTestSamples) {
+	results = new int[nrTestSamples];
+	distances = new Distance*[nrTestSamples];
+}
 
 Sequential_kNN::~Sequential_kNN() {
 	for (int i = 0; i < nrTestSamples; i++) { delete distances[i]; }
 	delete[] distances;
+	delete[] results;
 }
 
 //
@@ -29,27 +33,17 @@ Sequential_kNN::~Sequential_kNN() {
 //}
 
 void Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	nrTrainSamples = trainSet.nrSamples;
-	nrTestSamples = testSet.nrSamples;
-	distances = new Distance*[nrTestSamples];
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		distances[samIndex] = countDistances(trainSet, testSet[samIndex]);
 	}
 }
 
-int* Sequential_kNN::classify(const SampleSet& trainSet, const SampleSet& testSet) {  
-	int* results = new int[nrTestSamples];
-
+int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& testSample) {  
 	if (k == 1) {
-		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = find1NN(trainSet, nrTrainSamples, testSet[samIndex]).sampleLabel;
-		}
+		return find1NN(trainSet, nrTrainSamples, testSample).sampleLabel;
 	} else {
-		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = assignLabel(findkNN(trainSet, nrTrainSamples, testSet[samIndex]));
-		}
+		return assignLabel(findkNN(trainSet, nrTrainSamples, testSample));
 	}
-	return results;
 }
 
 //

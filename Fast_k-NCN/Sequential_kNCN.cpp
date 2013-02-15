@@ -3,17 +3,20 @@
 Sequential_kNCN::Sequential_kNCN() : Classifier() {}
 
 Sequential_kNCN::Sequential_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples)
-	: Classifier(k, nrTrainSamples, nrTestSamples) {}
+	: Classifier(k, nrTrainSamples, nrTestSamples) {
+	results = new int[nrTestSamples];
+	distances = new Distance*[nrTestSamples];
+}
 
 Sequential_kNCN::~Sequential_kNCN() {
 	for (int i = 0; i < nrTestSamples; i++) { delete distances[i]; }
 	delete[] distances;
+	delete[] results;
 }
 
 void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	distances = new Distance*[nrTestSamples];
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-		distances[samIndex] = countDistances(trainSet, testSet[samIndex]);
+		distances[samIndex] = countDistances(trainSet, testSet[samIndex]); // produces distance objects
 	}
 }
 
@@ -24,19 +27,12 @@ void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& tes
 //	Input:	trainSet, testSet
 //	Output:	vector of assigned labels
 //
-int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
-	int* results = new int[nrTestSamples];
-
+int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample) {	  
 	if (k == 1) {
-		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = find1NN(trainSet, nrTrainSamples, testSet[samIndex]).sampleLabel;
-		}
+		return find1NN(trainSet, nrTrainSamples, testSample).sampleLabel;
 	} else {
-		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSet[samIndex]));
-		}
+		return assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSample));
 	}
-	return results;
 }
 
 //
@@ -62,8 +58,9 @@ int* Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testS
 //
 const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
 	using std::swap;
-	Distance* nndists = new Distance[k];
-	fill(nndists, nndists+k, Distance(-1, -1, FLT_MAX));
+
+	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
+	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
 
 	SampleSet centroids(trainSet.nrClasses, trainSet.nrDims, k);
 	
@@ -97,9 +94,9 @@ const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& tes
 	return nndists;
 }
 
-inline void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
-	//trainSet[samIndexToMoveToBack].swap(trainSet[samIndexToMoveFromBack]);
-	Sample tempSample(trainSet[samIndexToMoveToBack]);
-	trainSet[samIndexToMoveToBack] = trainSet[samIndexToMoveFromBack];
-	trainSet[samIndexToMoveFromBack] = tempSample;
-}
+//inline void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
+//	//trainSet[samIndexToMoveToBack].swap(trainSet[samIndexToMoveFromBack]);
+//	Sample tempSample(trainSet[samIndexToMoveToBack]);
+//	trainSet[samIndexToMoveToBack] = trainSet[samIndexToMoveFromBack];
+//	trainSet[samIndexToMoveFromBack] = tempSample;
+//}

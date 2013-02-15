@@ -9,7 +9,7 @@ public:
 	~Sequential_kNCN();
 
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);
-	int* classify(const SampleSet& trainSet, const SampleSet& testSet);
+	int classifySample(const SampleSet& trainSet, const Sample& testSample);
 
 private:
 	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);

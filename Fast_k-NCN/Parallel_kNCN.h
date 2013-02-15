@@ -9,10 +9,8 @@ public:
 	~Parallel_kNCN();
 
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);
-	int* classify(const SampleSet& trainSet, const SampleSet& testSet);
+	int classifySample(const SampleSet& trainSet, const Sample& testSample);
 
 private:
-	const Distance* findkNCN_parallel(const SampleSet& trainSet, const int nrTrainSamples,
-		const Sample& testSample);
-
+	const Distance* findkNCN_parallel(SampleSet& trainSet, const Sample& testSample);
 };

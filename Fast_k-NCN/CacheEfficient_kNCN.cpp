@@ -17,22 +17,15 @@ void CacheEfficient_kNCN::preprocess(const SampleSet& trainSet, const SampleSet&
 	}
 }
 
-int* CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
-	int* results = new int[nrTestSamples];
-
+int CacheEfficient_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample) {	  
 	if (k == 1) {
-		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = find1NN(trainSet, nrTrainSamples, testSet[samIndex]).sampleLabel;
-		}
+		return find1NN(trainSet, nrTrainSamples, testSample).sampleLabel;
 	} else {
-		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = assignLabel(findkNCN(trainSet, nrTrainSamples, testSet[samIndex]));
-		}
+		return assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSample));
 	}
-	return results;
 }
 
-const Distance* CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const int nrTrainSamples, const Sample& testSample) {
+const Distance* CacheEfficient_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
 	Distance* nndists = NULL;
 	
 	return nndists;

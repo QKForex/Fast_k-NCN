@@ -19,7 +19,7 @@ using namespace Common;
 class Classifier { //TODO: singleton
 public:
 	int k;
-	Distance** distances;
+	Distance** distances; // distances between all samples
 	int nrTrainSamples;
 	int nrTestSamples;
 	int nrClassificationErrors;
@@ -27,11 +27,14 @@ public:
 
 	int* results;
 
+	Distance* nndists; // distances to k nearest neighbors
+
 	virtual ~Classifier() {}; // cannot implement pure virtual destructor
 	virtual void preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
-	virtual int* classify(const SampleSet& trainSet, const SampleSet& testSet) = 0;
-
+	virtual int classifySample(const SampleSet& trainSet, const Sample& testSample) = 0;
+	
 	const int learnOptimalK(const SampleSet& trainSet, const int largestK);
+	void classify(const SampleSet& trainSet, const SampleSet& testSet);
 	void calculateErrorRate(const SampleSet& orig);
 
 protected:
@@ -41,8 +44,10 @@ protected:
 	const Distance find1NN(const SampleSet& trainSet, const int nrTrainSamples,
 		const Sample& testSample);
 	int assignLabel(const Distance* dists);
+
+	// wrappers
 	int calculateError(const int* results, const SampleSet& orig);
-	
+	int classifySample(const SampleSet& trainSet, const SampleSet& testSet);
 };
 
 
