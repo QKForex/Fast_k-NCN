@@ -38,11 +38,12 @@ void Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& test
 	}
 }
 
-int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& testSample) {  
+int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& testSample,
+								   Distance* testSampleDists) {	  
 	if (k == 1) {
-		return find1NN(trainSet, nrTrainSamples, testSample).sampleLabel;
+		return find1NN(trainSet, testSample).sampleLabel;
 	} else {
-		return assignLabel(findkNN(trainSet, nrTrainSamples, testSample));
+		return assignLabel(findkNN(trainSet, testSample));
 	}
 }
 
@@ -64,8 +65,8 @@ int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& test
 //	this should happen just once
 //
 //TODO: extend interface by train and test samples
-const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const int nrTrainSamples,
-		const Sample& testSample) {	
+const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample& testSample,
+										Distance** dists) {	
 	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
 	if (nndists != NULL) {
 		fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
@@ -74,17 +75,24 @@ const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const int nrT
 	}
 
 	for (int distsIndex = 0; distsIndex < nrTrainSamples; distsIndex++) {
-		if (distances[testSample.index][distsIndex].distValue < nndists[k - 1].distValue) {
+		if (dists[testSample.index][distsIndex].distValue < nndists[k - 1].distValue) {
 			for (int distsInNndistsIndex = 0; distsInNndistsIndex < k; distsInNndistsIndex++) {
-				if (distances[testSample.index][distsIndex].distValue < nndists[distsInNndistsIndex].distValue) {
+				if (dists[testSample.index][distsIndex].distValue < nndists[distsInNndistsIndex].distValue) {
 					for (int distsToMoveIndex = k - 1; distsToMoveIndex > distsInNndistsIndex; distsToMoveIndex--) {
 						nndists[distsToMoveIndex] = nndists[distsToMoveIndex - 1];
 					}
-					nndists[distsInNndistsIndex] = distances[testSample.index][distsIndex];
+					nndists[distsInNndistsIndex] = dists[testSample.index][distsIndex];
 					break;
 				}
 			}
 		}
 	}
 	return nndists;
+}
+
+//
+//	Wrapper for findkNN that uses distances attribute instead of specified distances
+//
+const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample& testSample) {
+	return findkNN(trainSet, testSample, distances);
 }

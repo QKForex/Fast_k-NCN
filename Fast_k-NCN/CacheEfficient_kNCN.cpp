@@ -17,9 +17,10 @@ void CacheEfficient_kNCN::preprocess(const SampleSet& trainSet, const SampleSet&
 	}
 }
 
-int CacheEfficient_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample) {	  
+int CacheEfficient_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
+								   Distance* testSampleDists) {	  
 	if (k == 1) {
-		return find1NN(trainSet, nrTrainSamples, testSample).sampleLabel;
+		return find1NN(trainSet, testSample).sampleLabel;
 	} else {
 		return assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSample));
 	}

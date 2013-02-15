@@ -31,9 +31,11 @@ public:
 
 	virtual ~Classifier() {}; // cannot implement pure virtual destructor
 	virtual void preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
-	virtual int classifySample(const SampleSet& trainSet, const Sample& testSample) = 0;
+	virtual int classifySample(const SampleSet& trainSet, const Sample& testSample,
+		Distance* dists) = 0;
 	
 	const int learnOptimalK(const SampleSet& trainSet, const int largestK);
+	int classifySample(const SampleSet& trainSet, const Sample& testSample);
 	void classify(const SampleSet& trainSet, const SampleSet& testSet);
 	void calculateErrorRate(const SampleSet& orig);
 
@@ -41,8 +43,10 @@ protected:
 	Classifier();
 	Classifier(const int k, const int nrTrainSamples, const int nrTestSamples);
 
-	const Distance find1NN(const SampleSet& trainSet, const int nrTrainSamples,
-		const Sample& testSample);
+	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample,
+		Distance** dists);
+	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample);
+	
 	int assignLabel(const Distance* dists);
 
 	// wrappers

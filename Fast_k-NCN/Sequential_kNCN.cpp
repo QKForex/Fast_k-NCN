@@ -27,9 +27,10 @@ void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& tes
 //	Input:	trainSet, testSet
 //	Output:	vector of assigned labels
 //
-int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample) {	  
+int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
+								   Distance* testSampleDists) {	  
 	if (k == 1) {
-		return find1NN(trainSet, nrTrainSamples, testSample).sampleLabel;
+		return find1NN(trainSet, testSample).sampleLabel;
 	} else {
 		return assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSample));
 	}
@@ -56,15 +57,14 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 // 
 //	trainSet needs to be changed, moving already used to the back of array, swap samples
 //
-const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
-	using std::swap;
-
+const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
+										  Distance** dists) {
 	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
 	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
 
 	SampleSet centroids(trainSet.nrClasses, trainSet.nrDims, k);
 	
-	nndists[0] = find1NN(trainSet, trainSet.nrSamples, testSample);
+	nndists[0] = find1NN(trainSet, testSample, dists);
 	centroids[0] = trainSet[nndists[0].sampleIndex];
 	//trainSet[nndists[0].sampleIndex].swap(trainSet[trainSet.nrSamples - 1]);
 	trainSet.swapSamples(nndists[0].sampleIndex, trainSet.nrSamples - 1);
@@ -92,6 +92,10 @@ const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& tes
 	}
 
 	return nndists;
+}
+
+const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
+	return findkNCN(trainSet, testSample, distances);
 }
 
 //inline void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {

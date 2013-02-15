@@ -9,7 +9,8 @@ public:
 	~CacheEfficient_kNCN();
 
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);
-	int classifySample(const SampleSet& trainSet, const Sample& testSample);
+	int classifySample(const SampleSet& trainSet, const Sample& testSample,
+		Distance* testSampleDists);
 
 private:
 	const Distance* CacheEfficient_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample);

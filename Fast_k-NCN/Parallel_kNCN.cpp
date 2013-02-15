@@ -17,9 +17,10 @@ void Parallel_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testS
 	}
 }
 
-int Parallel_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample) {	  
+int Parallel_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
+								   Distance* testSampleDists) {	  
 	if (k == 1) {
-		return find1NN(trainSet, nrTrainSamples, testSample).sampleLabel;
+		return find1NN(trainSet, testSample).sampleLabel;
 	} else {
 		return assignLabel(findkNCN_parallel(const_cast<SampleSet&> (trainSet), testSample));
 	}
@@ -41,7 +42,7 @@ const Distance* Parallel_kNCN::findkNCN_parallel(SampleSet& trainSet, const Samp
 
 	SampleSet centroids(trainSet.nrClasses, trainSet.nrDims, k);
 	
-	nndists[0] = find1NN(trainSet, trainSet.nrSamples, testSample);
+	nndists[0] = find1NN(trainSet, testSample);
 	centroids[0] = trainSet[nndists[0].sampleIndex];
 	//trainSet[nndists[0].sampleIndex].swap(trainSet[trainSet.nrSamples - 1]);
 	trainSet.swapSamples(nndists[0].sampleIndex, trainSet.nrSamples - 1);

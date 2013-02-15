@@ -10,10 +10,12 @@ public:
 
 	//const int learnOptimalK(const SampleSet& trainSet, const int largestK);
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);
-	int classifySample(const SampleSet& trainSet, const Sample& testSample);
+	int classifySample(const SampleSet& trainSet, const Sample& testSample,
+		Distance* testSampleDists);
 
 private:
-	const Distance* findkNN(const SampleSet& trainSet, const int nrTrainSamples,
-		const Sample& testSample);
+	const Distance* findkNN(const SampleSet& trainSet, const Sample& testSample,
+		Distance** dists);
+	const Distance* findkNN(const SampleSet& trainSet, const Sample& testSample);
 
 };

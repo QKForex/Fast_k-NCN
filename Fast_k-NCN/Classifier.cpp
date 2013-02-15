@@ -23,6 +23,9 @@ Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSa
 const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largestK) {
 	vector< pair<int,int> > errorsForK;
 
+	Distance** nndists = new Distance*[nrTestSamples];
+
+
 	for (k = 1; k <= largestK; k++) {
 		SampleSet remainingTrainSamples(trainSet);
 		remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1;
@@ -35,7 +38,8 @@ const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largest
 		for (int samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
 			// for every sample perform leave-one-out and increase counter on error
 			remainingTrainSamples.swapSamples(samIndex, trainSet.nrSamples - 1);
-			int label = classifySample(remainingTrainSamples, currentTrainSample);
+			nndists[samIndex] = countDistances(remainingTrainSamples, currentTrainSample);
+			int label = classifySample(remainingTrainSamples, currentTrainSample, nndists[samIndex]);
 			if (label != currentTrainSample.label) {
 				errorsForK[k].second++;
 			}
@@ -47,6 +51,9 @@ const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largest
           boost::bind(&std::pair<int, int>::second, _2));
 
 	const int optimalK = errorsForK[0].first;
+
+	for (int i = 0; i < nrTestSamples; i++) { delete nndists[i]; }
+	delete[] nndists;
 
 	return optimalK;
 }
@@ -69,18 +76,28 @@ void Classifier::classify(const SampleSet& trainSet, const SampleSet& testSet) {
 //	Input: list of precomputed distances for given sample
 //	Output: list of k nearest neighbors
 //
-const Distance Classifier::find1NN(const SampleSet& trainSet, const int nrTrainSamples,
-	const Sample& testSample) {							   
-	Distance nearestNeighbourDist = distances[testSample.index][0];
+const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& testSample,
+								   Distance** dists) {							   
+	Distance nearestNeighbourDist = dists[testSample.index][0];
 	//TODO: to parallelize somehow, e.g. compare in 4 threads,
 	// and then compare 4 results in the end
-	for (int distsIndex = 1; distsIndex < nrTrainSamples; distsIndex++) {
-		if (distances[testSample.index][distsIndex].distValue < nearestNeighbourDist.distValue) {
-			nearestNeighbourDist = distances[testSample.index][distsIndex];
+	for (int distsIndex = 1; distsIndex < trainSet.nrSamples; distsIndex++) {
+		if (dists[testSample.index][distsIndex].distValue < nearestNeighbourDist.distValue) {
+			nearestNeighbourDist = dists[testSample.index][distsIndex];
 		}
 	}
 	return nearestNeighbourDist;
 }
+
+//
+//	Wrapper for find1NN that uses distances attribute instead of specified distances
+//
+const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& testSample) {
+	return find1NN(trainSet, testSample, distances);
+}
+
+
+
 
 //	
 //	Assigns sample to most frequent label
@@ -141,6 +158,6 @@ void Classifier::calculateErrorRate(const SampleSet& orig) {
 	errorRate = (float) nrClassificationErrors / orig.nrSamples * 100;
 }
 
-int Classifier::classifySample(const SampleSet& trainSet, const SampleSet& testSet) {
-
+int Classifier::classifySample(const SampleSet& trainSet, const Sample& testSample) {
+	return classifySample(trainSet, testSample, distances[testSample.index]);
 }
