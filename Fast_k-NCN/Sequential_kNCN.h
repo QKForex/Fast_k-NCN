@@ -13,8 +13,6 @@ public:
 		Distance* testSampleDists);
 private:
 	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample,
-		Distance** dists);
+		Distance* dists);
 	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);
-	void swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack);
-
 };

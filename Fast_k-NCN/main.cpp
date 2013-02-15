@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
 		exit(-1);
 	}
 
-	//classifier->learnOptimalK(trainSet, ir.largestK);
+	classifier->learnOptimalK(trainSet, ir.largestK);
 
 	PerformanceAnalyzer pa;
 	pa.startTimer();

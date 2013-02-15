@@ -20,10 +20,17 @@ void RandomizedSelect_kNCN::preprocess(const SampleSet& trainSet, const SampleSe
 int RandomizedSelect_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
 								   Distance* testSampleDists) {	  
 	if (k == 1) {
-		return find1NN(trainSet, testSample).sampleLabel;
+		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		return assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSample));
+		return assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSample, testSampleDists));
 	}
+}
+
+const Distance* RandomizedSelect_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
+												Distance* testSampleDists) {
+	Distance* nndists = NULL;
+	
+	return nndists;
 }
 
 const Distance* RandomizedSelect_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {

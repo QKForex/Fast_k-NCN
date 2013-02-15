@@ -15,7 +15,7 @@ public:
 
 private:
 	const Distance* findkNN(const SampleSet& trainSet, const Sample& testSample,
-		Distance** dists);
+		Distance* testSampleDists);
 	const Distance* findkNN(const SampleSet& trainSet, const Sample& testSample);
 
 };

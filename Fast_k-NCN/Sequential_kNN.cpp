@@ -41,9 +41,9 @@ void Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& test
 int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& testSample,
 								   Distance* testSampleDists) {	  
 	if (k == 1) {
-		return find1NN(trainSet, testSample).sampleLabel;
+		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		return assignLabel(findkNN(trainSet, testSample));
+		return assignLabel(findkNN(trainSet, testSample, testSampleDists));
 	}
 }
 
@@ -66,7 +66,7 @@ int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& test
 //
 //TODO: extend interface by train and test samples
 const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample& testSample,
-										Distance** dists) {	
+										Distance* testSampleDists) {	
 	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
 	if (nndists != NULL) {
 		fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
@@ -75,13 +75,13 @@ const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample&
 	}
 
 	for (int distsIndex = 0; distsIndex < nrTrainSamples; distsIndex++) {
-		if (dists[testSample.index][distsIndex].distValue < nndists[k - 1].distValue) {
+		if (testSampleDists[distsIndex].distValue < nndists[k - 1].distValue) {
 			for (int distsInNndistsIndex = 0; distsInNndistsIndex < k; distsInNndistsIndex++) {
-				if (dists[testSample.index][distsIndex].distValue < nndists[distsInNndistsIndex].distValue) {
+				if (testSampleDists[distsIndex].distValue < nndists[distsInNndistsIndex].distValue) {
 					for (int distsToMoveIndex = k - 1; distsToMoveIndex > distsInNndistsIndex; distsToMoveIndex--) {
 						nndists[distsToMoveIndex] = nndists[distsToMoveIndex - 1];
 					}
-					nndists[distsInNndistsIndex] = dists[testSample.index][distsIndex];
+					nndists[distsInNndistsIndex] = testSampleDists[distsIndex];
 					break;
 				}
 			}
@@ -94,5 +94,5 @@ const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample&
 //	Wrapper for findkNN that uses distances attribute instead of specified distances
 //
 const Distance* Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample& testSample) {
-	return findkNN(trainSet, testSample, distances);
+	return findkNN(trainSet, testSample, distances[testSample.index]);
 }

@@ -13,6 +13,8 @@ public:
 		Distance* testSampleDists);
 
 private:
-	const Distance* CacheEfficient_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample);
+	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample,
+		Distance* testSampleDists);
+	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);
 
 };

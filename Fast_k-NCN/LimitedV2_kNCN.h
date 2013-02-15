@@ -13,5 +13,8 @@ public:
 		Distance* testSampleDists);
 
 private:
+	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample,
+		Distance* testSampleDists);
 	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);
+
 };

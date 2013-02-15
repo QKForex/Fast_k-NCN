@@ -13,5 +13,7 @@ public:
 		Distance* testSampleDists);
 
 private:
+	const Distance* findkNCN_parallel(SampleSet& trainSet, const Sample& testSample,
+		Distance* testSampleDists);
 	const Distance* findkNCN_parallel(SampleSet& trainSet, const Sample& testSample);
 };

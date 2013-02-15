@@ -24,18 +24,15 @@ const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largest
 	vector< pair<int,int> > errorsForK;
 
 	Distance** nndists = new Distance*[nrTestSamples];
-
-
+	// na konæu jest 1399, 0, 1, 2,..., 1398
 	for (k = 1; k <= largestK; k++) {
 		SampleSet remainingTrainSamples(trainSet);
 		remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1;
-
 		Sample currentTrainSample(remainingTrainSamples[remainingTrainSamples.nrSamples - 1]);
-
 		// for every k check all leave-one-out combinations in trainSet
 		pair<int, int> p(k,0);
 		errorsForK.push_back(p);
-		for (int samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
+		for (int samIndex = 0; samIndex < remainingTrainSamples.nrSamples - 1; samIndex++) {
 			// for every sample perform leave-one-out and increase counter on error
 			remainingTrainSamples.swapSamples(samIndex, trainSet.nrSamples - 1);
 			nndists[samIndex] = countDistances(remainingTrainSamples, currentTrainSample);
@@ -43,6 +40,7 @@ const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largest
 			if (label != currentTrainSample.label) {
 				errorsForK[k].second++;
 			}
+			remainingTrainSamples.swapSamples(trainSet.nrSamples - 1, samIndex);
 		}
 	}
 
@@ -65,9 +63,9 @@ const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largest
 //	Output:	vector of assigned labels
 //
 void Classifier::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
-		for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-			results[samIndex] = classifySample(trainSet, testSet[samIndex]);
-		}
+	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		results[samIndex] = classifySample(trainSet, testSet[samIndex]);
+	}
 }
 
 //
@@ -77,13 +75,13 @@ void Classifier::classify(const SampleSet& trainSet, const SampleSet& testSet) {
 //	Output: list of k nearest neighbors
 //
 const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& testSample,
-								   Distance** dists) {							   
-	Distance nearestNeighbourDist = dists[testSample.index][0];
+								   Distance* dists) {							   
+	Distance nearestNeighbourDist = dists[0];
 	//TODO: to parallelize somehow, e.g. compare in 4 threads,
 	// and then compare 4 results in the end
 	for (int distsIndex = 1; distsIndex < trainSet.nrSamples; distsIndex++) {
-		if (dists[testSample.index][distsIndex].distValue < nearestNeighbourDist.distValue) {
-			nearestNeighbourDist = dists[testSample.index][distsIndex];
+		if (dists[distsIndex].distValue < nearestNeighbourDist.distValue) {
+			nearestNeighbourDist = dists[distsIndex];
 		}
 	}
 	return nearestNeighbourDist;
@@ -93,11 +91,8 @@ const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& test
 //	Wrapper for find1NN that uses distances attribute instead of specified distances
 //
 const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& testSample) {
-	return find1NN(trainSet, testSample, distances);
+	return find1NN(trainSet, testSample, distances[testSample.index]);
 }
-
-
-
 
 //	
 //	Assigns sample to most frequent label
@@ -106,17 +101,17 @@ const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& test
 //	Input:
 //	Output:
 // 
-int Classifier::assignLabel(const Distance* dists) {
-	if (k == 1) { return dists[0].sampleLabel; }
+int Classifier::assignLabel(const Distance* nnDists) {
+	if (k == 1) { return nnDists[0].sampleLabel; }
 
 	//  first find largest class label
 	// 	create array of distsSize of the greatest class label so that we can increase
 	//	the value under that index every time that label is met
 	int i = 0;
-	int largestLabel = dists[i].sampleLabel;
+	int largestLabel = nnDists[i].sampleLabel;
 	for (i = 1; i < k; i++) {
-		if (largestLabel < dists[i].sampleLabel) {
-			largestLabel = dists[i].sampleLabel;
+		if (largestLabel < nnDists[i].sampleLabel) {
+			largestLabel = nnDists[i].sampleLabel;
 		}
 	}
 	
@@ -127,8 +122,8 @@ int Classifier::assignLabel(const Distance* dists) {
 	for (i = 0; i < k; i++)	{
 		// in case of draw choose the label with smallest distance,
 		// change ">" to ">=" to choose the last, largest
-		if (++freqs[dists[i].sampleLabel] > freqs[result]) {
-			result = dists[i].sampleLabel;
+		if (++freqs[nnDists[i].sampleLabel] > freqs[result]) {
+			result = nnDists[i].sampleLabel;
 		}
 	}
 
@@ -161,3 +156,4 @@ void Classifier::calculateErrorRate(const SampleSet& orig) {
 int Classifier::classifySample(const SampleSet& trainSet, const Sample& testSample) {
 	return classifySample(trainSet, testSample, distances[testSample.index]);
 }
+

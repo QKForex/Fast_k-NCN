@@ -44,10 +44,10 @@ protected:
 	Classifier(const int k, const int nrTrainSamples, const int nrTestSamples);
 
 	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample,
-		Distance** dists);
+		Distance* testSampleDists);
 	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample);
 	
-	int assignLabel(const Distance* dists);
+	int assignLabel(const Distance* nnDists);
 
 	// wrappers
 	int calculateError(const int* results, const SampleSet& orig);

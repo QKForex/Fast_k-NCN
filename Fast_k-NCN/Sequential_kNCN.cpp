@@ -30,9 +30,9 @@ void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& tes
 int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
 								   Distance* testSampleDists) {	  
 	if (k == 1) {
-		return find1NN(trainSet, testSample).sampleLabel;
+		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		return assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSample));
+		return assignLabel(findkNCN(const_cast<SampleSet&> (trainSet), testSample, testSampleDists));
 	}
 }
 
@@ -58,13 +58,13 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 //	trainSet needs to be changed, moving already used to the back of array, swap samples
 //
 const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
-										  Distance** dists) {
+										  Distance* testSampleDists) {
 	Distance* nndists = (Distance*) malloc(k * sizeof(Distance));
 	fill(nndists, nndists+k, Distance(-1,-1, FLT_MAX));
 
 	SampleSet centroids(trainSet.nrClasses, trainSet.nrDims, k);
 	
-	nndists[0] = find1NN(trainSet, testSample, dists);
+	nndists[0] = find1NN(trainSet, testSample, testSampleDists);
 	centroids[0] = trainSet[nndists[0].sampleIndex];
 	//trainSet[nndists[0].sampleIndex].swap(trainSet[trainSet.nrSamples - 1]);
 	trainSet.swapSamples(nndists[0].sampleIndex, trainSet.nrSamples - 1);
@@ -95,12 +95,6 @@ const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& tes
 }
 
 const Distance* Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
-	return findkNCN(trainSet, testSample, distances);
+	return findkNCN(trainSet, testSample, distances[testSample.index]);
 }
 
-//inline void Sequential_kNCN::swapSamples(SampleSet& trainSet, const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
-//	//trainSet[samIndexToMoveToBack].swap(trainSet[samIndexToMoveFromBack]);
-//	Sample tempSample(trainSet[samIndexToMoveToBack]);
-//	trainSet[samIndexToMoveToBack] = trainSet[samIndexToMoveFromBack];
-//	trainSet[samIndexToMoveFromBack] = tempSample;
-//}

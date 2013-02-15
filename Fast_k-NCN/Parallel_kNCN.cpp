@@ -20,10 +20,17 @@ void Parallel_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testS
 int Parallel_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
 								   Distance* testSampleDists) {	  
 	if (k == 1) {
-		return find1NN(trainSet, testSample).sampleLabel;
+		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		return assignLabel(findkNCN_parallel(const_cast<SampleSet&> (trainSet), testSample));
+		return assignLabel(findkNCN_parallel(const_cast<SampleSet&> (trainSet), testSample, testSampleDists));
 	}
+}
+
+const Distance* Parallel_kNCN::findkNCN_parallel(SampleSet& trainSet, const Sample& testSample,
+										 Distance* testSampleDists) {
+	Distance* nndists = NULL;
+	
+	return nndists;
 }
 
 //
