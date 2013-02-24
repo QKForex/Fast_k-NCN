@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
 		exit(-1);
 	}
 
-	classifier->learnOptimalK(trainSet, ir.largestK);
+	//classifier->learnOptimalK(trainSet, ir.largestK);
 
 	PerformanceAnalyzer pa;
 	pa.startTimer();
@@ -104,7 +104,8 @@ int main(int argc, char** argv) {
 	pa.stopTimer();
 	classifier->calculateErrorRate(testSet);
 
-	std::chrono::time_point<std::chrono::system_clock> current_time = std::chrono::system_clock::now();
+	std::chrono::time_point<std::chrono::system_clock> current_time = 
+		std::chrono::system_clock::now();
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
 	ofstream resultFile(ir.resultFilename, fstream::app);
 	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %25t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 

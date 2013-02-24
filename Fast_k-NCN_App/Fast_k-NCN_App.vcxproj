@@ -18,91 +18,36 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="CacheEfficient_kNCN.cpp" />
-    <ClCompile Include="Classifier.cpp" />
-    <ClCompile Include="DistanceCalculation.cpp" />
-    <ClCompile Include="InputReader.cpp" />
-    <ClCompile Include="LimitedV1_kNCN.cpp" />
-    <ClCompile Include="LimitedV2_kNCN.cpp" />
-    <ClCompile Include="MemoryAllocation.cpp" />
-    <ClCompile Include="Parallel_kNCN.cpp" />
-    <ClCompile Include="PerformanceAnalyzer.cpp" />
-    <ClCompile Include="RandomizedSelect_kNCN.cpp" />
-    <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="SampleSet.cpp" />
-    <ClCompile Include="SampleSetFactory.cpp" />
-    <ClCompile Include="Sequential_kNCN.cpp" />
-    <ClCompile Include="Sequential_kNN.cpp" />
-    <ClCompile Include="Utility.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CacheEfficient_kNCN.h" />
-    <ClInclude Include="Classifier.h" />
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="Distance.h" />
-    <ClInclude Include="DistanceCalculation.h" />
-    <ClInclude Include="InputReader.h" />
-    <ClInclude Include="LimitedV1_kNCN.h" />
-    <ClInclude Include="LimitedV2_kNCN.h" />
-    <ClInclude Include="MemoryAllocation.h" />
-    <ClInclude Include="Parallel_kNCN.h" />
-    <ClInclude Include="PerformanceAnalyzer.h" />
-    <ClInclude Include="RandomizedSelect_kNCN.h" />
-    <ClInclude Include="Sample.h" />
-    <ClInclude Include="SampleSet.h" />
-    <ClInclude Include="SampleSetFactory.h" />
-    <ClInclude Include="Sequential_kNCN.h" />
-    <ClInclude Include="Sequential_kNN.h" />
-    <ClInclude Include="Utility.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Results\results_kncn.txt" />
-    <Text Include="Results\results_knn.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\cache_kncn.properties" />
-    <None Include="Properties\kncn.properties" />
-    <None Include="Properties\knn.properties" />
-    <None Include="Properties\limv1_kncn.properties" />
-    <None Include="Properties\limv2_kncn.properties" />
-    <None Include="Properties\par_kncn.properties" />
-    <None Include="Properties\rand_kncn.properties" />
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="logger_config.xml" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{75D9A002-0C5A-4F63-A7FE-C414F4D73E1A}</ProjectGuid>
-    <RootNamespace>Fast_kNCN</RootNamespace>
-    <ProjectName>Fast_k-NCN</ProjectName>
+    <ProjectGuid>{72347611-D5E4-471A-A530-F95453AF8BD3}</ProjectGuid>
+    <RootNamespace>Fast_kNCN_App</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -120,36 +65,36 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_debug;$(LibraryPath)</LibraryPath>
     <IncludePath>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_release;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x64_debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_release;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_debug;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x64_debug;$(LibraryPath)</LibraryPath>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <BrowseInformation>false</BrowseInformation>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
+      <SDLCheck>
+      </SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Fast_k-NCN;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -159,26 +104,23 @@
       <SubSystem>
       </SubSystem>
     </Link>
-    <Bscmake>
-      <PreserveSbr>true</PreserveSbr>
-    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <BrowseInformation>false</BrowseInformation>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
+      <SDLCheck>
+      </SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Fast_k-NCN;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Program Files\boost\boost_152_0\lib64\;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x64_debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>apr.lib;aprutil.lib;log4cxx.lib;xml.lib;ws2_32.lib;mswsock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>
+      </SubSystem>
     </Link>
-    <Bscmake>
-      <PreserveSbr>true</PreserveSbr>
-    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -186,8 +128,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Fast_k-NCN;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -204,11 +146,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <EnablePREfast>false</EnablePREfast>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalOptions>/arch:AVX %(AdditionalOptions)</AdditionalOptions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Fast_k-NCN;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -219,6 +158,14 @@
       <AdditionalDependencies>apr.lib;aprutil.lib;log4cxx.lib;xml.lib;ws2_32.lib;mswsock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fast_k-NCN\Fast_k-NCN.vcxproj">
+      <Project>{75d9a002-0c5a-4f63-a7fe-c414f4d73e1a}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
