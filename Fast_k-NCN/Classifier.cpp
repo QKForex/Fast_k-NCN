@@ -1,7 +1,4 @@
 #include "Classifier.h"
-#include <vector> //TODO should go from here
-#include <algorithm>
-#include <boost\bind.hpp>
 
 Classifier::Classifier() : k(1), nrTrainSamples(0), nrTestSamples(0) {
 	distances = NULL;
@@ -23,30 +20,44 @@ Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSa
 const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largestK) {
 	vector< pair<int,int> > errorsForK;
 
-	Distance** nndists = new Distance*[nrTestSamples];
+	Distance** nndists = new Distance*[trainSet.nrSamples];
+
+	SampleSet remainingTrainSamples(trainSet); //TODO: change this classifier
+	remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1;
 	// na konæu jest 1399, 0, 1, 2,..., 1398
 	for (k = 1; k <= largestK; k++) {
-		SampleSet remainingTrainSamples(trainSet);
-		remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1;
-		Sample currentTrainSample(remainingTrainSamples[remainingTrainSamples.nrSamples - 1]);
+
+		//Sample currentTrainSample(remainingTrainSamples[remainingTrainSamples.nrSamples - 1]);
 		// for every k check all leave-one-out combinations in trainSet
 		pair<int, int> p(k,0);
 		errorsForK.push_back(p);
-		for (int samIndex = 0; samIndex < remainingTrainSamples.nrSamples - 1; samIndex++) {
+
+		for (int samIndex = 0; samIndex < remainingTrainSamples.nrSamples-1; samIndex++) {
 			// for every sample perform leave-one-out and increase counter on error
 			remainingTrainSamples.swapSamples(samIndex, trainSet.nrSamples - 1);
-			nndists[samIndex] = countDistances(remainingTrainSamples, currentTrainSample);
-			int label = classifySample(remainingTrainSamples, currentTrainSample, nndists[samIndex]);
-			if (label != currentTrainSample.label) {
-				errorsForK[k].second++;
+			//swapSamples(remainingTrainSamples[samIndex], currentTrainSample);
+			nndists[samIndex] = countDistances(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1]);
+			int label = classifySample(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[samIndex]);
+			if (label != remainingTrainSamples[trainSet.nrSamples - 1].label) {
+				errorsForK[k-1].second++;
 			}
 			remainingTrainSamples.swapSamples(trainSet.nrSamples - 1, samIndex);
+			//swapSamples(currentTrainSample, remainingTrainSamples[samIndex]);
 		}
+
+		nndists[trainSet.nrSamples - 1] = countDistances(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1]);
+		int label = classifySample(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[trainSet.nrSamples - 1]);
+		if (label != remainingTrainSamples[trainSet.nrSamples - 1].label) {
+			errorsForK[k-1].second++;
+		}
+
 	}
 
+
+
 	std::sort(errorsForK.begin(), errorsForK.end(), 
-          boost::bind(&std::pair<int, int>::second, _1) <
-          boost::bind(&std::pair<int, int>::second, _2));
+		boost::bind(&std::pair<int, int>::second, _1) <
+		boost::bind(&std::pair<int, int>::second, _2));
 
 	const int optimalK = errorsForK[0].first;
 

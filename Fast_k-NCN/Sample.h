@@ -49,9 +49,11 @@ namespace Common {
 		// for range-based for loop
 		//inline SampleDim begin() const { return dims[0]; }
 		//inline SampleDim end() const { return dims[nrDims-1]; }
+		friend void swapSamples(Sample& s1, Sample& s2);
 
 	private:
 		void copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst);
 	};
+
 
 }

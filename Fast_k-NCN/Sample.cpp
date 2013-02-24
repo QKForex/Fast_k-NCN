@@ -104,12 +104,19 @@ namespace Common {
 	//}   
 
 
-	std::ostream& operator<<(std::ostream& out, const Sample& s) {
-		return out << s.dims << " " << s.index << " " << s.label << " " << s.nrDims;
-	}
 
 	void Sample::copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst) {
 		for (int i = 0; i < nrDims; i++) { dst[i] = src[i]; }
 	}
 
+	std::ostream& operator<<(std::ostream& out, const Sample& s) {
+		return out << s.dims << " " << s.index << " " << s.label << " " << s.nrDims;
+	}
+
+	void swapSamples(Sample& s1, Sample& s2) {
+		Sample tempSample(s1);
+		s1 = s2;
+		s2 = tempSample;
+	}
+				
 }

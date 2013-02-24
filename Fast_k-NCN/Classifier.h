@@ -1,10 +1,13 @@
 #pragma once
 
+#include <vector>
 #include <algorithm>
 #include <climits>
 
 #include <time.h>
 #include <windows.h>
+
+#include <boost\bind.hpp>
 
 #include "Distance.h"
 #include "DistanceCalculation.h"
