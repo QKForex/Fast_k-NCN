@@ -1,7 +1,5 @@
 #include "Sample.h"
 
-
-
 namespace Common {
 
 	//TODO: Add Comments
@@ -71,7 +69,7 @@ namespace Common {
 	}
 
 	bool Sample::operator==(const Sample& s) const {
-		if ((nrDims != s.nrDims) || (label != s.label)) { // can also compare on index
+		if ((index != s.index) || (nrDims != s.nrDims) || (label != s.label)) { // can also compare on index
 			return false;
 		}
 		if (dims[0] == s.dims[0]) {
