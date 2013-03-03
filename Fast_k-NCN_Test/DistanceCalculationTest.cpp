@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#include "DistanceCalculation.h"
-#include "SampleSetFactory.h"
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Common;
 
@@ -31,7 +28,7 @@ namespace Fast_kNCN_Test
 
 
 	TEST_CLASS(DistanceCalculationTest)	{
-
+	private:
 
 		TEST_CLASS_INITIALIZE(DistanceCalculationTestSetUp) {	
 
@@ -43,34 +40,33 @@ namespace Fast_kNCN_Test
 
 		}
 
-public:
+	public:
+		TEST_METHOD(CountManhattanDistanceTest) {
+			Distance dist;
+			dist.distValue = countManhattanDistance(trainSample, _testSample, trainSample.nrDims);
 
-	TEST_METHOD(CountManhattanDistanceTest) {
-		Distance dist;
-		dist.distValue = countManhattanDistance(trainSample, _testSample, trainSample.nrDims);
+			Assert::IsTrue(0.0002 - dist.distValue < 0.00001);
+		}
 
-		Assert::IsTrue(0.0002 - dist.distValue < 0.00001);
-	}
+		TEST_METHOD(CountEuclideanDistanceTest)	{
+			Distance dist;
+			dist.distValue = countEuclideanDistance(trainSample, _testSample, trainSample.nrDims);
 
-	TEST_METHOD(CountEuclideanDistanceTest)	{
-		Distance dist;
-		dist.distValue = countEuclideanDistance(trainSample, _testSample, trainSample.nrDims);
+			Assert::IsTrue(0.0000000400 - dist.distValue < 0.000000001);
 
-		Assert::IsTrue(0.0000000400 - dist.distValue < 0.000000001);
+		}
 
-	}
+		TEST_METHOD(CalculateDistanceTest) {
+			SampleSetFactory sf;
+			SampleSet trainSampleSet = sf.createSampleSet("../Fast_k-NCN/Datasets/ftrain01.txt");
 
-	TEST_METHOD(CalculateDistanceTest) {
-		SampleSetFactory sf;
-		SampleSet trainSampleSet = sf.createSampleSet("../Fast_k-NCN/Datasets/ftrain01.txt");
+			const Distance* resultDists = countDistances(trainSampleSet, _testSample);
 
-		const Distance* resultDists = countDistances(trainSampleSet, _testSample);
+			Assert::IsTrue(resultDists != NULL);
 
-		Assert::IsTrue(resultDists != NULL);
+			delete[] resultDists;
+		}
 
-		delete[] resultDists;
-	}
-	
 
 	};
 }
