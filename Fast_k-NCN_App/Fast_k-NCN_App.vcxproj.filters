@@ -13,10 +13,65 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Datasets">
+      <UniqueIdentifier>{2120e9b2-c5fa-41e3-be56-5e1b3da52cae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Logs">
+      <UniqueIdentifier>{7c5121ab-fb73-4f47-9a3c-e0e708767dc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Results">
+      <UniqueIdentifier>{862179ad-3740-419a-be7a-1d0c26665f39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Properties">
+      <UniqueIdentifier>{1046421d-e8cb-4cbb-886b-2e216af4e3c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Datasets\ftest01.txt">
+      <Filter>Resource Files\Datasets</Filter>
+    </Text>
+    <Text Include="..\Datasets\ftrain01.txt">
+      <Filter>Resource Files\Datasets</Filter>
+    </Text>
+    <Text Include="..\Datasets\ftest02.txt">
+      <Filter>Resource Files\Datasets</Filter>
+    </Text>
+    <Text Include="..\Datasets\ftrain02.txt">
+      <Filter>Resource Files\Datasets</Filter>
+    </Text>
+    <Text Include="..\Results\results_kncn.txt">
+      <Filter>Resource Files\Results</Filter>
+    </Text>
+    <Text Include="..\Results\results_knn.txt">
+      <Filter>Resource Files\Results</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Properties\cache_kncn.properties">
+      <Filter>Resource Files\Properties</Filter>
+    </None>
+    <None Include="..\Properties\kncn.properties">
+      <Filter>Resource Files\Properties</Filter>
+    </None>
+    <None Include="..\Properties\knn.properties">
+      <Filter>Resource Files\Properties</Filter>
+    </None>
+    <None Include="..\Properties\limv1_kncn.properties">
+      <Filter>Resource Files\Properties</Filter>
+    </None>
+    <None Include="..\Properties\limv2_kncn.properties">
+      <Filter>Resource Files\Properties</Filter>
+    </None>
+    <None Include="..\Properties\par_kncn.properties">
+      <Filter>Resource Files\Properties</Filter>
+    </None>
+    <None Include="..\Properties\rand_kncn.properties">
+      <Filter>Resource Files\Properties</Filter>
+    </None>
   </ItemGroup>
 </Project>

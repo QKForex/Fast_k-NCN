@@ -102,6 +102,7 @@
       </CompileAsManaged>
       <CompileAsWinRT>
       </CompileAsWinRT>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,6 +110,9 @@
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -175,18 +179,31 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClassifierTest.cpp" />
+    <ClCompile Include="DistanceCalculationTest.cpp" />
+    <ClCompile Include="SampleSetTest.cpp" />
+    <ClCompile Include="SampleTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="DistanceCalculationTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fast_k-NCN\Fast_k-NCN.vcxproj">
       <Project>{75d9a002-0c5a-4f63-a7fe-c414f4d73e1a}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Datasets\ftest01.txt" />
+    <Text Include="..\Datasets\ftest02.txt" />
+    <Text Include="..\Datasets\ftrain01.txt" />
+    <Text Include="..\Datasets\ftrain02.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Properties\kncn.properties" />
+    <None Include="..\Properties\knn.properties" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

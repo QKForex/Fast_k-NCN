@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Datasets">
+      <UniqueIdentifier>{8d94beef-d8a2-446e-be70-7905e6b060b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Properties">
+      <UniqueIdentifier>{06e9a5e1-5eb7-47b3-a0f5-b60862f56f04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -26,8 +32,39 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ClassifierTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="DistanceCalculationTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SampleTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SampleSetTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Datasets\ftest01.txt">
+      <Filter>Resource Files\Datasets</Filter>
+    </Text>
+    <Text Include="..\Datasets\ftest02.txt">
+      <Filter>Resource Files\Datasets</Filter>
+    </Text>
+    <Text Include="..\Datasets\ftrain01.txt">
+      <Filter>Resource Files\Datasets</Filter>
+    </Text>
+    <Text Include="..\Datasets\ftrain02.txt">
+      <Filter>Resource Files\Datasets</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Properties\kncn.properties">
+      <Filter>Resource Files\Properties</Filter>
+    </None>
+    <None Include="..\Properties\knn.properties">
+      <Filter>Resource Files\Properties</Filter>
+    </None>
   </ItemGroup>
 </Project>

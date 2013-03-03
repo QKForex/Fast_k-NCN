@@ -139,37 +139,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Results\results_kncn.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="Results\results_knn.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\cache_kncn.properties">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Properties\kncn.properties">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Properties\knn.properties">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Properties\limv1_kncn.properties">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Properties\limv2_kncn.properties">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Properties\par_kncn.properties">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Properties\rand_kncn.properties">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Xml Include="logger_config.xml">
       <Filter>Resource Files</Filter>
     </Xml>

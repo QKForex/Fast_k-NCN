@@ -96,6 +96,7 @@
       </SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\Fast_k-NCN;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -104,6 +105,9 @@
       <SubSystem>
       </SubSystem>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -165,6 +169,23 @@
     <ProjectReference Include="..\Fast_k-NCN\Fast_k-NCN.vcxproj">
       <Project>{75d9a002-0c5a-4f63-a7fe-c414f4d73e1a}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Datasets\ftest01.txt" />
+    <Text Include="..\Datasets\ftest02.txt" />
+    <Text Include="..\Datasets\ftrain01.txt" />
+    <Text Include="..\Datasets\ftrain02.txt" />
+    <Text Include="..\Results\results_kncn.txt" />
+    <Text Include="..\Results\results_knn.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Properties\cache_kncn.properties" />
+    <None Include="..\Properties\kncn.properties" />
+    <None Include="..\Properties\knn.properties" />
+    <None Include="..\Properties\limv1_kncn.properties" />
+    <None Include="..\Properties\limv2_kncn.properties" />
+    <None Include="..\Properties\par_kncn.properties" />
+    <None Include="..\Properties\rand_kncn.properties" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

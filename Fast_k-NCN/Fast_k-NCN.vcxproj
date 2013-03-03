@@ -57,19 +57,6 @@
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Results\results_kncn.txt" />
-    <Text Include="Results\results_knn.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\cache_kncn.properties" />
-    <None Include="Properties\kncn.properties" />
-    <None Include="Properties\knn.properties" />
-    <None Include="Properties\limv1_kncn.properties" />
-    <None Include="Properties\limv2_kncn.properties" />
-    <None Include="Properties\par_kncn.properties" />
-    <None Include="Properties\rand_kncn.properties" />
-  </ItemGroup>
-  <ItemGroup>
     <Xml Include="logger_config.xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -148,7 +135,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformation>true</BrowseInformation>
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
