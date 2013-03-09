@@ -60,9 +60,10 @@ namespace Fast_kNCN_Test
 			SampleSetFactory sf;
 			SampleSet trainSampleSet = sf.createSampleSet("../Fast_k-NCN/Datasets/ftrain01.txt");
 
-			const Distance* resultDists = countDistances(trainSampleSet, _testSample);
-
-			Assert::IsTrue(resultDists != NULL);
+			Distance* resultDists = new Distance[trainSampleSet.nrDims];
+			
+			countDistances(trainSampleSet, _testSample, resultDists);
+			Assert::IsNotNull(resultDists); //TODO: change to sth meaningful
 
 			delete[] resultDists;
 		}

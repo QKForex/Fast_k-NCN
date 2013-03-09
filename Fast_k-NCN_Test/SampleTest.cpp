@@ -24,8 +24,6 @@ namespace Fast_kNCN_Test
 		-0.0261f, -0.3483f, -0.0400f, -0.3543f,
 		-0.0515f, -0.3601f};
 
-
-
 	TEST_CLASS(SampleSetTest)	{
 		static Sample testSample;
 		static SampleSetFactory sf;

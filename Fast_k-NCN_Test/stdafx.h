@@ -14,8 +14,9 @@
 #include <memory>
 
 #include "DistanceCalculation.h"
+#include "InputReader.h"
+#include "Sequential_kNCN.h"
 #include "SampleSetFactory.h"
-
 
 using namespace Common;
 
