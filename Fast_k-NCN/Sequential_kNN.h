@@ -4,7 +4,6 @@
 
 class Sequential_kNN: public Classifier {
 public:
-	Sequential_kNN();
 	Sequential_kNN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~Sequential_kNN();
 
@@ -14,8 +13,10 @@ public:
 		Distance* testSampleDists);
 
 private:
-	const Distance* findkNN(const SampleSet& trainSet, const Sample& testSample,
+	Sequential_kNN();
+
+	void findkNN(const SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists);
-	const Distance* findkNN(const SampleSet& trainSet, const Sample& testSample);
+	void findkNN(const SampleSet& trainSet, const Sample& testSample);
 
 };

@@ -4,7 +4,6 @@
 
 class RandomizedSelect_kNCN: public Classifier {
 public:
-	RandomizedSelect_kNCN();
 	RandomizedSelect_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~RandomizedSelect_kNCN();
 
@@ -13,8 +12,9 @@ public:
 		Distance* testSampleDists);
 
 private:
-	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample,
+	RandomizedSelect_kNCN();
+	
+	void findkNCN(SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists);
-	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);
-
+	void findkNCN(SampleSet& trainSet, const Sample& testSample);
 };

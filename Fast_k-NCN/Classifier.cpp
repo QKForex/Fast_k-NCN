@@ -1,14 +1,26 @@
 #include "Classifier.h"
 
 Classifier::Classifier() : k(1), nrTrainSamples(0), nrTestSamples(0) {
-	distances = NULL;
-	results = NULL;
+	distances = nullptr;
+	results = nullptr;
+	nndists = nullptr;
 }
 
 Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSamples)
 	: k(k), nrTrainSamples(nrTrainSamples), nrTestSamples(nrTestSamples) {
-	distances = NULL;
-	results = NULL;
+	distances = new Distance*[nrTestSamples]; // preprocess
+	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
+		distances[distIndex] = new Distance[30]; //TODO: add nrDims
+		std::fill(distances[distIndex], distances[distIndex]+30, Distance(-1,-1, FLT_MAX));
+	}
+
+	nndists = new Distance*[nrTestSamples];
+	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
+		nndists[distIndex] = new Distance[k]; //TODO: add nrDims
+		std::fill(distances[distIndex], distances[distIndex]+k, Distance(-1,-1, FLT_MAX));
+	}
+
+	results = new int[nrTestSamples];
 }
 
 //
@@ -18,25 +30,29 @@ Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSa
 //	Output:
 //
 const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largestK) {
-	vector< pair<int,int> > errorsForK;
+	std::vector< std::pair<int,int> > errorsForK;
 
 	Distance** nndists = new Distance*[trainSet.nrSamples];
+	for (int i = 0; i < trainSet.nrSamples; i++) {
+		nndists[i] = new Distance[trainSet.nrSamples - 1];
+	}
 
 	SampleSet remainingTrainSamples(trainSet); //TODO: change this classifier
-	remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1;
-	// na konæu jest 1399, 0, 1, 2,..., 1398
+	remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1; //TODO: change!
+	// na koncu jest 1399, 0, 1, 2,..., 1398
+	
 	for (k = 1; k <= largestK; k++) {
 
 		//Sample currentTrainSample(remainingTrainSamples[remainingTrainSamples.nrSamples - 1]);
 		// for every k check all leave-one-out combinations in trainSet
-		pair<int, int> p(k,0);
+		std::pair<int, int> p(k,0);
 		errorsForK.push_back(p);
 
-		for (int samIndex = 0; samIndex < remainingTrainSamples.nrSamples-1; samIndex++) {
+		for (int samIndex = 0; samIndex < remainingTrainSamples.nrSamples - 1; samIndex++) {
 			// for every sample perform leave-one-out and increase counter on error
 			remainingTrainSamples.swapSamples(samIndex, trainSet.nrSamples - 1);
 			//swapSamples(remainingTrainSamples[samIndex], currentTrainSample);
-			nndists[samIndex] = countDistances(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1]);
+			countDistances(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[samIndex]);
 			int label = classifySample(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[samIndex]);
 			if (label != remainingTrainSamples[trainSet.nrSamples - 1].label) {
 				errorsForK[k-1].second++;
@@ -45,15 +61,13 @@ const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largest
 			//swapSamples(currentTrainSample, remainingTrainSamples[samIndex]);
 		}
 
-		nndists[trainSet.nrSamples - 1] = countDistances(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1]);
+		countDistances(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[trainSet.nrSamples - 1]);
 		int label = classifySample(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[trainSet.nrSamples - 1]);
 		if (label != remainingTrainSamples[trainSet.nrSamples - 1].label) {
 			errorsForK[k-1].second++;
 		}
 
 	}
-
-
 
 	std::sort(errorsForK.begin(), errorsForK.end(), 
 		boost::bind(&std::pair<int, int>::second, _1) <
@@ -65,6 +79,10 @@ const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largest
 	delete[] nndists;
 
 	return optimalK;
+}
+
+int Classifier::classifySample(const SampleSet& trainSet, const Sample& testSample) {
+	return classifySample(trainSet, testSample, distances[testSample.index]);
 }
 
 //
@@ -79,11 +97,17 @@ void Classifier::classify(const SampleSet& trainSet, const SampleSet& testSet) {
 	}
 }
 
+void Classifier::calculateErrorRate(const SampleSet& orig) {
+	nrClassificationErrors = calculateError(orig, results);	
+	errorRate = (float) nrClassificationErrors / orig.nrSamples * 100;
+}
+
 //
 //	Find first Nearest Neighbor - simplified version 
+//	The resultant nearest neighbor consists of label
 //
 //	Input: list of precomputed distances for given sample
-//	Output: list of k nearest neighbors
+//	Output: nearest neighbor
 //
 const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& testSample,
 								   Distance* dists) {							   
@@ -112,17 +136,17 @@ const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& test
 //	Input:
 //	Output:
 // 
-int Classifier::assignLabel(const Distance* nnDists) {
-	if (k == 1) { return nnDists[0].sampleLabel; }
+int Classifier::assignLabel(const int testSampleIndex) {
+	if (k == 1) { return nndists[testSampleIndex][0].sampleLabel; }
 
 	//  first find largest class label
 	// 	create array of distsSize of the greatest class label so that we can increase
 	//	the value under that index every time that label is met
 	int i = 0;
-	int largestLabel = nnDists[i].sampleLabel;
+	int largestLabel = nndists[testSampleIndex][i].sampleLabel;
 	for (i = 1; i < k; i++) {
-		if (largestLabel < nnDists[i].sampleLabel) {
-			largestLabel = nnDists[i].sampleLabel;
+		if (largestLabel < nndists[testSampleIndex][i].sampleLabel) {
+			largestLabel = nndists[testSampleIndex][i].sampleLabel;
 		}
 	}
 	
@@ -133,8 +157,8 @@ int Classifier::assignLabel(const Distance* nnDists) {
 	for (i = 0; i < k; i++)	{
 		// in case of draw choose the label with smallest distance,
 		// change ">" to ">=" to choose the last, largest
-		if (++freqs[nnDists[i].sampleLabel] > freqs[result]) {
-			result = nnDists[i].sampleLabel;
+		if (++freqs[nndists[testSampleIndex][i].sampleLabel] > freqs[result]) {
+			result = nndists[testSampleIndex][i].sampleLabel;
 		}
 	}
 
@@ -143,7 +167,7 @@ int Classifier::assignLabel(const Distance* nnDists) {
 	return result;
 }
 
-int Classifier::calculateError(const int* results, const SampleSet& orig) {
+int Classifier::calculateError(const SampleSet& orig, const int* results) {
 	int nrError = 0;
 	// comments in this function - uncomment for more verbose logging purposes
 	//ofstream file("result.txt");
@@ -158,13 +182,3 @@ int Classifier::calculateError(const int* results, const SampleSet& orig) {
 	//file << "Number of errors: " << nrError << std::endl;
 	return nrError;
 }
-
-void Classifier::calculateErrorRate(const SampleSet& orig) {
-	nrClassificationErrors = calculateError(results, orig);	
-	errorRate = (float) nrClassificationErrors / orig.nrSamples * 100;
-}
-
-int Classifier::classifySample(const SampleSet& trainSet, const Sample& testSample) {
-	return classifySample(trainSet, testSample, distances[testSample.index]);
-}
-

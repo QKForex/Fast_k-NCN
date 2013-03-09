@@ -10,6 +10,6 @@ namespace Common {
 
 	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, const int nrDims);
 	DistanceValue countEuclideanDistance(const Sample& train, const Sample& test, const int nrDims);
-	Distance* countDistances(const SampleSet& trainSet, const Sample& testSample);
+	void countDistances(const SampleSet& trainSet, const Sample& testSample, Distance*& distances);
 
 }

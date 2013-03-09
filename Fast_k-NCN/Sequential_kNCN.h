@@ -4,7 +4,8 @@
 
 class Sequential_kNCN: public Classifier {
 public:
-	Sequential_kNCN();
+	// centroids
+	
 	Sequential_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~Sequential_kNCN();
 
@@ -12,7 +13,9 @@ public:
 	int classifySample(const SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists);
 private:
-	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample,
+	Sequential_kNCN();
+
+	void findkNCN(SampleSet& trainSet, const Sample& testSample,
 		Distance* dists);
-	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);
+	void findkNCN(SampleSet& trainSet, const Sample& testSample);
 };

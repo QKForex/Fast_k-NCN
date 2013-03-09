@@ -9,11 +9,9 @@
 
 #include <boost\bind.hpp>
 
-#include "Distance.h"
 #include "DistanceCalculation.h"
 #include "SampleSet.h"
 
-using namespace std;
 using namespace Common;
 
 //
@@ -21,16 +19,15 @@ using namespace Common;
 //
 class Classifier { //TODO: singleton
 public:
+	Distance** distances; // all distances for all combinations of train and test samples
+	Distance** nndists; // distances to k nearest neighbors for all test samples
+	int* results; // results of nrClasses
+
 	int k;
-	Distance** distances; // distances between all samples
 	int nrTrainSamples;
 	int nrTestSamples;
 	int nrClassificationErrors;
 	float errorRate;
-
-	int* results;
-
-	Distance* nndists; // distances to k nearest neighbors
 
 	virtual ~Classifier() {}; // cannot implement pure virtual destructor
 	virtual void preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
@@ -46,15 +43,13 @@ protected:
 	Classifier();
 	Classifier(const int k, const int nrTrainSamples, const int nrTestSamples);
 
+	//TODO: find1NN Parallel
 	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists);
 	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample);
 	
-	int assignLabel(const Distance* nnDists);
-
-	// wrappers
-	int calculateError(const int* results, const SampleSet& orig);
-	int classifySample(const SampleSet& trainSet, const SampleSet& testSet);
+	int assignLabel(const int testSampleIndex);
+	int calculateError(const SampleSet& orig, const int* results);
 };
 
 

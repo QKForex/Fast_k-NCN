@@ -4,7 +4,6 @@
 
 class CacheEfficient_kNCN: public Classifier {
 public:
-	CacheEfficient_kNCN();
 	CacheEfficient_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~CacheEfficient_kNCN();
 
@@ -13,8 +12,10 @@ public:
 		Distance* testSampleDists);
 
 private:
-	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample,
+	CacheEfficient_kNCN();
+
+	void findkNCN(SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists);
-	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);
+	void findkNCN(SampleSet& trainSet, const Sample& testSample);
 
 };

@@ -4,7 +4,6 @@
 
 class LimitedV1_kNCN: public Classifier {
 public:
-	LimitedV1_kNCN();
 	LimitedV1_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~LimitedV1_kNCN();
 
@@ -13,7 +12,9 @@ public:
 		Distance* testSampleDists);
 
 private:
-	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample,
+	LimitedV1_kNCN();
+
+	void findkNCN(SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists);
-	const Distance* findkNCN(SampleSet& trainSet, const Sample& testSample);
+	void findkNCN(SampleSet& trainSet, const Sample& testSample);
 };

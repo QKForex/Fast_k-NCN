@@ -4,7 +4,6 @@
 
 class Parallel_kNCN: public Classifier {
 public:
-	Parallel_kNCN();
 	Parallel_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~Parallel_kNCN();
 
@@ -13,7 +12,9 @@ public:
 		Distance* testSampleDists);
 
 private:
-	const Distance* findkNCN_parallel(SampleSet& trainSet, const Sample& testSample,
+	Parallel_kNCN();
+
+	void findkNCN_parallel(SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists);
-	const Distance* findkNCN_parallel(SampleSet& trainSet, const Sample& testSample);
+	void findkNCN_parallel(SampleSet& trainSet, const Sample& testSample);
 };

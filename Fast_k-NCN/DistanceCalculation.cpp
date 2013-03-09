@@ -36,8 +36,7 @@ namespace Common {
 	}
 
 	//TODO: maybe should be const and array should not changed anywhere else in the code
-	Distance* countDistances(const SampleSet& trainSet, const Sample& testSample) {
-		Distance* distances = new Distance[trainSet.nrSamples];
+	void countDistances(const SampleSet& trainSet, const Sample& testSample, Distance*& distances) {
 		Distance d;
 		int samIndex;
 		//TODO: introduce multithreading
@@ -52,7 +51,6 @@ namespace Common {
 			d.sampleLabel = trainSet[samIndex].label;
 			distances[samIndex] = d;
 		}
-		return distances;
 	}
 
 }
