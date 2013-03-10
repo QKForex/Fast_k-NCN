@@ -36,20 +36,18 @@ namespace Common {
 	}
 
 	//TODO: maybe should be const and array should not changed anywhere else in the code
-	void countDistances(const SampleSet& trainSet, const Sample& testSample, Distance*& distances) {
-		Distance d;
+	void countDistances(const SampleSet& trainSet, const Sample& testSample, Distance* distances) {
 		int samIndex;
 		//TODO: introduce multithreading
 		//#pragma omp parallel for default(none) private(samIndex, d) shared(distances, trainSet, testSample) 
 		for (samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
-			d.sampleIndex = samIndex;
+			distances[samIndex].sampleIndex = samIndex;
+			distances[samIndex].sampleLabel = trainSet[samIndex].label;
 #ifdef MANHATTAN_DIST
-			d.distValue = countManhattanDistance(trainSet[samIndex], testSample, trainSet.nrDims);
+			distances[samIndex].distValue = countManhattanDistance(trainSet[samIndex], testSample, trainSet.nrDims);
 #elif EUCLIDEAN_DIST
-			d.distValue = countEuclideanDistance(trainSet[samIndex], testSample, trainSet.nrDims);
+			distances[samIndex].distValue = countEuclideanDistance(trainSet[samIndex], testSample, trainSet.nrDims);
 #endif
-			d.sampleLabel = trainSet[samIndex].label;
-			distances[samIndex] = d;
 		}
 	}
 
