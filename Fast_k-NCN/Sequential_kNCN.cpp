@@ -17,7 +17,7 @@ Sequential_kNCN::~Sequential_kNCN() {
 
 void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-		countDistances(trainSet, testSet[samIndex], distances[samIndex]);
+		countDistances(trainSet, testSet[samIndex], this->distances[samIndex]);
 	}
 }
 
@@ -91,6 +91,6 @@ void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
 }
 
 void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
-	return findkNCN(trainSet, testSample, distances[testSample.index]);
+	return findkNCN(trainSet, testSample, this->distances[testSample.index]);
 }
 

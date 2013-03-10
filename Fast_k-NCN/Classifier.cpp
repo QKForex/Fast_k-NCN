@@ -10,14 +10,14 @@ Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSa
 	: k(k), nrTrainSamples(nrTrainSamples), nrTestSamples(nrTestSamples) {
 	distances = new Distance*[nrTestSamples]; // preprocess
 	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
-		distances[distIndex] = new Distance[30]; //TODO: add nrDims
-		std::fill(distances[distIndex], distances[distIndex]+30, Distance(-1,-1, FLT_MAX));
+		distances[distIndex] = new Distance[nrTrainSamples]; //TODO: add nrDims
+		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
 	}
 
 	nndists = new Distance*[nrTestSamples];
 	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
 		nndists[distIndex] = new Distance[k]; //TODO: add nrDims
-		std::fill(distances[distIndex], distances[distIndex]+k, Distance(-1,-1, FLT_MAX));
+		std::fill(nndists[distIndex], nndists[distIndex]+k, Distance(-1,-1, FLT_MAX));
 	}
 
 	results = new int[nrTestSamples];
