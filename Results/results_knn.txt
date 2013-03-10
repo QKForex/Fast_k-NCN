@@ -35,3 +35,6 @@
 10.13%  456       1274ms  5  kNN                   Datasets\ftrain01.txt        1400  Datasets\ftest01.txt         4503      Thu Feb 07 18:07:57 2013
 100.00%  1       14150ms  5  kNN                   Datasets\ftrain01.txt          50  Datasets\ftest01.txt            1      Sun Feb 24 14:01:57 2013
 100.00%  1           0ms  5  kNN                   Datasets\ftrain01.txt          50  Datasets\ftest01.txt            1      Sun Feb 24 14:02:12 2013
+100.00%  1           0ms  5  kNN                   ..\Datasets\ftrain01.txt       50  ..\Datasets\ftest01.txt         1      Sun Mar 10 00:09:53 2013
+100.00%  1           0ms  5  kNN                   ..\Datasets\ftrain01.txt       50  ..\Datasets\ftest01.txt         1      Sun Mar 10 00:11:15 2013
+100.00%  1           0ms  5  kNN                   ..\Datasets\ftrain01.txt       50  ..\Datasets\ftest01.txt         1      Sun Mar 10 00:15:20 2013
