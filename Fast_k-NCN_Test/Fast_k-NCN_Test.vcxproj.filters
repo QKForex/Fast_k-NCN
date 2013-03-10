@@ -60,10 +60,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Properties\kncn.properties">
-      <Filter>Resource Files\Properties</Filter>
-    </None>
-    <None Include="..\Properties\knn.properties">
+    <None Include="..\Properties\test.properties">
       <Filter>Resource Files\Properties</Filter>
     </None>
   </ItemGroup>

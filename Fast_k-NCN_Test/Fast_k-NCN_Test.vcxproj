@@ -203,8 +203,7 @@
     <Text Include="..\Datasets\ftrain02.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Properties\kncn.properties" />
-    <None Include="..\Properties\knn.properties" />
+    <None Include="..\Properties\test.properties" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
