@@ -60,6 +60,12 @@ namespace Fast_kNCN_Test {
 			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
 				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 			
+			Assert::AreEqual(classifier->k, ir.k);
+			Assert::AreEqual(classifier->nrTrainSamples, trainSet.nrSamples);
+			Assert::AreEqual(classifier->nrTestSamples, testSet.nrSamples);
+			Assert::AreEqual(classifier->nrClassificationErrors, 0);
+			Assert::AreEqual(classifier->errorRate, 0.0f);
+
 			Assert::IsNotNull(classifier->distances);
 			Assert::IsNotNull(classifier->nndists);
 			Assert::IsNotNull(classifier->results);

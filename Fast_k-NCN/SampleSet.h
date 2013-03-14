@@ -35,6 +35,7 @@ namespace Common {
 
 		friend std::ostream& operator<<(std::ostream& out, const SampleSet& s);
 		//friend Sample operator*() const;
+
 	};
 }
 

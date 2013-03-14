@@ -5,7 +5,7 @@ namespace Common {
 	//TODO: Add Comments
 	
 	Sample::Sample() : index(-1), label(0), nrDims(0) {
-		dims = NULL;
+		dims = nullptr;
 	}
 
 	Sample::Sample(const int i, const int l, const int n)
@@ -100,8 +100,6 @@ namespace Common {
 	//	swap(dims, other.dims);
 
 	//}   
-
-
 
 	void Sample::copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst) {
 		for (int i = 0; i < nrDims; i++) { dst[i] = src[i]; }

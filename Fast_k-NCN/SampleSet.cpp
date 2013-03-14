@@ -10,6 +10,7 @@ namespace Common {
 	SampleSet::SampleSet(int c, int d, int s)
 		: nrClasses(c), nrDims(d), nrSamples(s)	{
 		samples = new Sample[s]; // heap allocation
+		//TODO: consider adding () for initialization
 
 #ifdef LOGGING
 		cerr << "Allocated " << s * sizeof(Sample) << " byte(s) at address " << samples
