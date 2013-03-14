@@ -19,9 +19,9 @@ using namespace Common;
 //
 class Classifier { //TODO: singleton
 public:
-	Distance** distances; // all distances for all combinations of train and test samples
+	Distance** distances; // distances for all combinations of train and test samples, preprocessed
 	Distance** nndists; // distances to k nearest neighbors for all test samples
-	int* results; // results of nrClasses
+	int* results; // labels assigned to every sample as number of one of classes, ordered by index
 
 	int k;
 	int nrTrainSamples;

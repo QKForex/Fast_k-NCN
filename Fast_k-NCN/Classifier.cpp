@@ -8,18 +8,19 @@ Classifier::Classifier() : k(1), nrTrainSamples(0), nrTestSamples(0), nrClassifi
 
 Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSamples)
 	: k(k), nrTrainSamples(nrTrainSamples), nrTestSamples(nrTestSamples), nrClassificationErrors(0), errorRate(0.0f) {
-	distances = new Distance*[nrTestSamples]; // distances between every train and test sample, preprocessed
+	distances = new Distance*[nrTestSamples];
 	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
 		distances[distIndex] = new Distance[nrTrainSamples];
 		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
 	}
 
-	nndists = new Distance*[nrTestSamples]; // nearest neighbours as Distances
+	nndists = new Distance*[nrTestSamples];
 	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
 		nndists[distIndex] = new Distance[k];
 		std::fill(nndists[distIndex], nndists[distIndex]+k, Distance(-1,-1, FLT_MAX));
 	}
 
+	
 	results = new int[nrTestSamples](); //TODO: should it be initialized to 0?
 }
 
