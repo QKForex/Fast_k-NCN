@@ -7,16 +7,15 @@ public:
 	Sequential_kNN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~Sequential_kNN();
 
-	//const int learnOptimalK(const SampleSet& trainSet, const int largestK);
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);
 	int classifySample(const SampleSet& trainSet, const Sample& testSample,
-		Distance* testSampleDists);
+		Distance* testSampleDists, Distance* testSampleNNdists, const int k);
 
 private:
 	Sequential_kNN();
 
 	void findkNN(const SampleSet& trainSet, const Sample& testSample,
-		Distance* testSampleDists);
+		Distance* testSampleDists, Distance* testSampleNNdists, const int k);
 	void findkNN(const SampleSet& trainSet, const Sample& testSample);
 
 };

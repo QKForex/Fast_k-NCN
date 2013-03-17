@@ -19,29 +19,7 @@ namespace Fast_kNCN_Test {
 		}
 
 	public:
-		TEST_METHOD(LearnOptimalKTest) {
-			const int argc = 2;
-			char *argv[] = {"",	"../../Properties/test.properties"};
 
-			InputReader ir;
-			Assert::IsTrue(ir.readInput(argc, argv));
-
-			SampleSetFactory ssf;
-			SampleSet trainSet = ssf.createSampleSet(
-				ir.trainFilename, ir.nrLoadTrainSamples, ir.nrLoadSampleDims);
-			Assert::IsNotNull(&trainSet);
-			Assert::AreEqual(trainSet.nrSamples, 50);
-
-			SampleSet testSet = ssf.createSampleSet(
-				ir.testFilename, ir.nrLoadTestSamples, ir.nrLoadSampleDims);
-			Assert::IsNotNull(&testSet);
-			Assert::AreEqual(testSet.nrSamples, 5);
-
-			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
-				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
-
-			classifier->learnOptimalK(trainSet, ir.largestK);
-		}
 
 		TEST_METHOD(ClassifierConstructorTest) {
 			const int argc = 2;
@@ -89,6 +67,32 @@ namespace Fast_kNCN_Test {
 
 		}
 
+		TEST_METHOD(LearnOptimalKTest) {
+			const int argc = 2;
+			char *argv[] = {"",	"../../Properties/test.properties"};
+
+			InputReader ir;
+			Assert::IsTrue(ir.readInput(argc, argv));
+
+			SampleSetFactory ssf;
+			SampleSet trainSet = ssf.createSampleSet(
+				ir.trainFilename, ir.nrLoadTrainSamples, ir.nrLoadSampleDims);
+			Assert::IsNotNull(&trainSet);
+			Assert::AreEqual(trainSet.nrSamples, 50);
+
+			SampleSet testSet = ssf.createSampleSet(
+				ir.testFilename, ir.nrLoadTestSamples, ir.nrLoadSampleDims);
+			Assert::IsNotNull(&testSet);
+			Assert::AreEqual(testSet.nrSamples, 5);
+
+			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
+				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+
+			int optimalK = classifier->learnOptimalK(trainSet, ir.largestK);
+			Assert::AreEqual(optimalK, 1);
+
+		}
+
 		TEST_METHOD(PreprocessClassifyTest) {
 			const int argc = 2;
 			char *argv[] = {"",	"../../Properties/test.properties"};
@@ -122,7 +126,46 @@ namespace Fast_kNCN_Test {
 			Assert::AreEqual(classifier->nndists[0][classifier->k-1].distValue, 2.92563987f);
 			Assert::AreEqual(classifier->nndists[testSet.nrSamples-1][0].distValue, 3.30599999f);
 			Assert::AreEqual(classifier->nndists[testSet.nrSamples-1][classifier->k-1].distValue, 2.81742001f);
+		}
 
+		TEST_METHOD(KNCNTest) {
+			const int argc = 2;
+			char *argv[] = {"",	"../../Properties/test.properties"};
+
+			InputReader ir;
+			Assert::IsTrue(ir.readInput(argc, argv));
+
+			SampleSetFactory ssf;
+			SampleSet trainSet = ssf.createSampleSet(
+				ir.trainFilename, 0, 0);
+			Assert::IsNotNull(&trainSet);
+			//Assert::AreEqual(trainSet.nrSamples, 50);
+
+			SampleSet testSet = ssf.createSampleSet(
+				ir.testFilename, 0, 0);
+			Assert::IsNotNull(&testSet);
+			//Assert::AreEqual(testSet.nrSamples, 5);
+
+			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
+				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+
+			classifier->preprocess(trainSet, testSet);
+
+			//for (int samIndex = 0; samIndex < classifier->nrTestSamples; samIndex++) {
+			//	if (classifier->k == 1) {
+			//		results[samIndex] = classifier->find1NN(trainSet, testSet[samIndex], classifier->distances[samIndex]).sampleLabel;
+			//	} else {
+			//		(Sequential_kNCN)classifier->findkNCN(const_cast<SampleSet&> (trainSet), testSet[samIndex],
+			//			classifier->distances[samIndex], classifier->nndists[samIndex], classifier->k);
+			//		results[samIndex] = classifier->assignLabel(classifier->nndists[samIndex], classifier->k);
+			//	}
+			//}
+
+			classifier->classify(trainSet, testSet);
+
+			classifier->calculateErrorRate(testSet);
+
+			Assert::AreEqual(529, classifier->nrClassificationErrors);
 		}
 	};
 }

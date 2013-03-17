@@ -80,16 +80,21 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\Fast_k-NCN\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Fast_k-NCN\;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x64_debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>..\Fast_k-NCN\;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib32;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\Fast_k-NCN\;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\boost\boost_1_52_0\lib64;C:\Dev\Cpp\apache-log4cxx-0.10.0\libs\x86_release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -124,7 +129,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <CompileAsManaged>false</CompileAsManaged>
-      <CompileAsWinRT>hv</CompileAsWinRT>
+      <CompileAsWinRT>
+      </CompileAsWinRT>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,8 +149,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\Fast_k-NCN;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(VCInstallDir)UnitTest\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
-      <CompileAsManaged>true</CompileAsManaged>
-      <CompileAsWinRT>hv</CompileAsWinRT>
+      <CompileAsManaged>false</CompileAsManaged>
+      <CompileAsWinRT>
+      </CompileAsWinRT>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,8 +171,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\Fast_k-NCN;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include;$(VCInstallDir)UnitTest\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
-      <CompileAsManaged>true</CompileAsManaged>
-      <CompileAsWinRT>hv</CompileAsWinRT>
+      <CompileAsManaged>false</CompileAsManaged>
+      <CompileAsWinRT>
+      </CompileAsWinRT>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

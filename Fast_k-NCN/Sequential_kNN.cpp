@@ -6,11 +6,15 @@ Sequential_kNN::Sequential_kNN(const int k, const int nrTrainSamples, const int 
 	: Classifier(k, nrTrainSamples, nrTestSamples) {}
 
 Sequential_kNN::~Sequential_kNN() {
-	delete[] results;
-	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
-	delete[] nndists;
-	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
-	delete[] distances;
+	if (!results) { delete[] results; }
+	if (!nndists) {
+		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
+		delete[] nndists;
+	}
+	if (!distances) {
+		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
+		delete[] distances;
+	}
 }
 
 void Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
@@ -20,12 +24,12 @@ void Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& test
 }
 
 int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& testSample,
-								   Distance* testSampleDists) {	  
+								   Distance* testSampleDists, Distance* testSampleNNdists, const int k) {	  
 	if (k == 1) {
 		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		findkNN(trainSet, testSample, testSampleDists);
-		return assignLabel(testSample.index);
+		findkNN(trainSet, testSample, testSampleDists, testSampleNNdists, k);
+		return assignLabel(testSampleNNdists, k);
 	}
 }
 
@@ -47,15 +51,15 @@ int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& test
 //	this should happen just once
 //
 void Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample& testSample,
-										Distance* testSampleDists) {	
+										Distance* testSampleDists, Distance* testSampleNNdists, const int k) {	
 	for (int distsIndex = 0; distsIndex < nrTrainSamples; distsIndex++) {
-		if (testSampleDists[distsIndex].distValue < nndists[testSample.index][k - 1].distValue) {
+		if (testSampleDists[distsIndex].distValue < testSampleNNdists[k - 1].distValue) {
 			for (int distsInNndistsIndex = 0; distsInNndistsIndex < k; distsInNndistsIndex++) {
-				if (testSampleDists[distsIndex].distValue < nndists[testSample.index][distsInNndistsIndex].distValue) {
+				if (testSampleDists[distsIndex].distValue < testSampleNNdists[distsInNndistsIndex].distValue) {
 					for (int distsToMoveIndex = k - 1; distsToMoveIndex > distsInNndistsIndex; distsToMoveIndex--) {
-						nndists[testSample.index][distsToMoveIndex] = nndists[testSample.index][distsToMoveIndex - 1];
+						testSampleNNdists[distsToMoveIndex] = testSampleNNdists[distsToMoveIndex - 1];
 					}
-					nndists[testSample.index][distsInNndistsIndex] = testSampleDists[distsIndex];
+					testSampleNNdists[distsInNndistsIndex] = testSampleDists[distsIndex];
 					break;
 				}
 			}
@@ -67,5 +71,5 @@ void Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample& testSample
 //	Wrapper for findkNN that uses distances attribute instead of specified distances
 //
 void Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample& testSample) {
-	return findkNN(trainSet, testSample, distances[testSample.index]);
+	return findkNN(trainSet, testSample, this->distances[testSample.index], this->nndists[testSample.index], this->k);
 }

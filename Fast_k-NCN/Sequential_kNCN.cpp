@@ -8,11 +8,15 @@ Sequential_kNCN::Sequential_kNCN(const int k, const int nrTrainSamples, const in
 }
 
 Sequential_kNCN::~Sequential_kNCN() {
-	delete[] results;
-	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
-	delete[] nndists;
-	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
-	delete[] distances;
+	if (!results) { delete[] results; }
+	if (!nndists) {
+		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
+		delete[] nndists;
+	}
+	if (!distances) {
+		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
+		delete[] distances;
+	}
 }
 
 void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
@@ -23,17 +27,21 @@ void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& tes
 
 //
 //	Perform classification
+//	does not change testSampleDists
+//	preprocess should be run before to fill distances
 //
 //	Input:	trainSet, testSet
 //	Output:	vector of assigned labels
 //
 int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
-								   Distance* testSampleDists) {	  
+								   Distance* testSampleDists, Distance* testSampleNNdists,
+								   const int k) {	 
 	if (k == 1) {
 		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		findkNCN(const_cast<SampleSet&> (trainSet), testSample, testSampleDists);
-		return assignLabel(testSample.index);
+		findkNCN(const_cast<SampleSet&> (trainSet), testSample,
+			testSampleDists, testSampleNNdists, k);
+		return assignLabel(testSampleNNdists, k);
 	}
 }
 
@@ -59,13 +67,13 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 //	trainSet needs to be changed, moving already used to the back of array, swap samples
 //
 void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
-										  Distance* testSampleDists) {
+										  Distance* testSampleDists, Distance* testSampleNNdists, const int k) {
 	SampleSet centroids(trainSet.nrClasses, trainSet.nrDims, k); //TODO: move to attributes for Seq_kNCN
 	
-	nndists[testSample.index][0] = find1NN(trainSet, testSample, testSampleDists);
-	centroids[0] = trainSet[nndists[testSample.index][0].sampleIndex];
-	//trainSet[nndists[testSample.index][0].sampleIndex].swap(trainSet[trainSet.nrSamples - 1]);
-	trainSet.swapSamples(nndists[testSample.index][0].sampleIndex, trainSet.nrSamples - 1);
+	testSampleNNdists[0] = find1NN(trainSet, testSample, testSampleDists);
+	centroids[0] = trainSet[testSampleNNdists[0].sampleIndex];
+	//trainSet[testSampleNNdists[0].sampleIndex].swap(trainSet[trainSet.nrSamples - 1]);
+	trainSet.swapSamples(testSampleNNdists[0].sampleIndex, trainSet.nrSamples - 1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
 		Sample currentCentroid(-1, -1, trainSet.nrDims);
@@ -78,19 +86,19 @@ void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
 			}
 			Distance currentNNdist(trainSet[samIndex].index, trainSet[samIndex].label,
 				countManhattanDistance(currentCentroid, testSample, trainSet.nrDims)); //TODO: hardcoded Manhattan
-			if (currentNNdist.distValue < nndists[testSample.index][centroidIndex].distValue) {
+			if (currentNNdist.distValue < testSampleNNdists[centroidIndex].distValue) {
 				currentCentroid.index = trainSet[samIndex].index; // do not need to do that
 				currentCentroid.label = trainSet[samIndex].label;
-				nndists[testSample.index][centroidIndex] = currentNNdist;
+				testSampleNNdists[centroidIndex] = currentNNdist;
 				centroids[centroidIndex] = currentCentroid;
 			}
 		}
-		//trainSet[nndists[testSample.index][centroidIndex].sampleIndex].swap(trainSet[trainSet.nrSamples-1 - centroidIndex]);
-		trainSet.swapSamples(nndists[testSample.index][centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
+		//trainSet[testSampleNNdists[centroidIndex].sampleIndex].swap(trainSet[trainSet.nrSamples-1 - centroidIndex]);
+		trainSet.swapSamples(testSampleNNdists[centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
 	}
 }
 
 void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
-	return findkNCN(trainSet, testSample, this->distances[testSample.index]);
+	return findkNCN(trainSet, testSample, this->distances[testSample.index], this->nndists[testSample.index], this->k);
 }
 

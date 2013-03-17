@@ -33,22 +33,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CacheEfficient_kNCN.cpp">
-      <Filter>Source Files\Classifiers</Filter>
-    </ClCompile>
     <ClCompile Include="Classifier.cpp">
-      <Filter>Source Files\Classifiers</Filter>
-    </ClCompile>
-    <ClCompile Include="LimitedV1_kNCN.cpp">
-      <Filter>Source Files\Classifiers</Filter>
-    </ClCompile>
-    <ClCompile Include="LimitedV2_kNCN.cpp">
-      <Filter>Source Files\Classifiers</Filter>
-    </ClCompile>
-    <ClCompile Include="Parallel_kNCN.cpp">
-      <Filter>Source Files\Classifiers</Filter>
-    </ClCompile>
-    <ClCompile Include="RandomizedSelect_kNCN.cpp">
       <Filter>Source Files\Classifiers</Filter>
     </ClCompile>
     <ClCompile Include="Sequential_kNCN.cpp">
@@ -81,24 +66,24 @@
     <ClCompile Include="SampleSetFactory.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
+    <ClCompile Include="CacheEfficient_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="LimitedV1_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="LimitedV2_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="Parallel_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomizedSelect_kNCN.cpp">
+      <Filter>Source Files\Classifiers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CacheEfficient_kNCN.h">
-      <Filter>Header Files\Classifiers</Filter>
-    </ClInclude>
     <ClInclude Include="Classifier.h">
-      <Filter>Header Files\Classifiers</Filter>
-    </ClInclude>
-    <ClInclude Include="LimitedV1_kNCN.h">
-      <Filter>Header Files\Classifiers</Filter>
-    </ClInclude>
-    <ClInclude Include="LimitedV2_kNCN.h">
-      <Filter>Header Files\Classifiers</Filter>
-    </ClInclude>
-    <ClInclude Include="Parallel_kNCN.h">
-      <Filter>Header Files\Classifiers</Filter>
-    </ClInclude>
-    <ClInclude Include="RandomizedSelect_kNCN.h">
       <Filter>Header Files\Classifiers</Filter>
     </ClInclude>
     <ClInclude Include="Sequential_kNCN.h">
@@ -136,6 +121,21 @@
     </ClInclude>
     <ClInclude Include="SampleSetFactory.h">
       <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CacheEfficient_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="LimitedV1_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="LimitedV2_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Parallel_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomizedSelect_kNCN.h">
+      <Filter>Header Files\Classifiers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

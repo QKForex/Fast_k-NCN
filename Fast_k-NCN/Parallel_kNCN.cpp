@@ -6,11 +6,15 @@ Parallel_kNCN::Parallel_kNCN(const int k, const int nrTrainSamples, const int nr
 	: Classifier(k, nrTrainSamples, nrTestSamples) {}
 
 Parallel_kNCN::~Parallel_kNCN() {
-	delete[] results;
-	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
-	delete[] nndists;
-	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
-	delete[] distances;
+	if (!results) { delete[] results; }
+	if (!nndists) {
+		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
+		delete[] nndists;
+	}
+	if (!distances) {
+		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
+		delete[] distances;
+	}
 }
 
 void Parallel_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
@@ -21,12 +25,12 @@ void Parallel_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testS
 }
 
 int Parallel_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
-								   Distance* testSampleDists) {	  
+								   Distance* testSampleDists, Distance* testSampleNNdists, const int k) {	  
 	if (k == 1) {
 		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		findkNCN_parallel(const_cast<SampleSet&> (trainSet), testSample, testSampleDists);
-		return assignLabel(testSample.index);
+		findkNCN_parallel(const_cast<SampleSet&> (trainSet), testSample, testSampleDists, testSampleNNdists, k);
+		return assignLabel(testSampleNNdists, k);
 	}
 }
 
@@ -39,10 +43,10 @@ int Parallel_kNCN::classifySample(const SampleSet& trainSet, const Sample& testS
 //TODO: parallel
 // 
 void Parallel_kNCN::findkNCN_parallel(SampleSet& trainSet, const Sample& testSample,
-										 Distance* testSampleDists) {
+										 Distance* testSampleDists, Distance* testSampleNNdists, const int k) {
 
 }
 
 void Parallel_kNCN::findkNCN_parallel(SampleSet& trainSet, const Sample& testSample) {
-	findkNCN_parallel(trainSet, testSample, distances[testSample.index]);
+	findkNCN_parallel(trainSet, testSample, this->distances[testSample.index], this->nndists[testSample.index], this->k);
 }

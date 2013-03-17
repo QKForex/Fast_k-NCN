@@ -17,7 +17,7 @@ using namespace Common;
 //
 //	Abstract base class for Classifiers
 //
-class Classifier { //TODO: singleton
+class Classifier {
 public:
 	Distance** distances; // distances for all combinations of train and test samples, preprocessed
 	Distance** nndists; // distances to k nearest neighbors for all test samples
@@ -32,7 +32,7 @@ public:
 	virtual ~Classifier() {}; // cannot implement pure virtual destructor
 	virtual void preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
 	virtual int classifySample(const SampleSet& trainSet, const Sample& testSample,
-		Distance* dists) = 0;
+		Distance* testSampleDists, Distance* testSampleNNdists, const int k) = 0;
 	
 	const int learnOptimalK(const SampleSet& trainSet, const int largestK);
 	int classifySample(const SampleSet& trainSet, const Sample& testSample);
@@ -45,11 +45,10 @@ protected:
 
 	//TODO: find1NN Parallel
 	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample,
-		Distance* testSampleDists);
+		const Distance* testSampleDists);
 	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample);
 	
+	int assignLabel(const Distance* testSampleNNdists, const int k);
 	int assignLabel(const int testSampleIndex);
 	int calculateError(const SampleSet& orig, const int* results);
 };
-
-

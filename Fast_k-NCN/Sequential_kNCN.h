@@ -11,11 +11,11 @@ public:
 
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);
 	int classifySample(const SampleSet& trainSet, const Sample& testSample,
-		Distance* testSampleDists);
+		Distance* testSampleDists, Distance* testSampleNNdists, const int k);
 private:
 	Sequential_kNCN();
 
 	void findkNCN(SampleSet& trainSet, const Sample& testSample,
-		Distance* dists);
+		Distance* testSampleDists, Distance* testSampleNNdists, const int k);
 	void findkNCN(SampleSet& trainSet, const Sample& testSample);
 };

@@ -26,64 +26,98 @@ Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSa
 
 //
 //	Find optimal k - number of nearest nieghbors using leave-one-out method
-//	
+//	Find best performing classifier on given dataset
+//	this method is bound with dataset
+//	TODO: Possibly will move this method to other class so that it constructs classifier
+//	every time, there will be no need for complex interfaces anymore
+//	it could simply use preprocess and classify	
+//	Possibly should stay as a Classifier method, because it is going to be used in other
+//	as a part of algorithm
+//
 //	Input:
 //	Output:
 //
 const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largestK) {
 	std::vector< std::pair<int,int> > errorsForK;
 
-	Distance** nndists = new Distance*[trainSet.nrSamples];
+	Distance** trainDists = new Distance*[trainSet.nrSamples];
 	for (int i = 0; i < trainSet.nrSamples; i++) {
-		nndists[i] = new Distance[trainSet.nrSamples - 1];
+		trainDists[i] = new Distance[trainSet.nrSamples - 1];
+		std::fill(trainDists[i], trainDists[i]+(trainSet.nrSamples-1), Distance(-1,-1, FLT_MAX));
 	}
 
-	SampleSet remainingTrainSamples(trainSet); //TODO: change this classifier
-	remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1; //TODO: change!
-	// na koncu jest 1399, 0, 1, 2,..., 1398
-	
-	for (k = 1; k <= largestK; k++) {
+	SampleSet remainingTrainSamples(trainSet);
+	// last position in array is leave-one-out sample
+	// change the number of samples to make methods treat remainingTrainSamples
+	// as it would have one less sample hiding the leave-one-out sample
+	remainingTrainSamples.nrSamples = remainingTrainSamples.nrSamples - 1;
 
-		//Sample currentTrainSample(remainingTrainSamples[remainingTrainSamples.nrSamples - 1]);
-		// for every k check all leave-one-out combinations in trainSet
-		std::pair<int, int> p(k,0);
+	// preprocess
+	// count distances between all training samples
+	for (int samIndex = 0; samIndex < remainingTrainSamples.nrSamples; samIndex++) {
+		remainingTrainSamples.swapSamples(samIndex, trainSet.nrSamples - 1);
+		Common::countDistances(remainingTrainSamples,
+			remainingTrainSamples[trainSet.nrSamples - 1], trainDists[samIndex]);
+		remainingTrainSamples.swapSamples(trainSet.nrSamples - 1, samIndex);
+	}
+	// for last sample without swap
+	Common::countDistances(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1],
+		trainDists[trainSet.nrSamples - 1]);
+
+	// classify
+	// using all values k betwen 1 and largestK
+	// and collect number of errors
+	// for every kIndex check all leave-one-out combinations in trainSet
+	// for every sample perform leave-one-out and increase counter on error
+	for (int kIndex = 1; kIndex <= largestK; kIndex++) {
+
+		std::pair<int, int> p(kIndex,0);
 		errorsForK.push_back(p);
 
-		for (int samIndex = 0; samIndex < remainingTrainSamples.nrSamples - 1; samIndex++) {
-			// for every sample perform leave-one-out and increase counter on error
+		Distance** trainNNdists = new Distance*[trainSet.nrSamples];
+		for (int i = 0; i < trainSet.nrSamples; i++) {
+			trainNNdists[i] = new Distance[kIndex];
+			std::fill(trainNNdists[i], trainNNdists[i]+kIndex, Distance(-1,-1, FLT_MAX));
+		}
+
+		for (int samIndex = 0; samIndex < remainingTrainSamples.nrSamples; samIndex++) {
 			remainingTrainSamples.swapSamples(samIndex, trainSet.nrSamples - 1);
-			//swapSamples(remainingTrainSamples[samIndex], currentTrainSample);
-			countDistances(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[samIndex]);
-			int label = classifySample(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[samIndex]);
+			int label = classifySample(remainingTrainSamples, 
+				remainingTrainSamples[trainSet.nrSamples - 1],
+				trainDists[samIndex], trainNNdists[samIndex], kIndex);
 			if (label != remainingTrainSamples[trainSet.nrSamples - 1].label) {
-				errorsForK[k-1].second++;
+				errorsForK[kIndex-1].second++;
 			}
 			remainingTrainSamples.swapSamples(trainSet.nrSamples - 1, samIndex);
-			//swapSamples(currentTrainSample, remainingTrainSamples[samIndex]);
 		}
-
-		countDistances(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[trainSet.nrSamples - 1]);
-		int label = classifySample(remainingTrainSamples, remainingTrainSamples[trainSet.nrSamples - 1], nndists[trainSet.nrSamples - 1]);
+		// for last sample without swap
+		int label = classifySample(remainingTrainSamples,
+			remainingTrainSamples[trainSet.nrSamples - 1],
+			trainDists[trainSet.nrSamples - 1], trainNNdists[trainSet.nrSamples - 1], kIndex);
 		if (label != remainingTrainSamples[trainSet.nrSamples - 1].label) {
-			errorsForK[k-1].second++;
+			errorsForK[kIndex-1].second++;
 		}
-
+			
+		for (int i = 0; i < trainSet.nrSamples; i++) { delete trainNNdists[i]; }
+		delete[] trainNNdists;
 	}
 
+	// sort so the classifer with smallest number of errors is first
 	std::sort(errorsForK.begin(), errorsForK.end(), 
 		boost::bind(&std::pair<int, int>::second, _1) <
 		boost::bind(&std::pair<int, int>::second, _2));
 
-	const int optimalK = errorsForK[0].first;
+	for (int distIndex = 0; distIndex < trainSet.nrSamples; distIndex++) { 
+		delete trainDists[distIndex];
+	}
+	delete[] trainDists;
 
-	for (int i = 0; i < nrTestSamples; i++) { delete nndists[i]; }
-	delete[] nndists;
-
-	return optimalK;
+	return errorsForK[0].first;
 }
 
 int Classifier::classifySample(const SampleSet& trainSet, const Sample& testSample) {
-	return classifySample(trainSet, testSample, distances[testSample.index]);
+	return classifySample(trainSet, testSample, this->distances[testSample.index],
+		this->nndists[testSample.index], this->k);
 }
 
 //
@@ -111,13 +145,13 @@ void Classifier::calculateErrorRate(const SampleSet& orig) {
 //	Output: nearest neighbor
 //
 const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& testSample,
-								   Distance* dists) {							   
-	Distance nearestNeighbourDist = dists[0];
+								   const Distance* testSampleDists) {							   
+	Distance nearestNeighbourDist = testSampleDists[0];
 	//TODO: to parallelize somehow, e.g. compare in 4 threads,
 	// and then compare 4 results in the end
 	for (int distsIndex = 1; distsIndex < trainSet.nrSamples; distsIndex++) {
-		if (dists[distsIndex].distValue < nearestNeighbourDist.distValue) {
-			nearestNeighbourDist = dists[distsIndex];
+		if (testSampleDists[distsIndex].distValue < nearestNeighbourDist.distValue) {
+			nearestNeighbourDist = testSampleDists[distsIndex];
 		}
 	}
 	return nearestNeighbourDist;
@@ -137,35 +171,39 @@ const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& test
 //	Input:
 //	Output:
 // 
-int Classifier::assignLabel(const int testSampleIndex) {
-	if (k == 1) { return nndists[testSampleIndex][0].sampleLabel; }
+int Classifier::assignLabel(const Distance* testSampleNNdists, const int k) {
+	if (k == 1) { return testSampleNNdists[0].sampleLabel; }
 
 	//  first find largest class label
 	// 	create array of distsSize of the greatest class label so that we can increase
 	//	the value under that index every time that label is met
 	int i = 0;
-	int largestLabel = nndists[testSampleIndex][i].sampleLabel;
+	int largestLabel = testSampleNNdists[i].sampleLabel;
 	for (i = 1; i < k; i++) {
-		if (largestLabel < nndists[testSampleIndex][i].sampleLabel) {
-			largestLabel = nndists[testSampleIndex][i].sampleLabel;
+		if (largestLabel < testSampleNNdists[i].sampleLabel) {
+			largestLabel = testSampleNNdists[i].sampleLabel;
 		}
 	}
 	
-	int* freqs = new int[largestLabel + 1];
-	for (i = 0; i < largestLabel + 1; i++) { freqs[i] = 0; }
+	int* freqs = new int[largestLabel + 1]; //TODO: change to std::vector
+	std::fill(freqs, freqs+largestLabel+1, 0);
 
 	int result = 0;
 	for (i = 0; i < k; i++)	{
 		// in case of draw choose the label with smallest distance,
 		// change ">" to ">=" to choose the last, largest
-		if (++freqs[nndists[testSampleIndex][i].sampleLabel] > freqs[result]) {
-			result = nndists[testSampleIndex][i].sampleLabel;
+		if (++freqs[testSampleNNdists[i].sampleLabel] > freqs[result]) {
+			result = testSampleNNdists[i].sampleLabel;
 		}
 	}
 
 	delete[] freqs;
 
 	return result;
+}
+
+int Classifier::assignLabel(const int testSampleIndex) {
+	return assignLabel(this->distances[testSampleIndex], this->k);
 }
 
 int Classifier::calculateError(const SampleSet& orig, const int* results) {

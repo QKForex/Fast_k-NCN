@@ -20,20 +20,20 @@ void CacheEfficient_kNCN::preprocess(const SampleSet& trainSet, const SampleSet&
 }
 
 int CacheEfficient_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
-								   Distance* testSampleDists) {	  
+								   Distance* testSampleDists, Distance* testSampleNNdists, const int k) {	  
 	if (k == 1) {
 		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		findkNCN(const_cast<SampleSet&> (trainSet), testSample, testSampleDists);
-		return assignLabel(testSample.index);
+		findkNCN(const_cast<SampleSet&> (trainSet), testSample, testSampleDists, testSampleNNdists, k);
+		return assignLabel(testSampleNNdists, k);
 	}
 }
 
 void CacheEfficient_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample, 
-						 Distance* testSampleDists) {
+						 Distance* testSampleDists, Distance* testSampleNNdists, const int k) {
 
 }
 
 void CacheEfficient_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
-	findkNCN(trainSet, testSample, distances[testSample.index]);
+	findkNCN(trainSet, testSample, this->distances[testSample.index], this->nndists[testSample.index], this->k);
 }

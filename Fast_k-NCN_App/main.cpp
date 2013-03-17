@@ -95,7 +95,12 @@ int main(int argc, char** argv) {
 		exit(-1);
 	}
 
-	//classifier->learnOptimalK(trainSet, ir.largestK);
+	if (ir.largestK != 0) {
+		const int optimalK = classifier->learnOptimalK(trainSet, ir.largestK);
+		std::cout << std::endl;
+		std::cout << boost::format("Learning optimal k successful. Largest k checked: %d. Optimal k: %d.")
+			% ir.largestK % optimalK << std::endl;
+	}
 
 	PerformanceAnalyzer pa;
 	pa.startTimer();
