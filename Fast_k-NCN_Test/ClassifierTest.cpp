@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#define MY_SOLUTIONDIR ($(SolutionDir))
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Common;
 using namespace Utility;
@@ -112,20 +110,19 @@ namespace Fast_kNCN_Test {
 			Assert::AreEqual(testSet.nrSamples, 5);
 
 			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
-				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
-			
+				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));	
 
 			classifier->preprocess(trainSet, testSet);
-			Assert::AreEqual(classifier->distances[0][0].distValue, 11.5216007f);
-			Assert::AreEqual(classifier->distances[0][trainSet.nrSamples-1].distValue, 4.79499960f);
-			Assert::AreEqual(classifier->distances[testSet.nrSamples-1][0].distValue, 11.4932995f);
-			Assert::AreEqual(classifier->distances[testSet.nrSamples-1][trainSet.nrSamples-1].distValue, 5.56169987f);
+			Assert::AreEqual(classifier->distances[0][0].distValue, 11.5216f, 0.0001f);
+			Assert::AreEqual(classifier->distances[0][trainSet.nrSamples-1].distValue, 4.7950f, 0.0001f);
+			Assert::AreEqual(classifier->distances[testSet.nrSamples-1][0].distValue, 11.4933f, 0.0001f);
+			Assert::AreEqual(classifier->distances[testSet.nrSamples-1][trainSet.nrSamples-1].distValue, 5.5617f, 0.0001f);
 
 			classifier->classify(trainSet, testSet);
-			Assert::AreEqual(classifier->nndists[0][0].distValue, 3.30380011f);
-			Assert::AreEqual(classifier->nndists[0][classifier->k-1].distValue, 2.92563987f);
-			Assert::AreEqual(classifier->nndists[testSet.nrSamples-1][0].distValue, 3.30599999f);
-			Assert::AreEqual(classifier->nndists[testSet.nrSamples-1][classifier->k-1].distValue, 2.81742001f);
+			Assert::AreEqual(classifier->nndists[0][0].distValue, 3.3038f, 0.0001f);
+			Assert::AreEqual(classifier->nndists[0][classifier->k-1].distValue, 2.9256f, 0.0001f);
+			Assert::AreEqual(classifier->nndists[testSet.nrSamples-1][0].distValue, 3.3060f, 0.0001f);
+			Assert::AreEqual(classifier->nndists[testSet.nrSamples-1][classifier->k-1].distValue, 2.8174f, 0.0001f);
 		}
 
 		TEST_METHOD(KNCNTest) {

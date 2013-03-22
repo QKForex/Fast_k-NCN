@@ -113,7 +113,7 @@ int main(int argc, char** argv) {
 		std::chrono::system_clock::now();
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
 	std::ofstream resultFile(ir.resultFilename, std::fstream::app);
-	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %25t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 
+	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %26t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 
 		% classifier->errorRate % classifier->nrClassificationErrors % pa.totalTime 
 		% ir.k % ir.classifierName
 		% ir.trainFilename % trainSet.nrSamples 

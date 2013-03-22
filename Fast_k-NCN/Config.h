@@ -5,8 +5,8 @@
 //#define EUCLIDEAN_DIST //TODO: Slow should optimize with SSE/AVX
 
 // Cannot have builds for two different architectures in one build
-#define SSE 
-//#define AVX
+//#define SSE 
+#define AVX
 
 namespace Utility {
 	// Type definitions

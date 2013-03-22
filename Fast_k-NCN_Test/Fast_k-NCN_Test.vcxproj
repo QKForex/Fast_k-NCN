@@ -131,6 +131,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <CompileAsWinRT>
       </CompileAsWinRT>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -174,6 +175,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <CompileAsWinRT>
       </CompileAsWinRT>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -190,6 +192,7 @@
   <ItemGroup>
     <ClCompile Include="ClassifierTest.cpp" />
     <ClCompile Include="DistanceCalculationTest.cpp" />
+    <ClCompile Include="MemoryAllocationTest.cpp" />
     <ClCompile Include="SampleSetTest.cpp" />
     <ClCompile Include="SampleTest.cpp" />
     <ClCompile Include="stdafx.cpp">
