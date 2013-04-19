@@ -29,5 +29,15 @@ namespace Fast_kNCN_Test
 
 			freeSampleDimsMemory(dims, __FILE__, __LINE__);
 		}
+
+		TEST_METHOD(AllocateUnalignedMemoryTest) {
+			SampleDim* dims = allocateSampleDimsMemory(44, __FILE__, __LINE__);
+
+			for (int i = 0; i < 48; i++) {
+				Assert::AreEqual(dims[i], 0.0f); 
+			}
+
+			freeSampleDimsMemory(dims, __FILE__, __LINE__);
+		}
 	};
 }

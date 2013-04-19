@@ -4,10 +4,13 @@
 
 class CacheEfficient_kNCN: public Classifier {
 public:
+	Distance** distances; // distances for all combinations of train and test samples, preprocessed
+
 	CacheEfficient_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~CacheEfficient_kNCN();
 
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);
+	void classify(const SampleSet& trainSet, const SampleSet& testSet);
 	int classifySample(const SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists, Distance* testSampleNNdists, const int k);
 

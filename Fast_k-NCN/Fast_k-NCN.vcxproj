@@ -28,6 +28,7 @@
     <ClCompile Include="MemoryAllocation.cpp" />
     <ClCompile Include="Parallel_kNCN.cpp" />
     <ClCompile Include="PerformanceAnalyzer.cpp" />
+    <ClCompile Include="PrematureTerm_kNCN.cpp" />
     <ClCompile Include="RandomizedSelect_kNCN.cpp" />
     <ClCompile Include="Sample.cpp" />
     <ClCompile Include="SampleSet.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="MemoryAllocation.h" />
     <ClInclude Include="Parallel_kNCN.h" />
     <ClInclude Include="PerformanceAnalyzer.h" />
+    <ClInclude Include="PrematureTerm_kNCN.h" />
     <ClInclude Include="RandomizedSelect_kNCN.h" />
     <ClInclude Include="Sample.h" />
     <ClInclude Include="SampleSet.h" />

@@ -10,7 +10,7 @@ namespace Utility {
 #ifdef SSE
 		size_t size = (nrDims + REMAINDER_TABLE_SSE[nrDims % 4]) * sizeof(SampleDim);
 		//size_t size = nrDims  * sizeof(SampleDim);
-		SampleDim* sampleDimsPtr = (SampleDim*) _aligned_malloc(size, 16);
+		SampleDim* sampleDimsPtr = (SampleDim*) _aligned_malloc(size, 16); // 16-byte aligned for 128-bit access
 		//TODO: OutOfMemoryException(size)
 		if (sampleDimsPtr == NULL) {
 			throw "Not enough memory for sampleDims\n";
@@ -21,7 +21,7 @@ namespace Utility {
 		//fill(sampleDimsPtr, sampleDimsPtr+size, (SampleDim)0.0);
 #elif defined AVX
 		size_t size = (nrDims + REMAINDER_TABLE_AVX[nrDims % 8]) * sizeof(SampleDim);
-		SampleDim* sampleDimsPtr = (SampleDim*) _aligned_malloc(size, 32);
+		SampleDim* sampleDimsPtr = (SampleDim*) _aligned_malloc(size, 32); // 32-byte aligned for 256-bit access
 		if (sampleDimsPtr == NULL) {
 			throw "Not enough memory for sampleDims\n";
 		}

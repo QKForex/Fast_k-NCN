@@ -35,7 +35,7 @@ namespace Fast_kNCN_Test {
 				ir.testFilename, ir.nrLoadTestSamples, ir.nrLoadSampleDims);
 			Assert::IsNotNull(&testSet);
 
-			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
+			std::unique_ptr<Sequential_kNCN> classifier = std::unique_ptr<Sequential_kNCN>(
 				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 			
 			Assert::AreEqual(classifier->k, ir.k);
@@ -109,7 +109,7 @@ namespace Fast_kNCN_Test {
 			Assert::IsNotNull(&testSet);
 			Assert::AreEqual(testSet.nrSamples, 5);
 
-			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
+			std::unique_ptr<Sequential_kNCN> classifier = std::unique_ptr<Sequential_kNCN>(
 				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));	
 
 			classifier->preprocess(trainSet, testSet);

@@ -3,7 +3,13 @@
 RandomizedSelect_kNCN::RandomizedSelect_kNCN() : Classifier() {}
 
 RandomizedSelect_kNCN::RandomizedSelect_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples)
-	: Classifier(k, nrTrainSamples, nrTestSamples) {}
+	: Classifier(k, nrTrainSamples, nrTestSamples) {
+	distances = new Distance*[nrTestSamples];
+	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
+		distances[distIndex] = new Distance[nrTrainSamples];
+		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
+	}
+}
 
 RandomizedSelect_kNCN::~RandomizedSelect_kNCN() {
 	if (!results) { delete[] results; }
@@ -20,6 +26,13 @@ RandomizedSelect_kNCN::~RandomizedSelect_kNCN() {
 void RandomizedSelect_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		countDistances(trainSet, testSet[samIndex], distances[samIndex]);
+	}
+}
+
+void RandomizedSelect_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
+	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		results[samIndex] = classifySample(trainSet, testSet[samIndex],
+			distances[samIndex], nndists[samIndex], k);
 	}
 }
 

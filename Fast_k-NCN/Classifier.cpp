@@ -1,26 +1,18 @@
 #include "Classifier.h"
 
 Classifier::Classifier() : k(1), nrTrainSamples(0), nrTestSamples(0), nrClassificationErrors(0), errorRate(0.0f) {
-	distances = nullptr;
-	results = nullptr;
 	nndists = nullptr;
+	results = nullptr;
 }
 
 Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSamples)
 	: k(k), nrTrainSamples(nrTrainSamples), nrTestSamples(nrTestSamples), nrClassificationErrors(0), errorRate(0.0f) {
-	distances = new Distance*[nrTestSamples];
-	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
-		distances[distIndex] = new Distance[nrTrainSamples];
-		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
-	}
-
 	nndists = new Distance*[nrTestSamples];
 	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
 		nndists[distIndex] = new Distance[k];
 		std::fill(nndists[distIndex], nndists[distIndex]+k, Distance(-1,-1, FLT_MAX));
 	}
 
-	
 	results = new int[nrTestSamples](); //TODO: should it be initialized to 0?
 }
 
@@ -115,23 +107,6 @@ const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largest
 	return errorsForK[0].first;
 }
 
-int Classifier::classifySample(const SampleSet& trainSet, const Sample& testSample) {
-	return classifySample(trainSet, testSample, this->distances[testSample.index],
-		this->nndists[testSample.index], this->k);
-}
-
-//
-//	Perform classification
-//
-//	Input:	trainSet, testSet
-//	Output:	vector of assigned labels
-//
-void Classifier::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
-	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-		results[samIndex] = classifySample(trainSet, testSet[samIndex]);
-	}
-}
-
 void Classifier::calculateErrorRate(const SampleSet& orig) {
 	nrClassificationErrors = calculateError(orig, results);	
 	errorRate = (float) nrClassificationErrors / orig.nrSamples * 100;
@@ -155,13 +130,6 @@ const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& test
 		}
 	}
 	return nearestNeighbourDist;
-}
-
-//
-//	Wrapper for find1NN that uses distances attribute instead of specified distances
-//
-const Distance Classifier::find1NN(const SampleSet& trainSet, const Sample& testSample) {
-	return find1NN(trainSet, testSample, distances[testSample.index]);
 }
 
 //	
@@ -200,10 +168,6 @@ int Classifier::assignLabel(const Distance* testSampleNNdists, const int k) {
 	delete[] freqs;
 
 	return result;
-}
-
-int Classifier::assignLabel(const int testSampleIndex) {
-	return assignLabel(this->distances[testSampleIndex], this->k);
 }
 
 int Classifier::calculateError(const SampleSet& orig, const int* results) {

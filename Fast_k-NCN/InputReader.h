@@ -30,6 +30,7 @@ namespace Utility {
 		int nrLoadTrainSamples;
 		int nrLoadTestSamples;
 		int nrLoadSampleDims;
+		int threshold;
 
 		// Dataset cross-valdiation and 
 		std::string toCrossValidateFilename;

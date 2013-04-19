@@ -38,6 +38,8 @@ namespace Utility {
 				"provide number of testing samples to load, default (0) - all")
 				("nr-load-sample-dims", po::value<int>(&nrLoadSampleDims)->implicit_value(0),
 				"provide number of dimensions for each sample to load, default (0) - all")
+				("threshold", po::value<int>(&threshold)->implicit_value(0),
+				"provide threshold dimension for premature termination, default (0) - all")
 				;
 
 			po::options_description cmdline_options;

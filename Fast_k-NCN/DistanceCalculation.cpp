@@ -79,11 +79,13 @@ namespace Common {
 			distances[samIndex].sampleIndex = samIndex;
 			distances[samIndex].sampleLabel = trainSet[samIndex].label;
 #ifdef MANHATTAN_DIST
-			distances[samIndex].distValue = countManhattanDistance(trainSet[samIndex], testSample, trainSet.nrDims);
+			distances[samIndex].distValue = countManhattanDistance(trainSet[samIndex], testSample, testSample.nrDims);
 #elif EUCLIDEAN_DIST
-			distances[samIndex].distValue = countEuclideanDistance(trainSet[samIndex], testSample, trainSet.nrDims);
+			distances[samIndex].distValue = countEuclideanDistance(trainSet[samIndex], testSample, testSample.nrDims);
 #endif
 		}
 	}
+
+	
 
 }

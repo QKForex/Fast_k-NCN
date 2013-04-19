@@ -177,6 +177,7 @@
     <Text Include="..\Datasets\ftrain02.txt" />
     <Text Include="..\Results\results_kncn.txt" />
     <Text Include="..\Results\results_knn.txt" />
+    <Text Include="..\Results\results_pt_kncn.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Properties\cache_kncn.properties" />
@@ -185,6 +186,7 @@
     <None Include="..\Properties\limv1_kncn.properties" />
     <None Include="..\Properties\limv2_kncn.properties" />
     <None Include="..\Properties\par_kncn.properties" />
+    <None Include="..\Properties\pt_kncn.properties" />
     <None Include="..\Properties\rand_kncn.properties" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

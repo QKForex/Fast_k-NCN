@@ -4,6 +4,12 @@ Sequential_kNCN::Sequential_kNCN() : Classifier() {}
 
 Sequential_kNCN::Sequential_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples)
 	: Classifier(k, nrTrainSamples, nrTestSamples) {
+	distances = new Distance*[nrTestSamples];
+	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
+		distances[distIndex] = new Distance[nrTrainSamples];
+		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
+	}
+		
 	//TODO: initialize centroids**
 }
 
@@ -27,6 +33,25 @@ void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& tes
 
 //
 //	Perform classification
+//
+//	Input:	trainSet, testSet
+//	Output:	vector of assigned labels
+//
+void Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
+	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		results[samIndex] = classifySample(trainSet, testSet[samIndex]);
+	}
+}
+
+//
+//	Wrapper for find1NN that uses distances attribute instead of specified distances
+//
+const Distance Sequential_kNCN::find1NN(const SampleSet& trainSet, const Sample& testSample) {
+	return Classifier::find1NN(trainSet, testSample, this->distances[testSample.index]);
+}
+
+//
+//	Perform classification
 //	does not change testSampleDists
 //	preprocess should be run before to fill distances
 //
@@ -37,12 +62,17 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 								   Distance* testSampleDists, Distance* testSampleNNdists,
 								   const int k) {	 
 	if (k == 1) {
-		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
+		return Classifier::find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
 		findkNCN(const_cast<SampleSet&> (trainSet), testSample,
 			testSampleDists, testSampleNNdists, k);
-		return assignLabel(testSampleNNdists, k);
+		return Classifier::assignLabel(testSampleNNdists, k);
 	}
+}
+
+int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample) {
+	return classifySample(trainSet, testSample, this->distances[testSample.index],
+		this->nndists[testSample.index], this->k);
 }
 
 //
@@ -70,19 +100,21 @@ void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
 										  Distance* testSampleDists, Distance* testSampleNNdists, const int k) {
 	SampleSet centroids(trainSet.nrClasses, trainSet.nrDims, k); //TODO: move to attributes for Seq_kNCN
 	
-	testSampleNNdists[0] = find1NN(trainSet, testSample, testSampleDists);
+	testSampleNNdists[0] = Classifier::find1NN(trainSet, testSample, testSampleDists);
 	centroids[0] = trainSet[testSampleNNdists[0].sampleIndex];
 	//trainSet[testSampleNNdists[0].sampleIndex].swap(trainSet[trainSet.nrSamples - 1]);
 	trainSet.swapSamples(testSampleNNdists[0].sampleIndex, trainSet.nrSamples - 1);
 
+	int trainSetNrDims = trainSet.nrDims;
+
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
 		Sample currentCentroid(-1, -1, trainSet.nrDims);
-		for (int samIndex = 0; samIndex < trainSet.nrSamples - centroidIndex; samIndex++) {
-			for (int dimIndex = 0; dimIndex < trainSet.nrDims; dimIndex++) {
-				currentCentroid[dimIndex] =
-					(centroids[centroidIndex-1][dimIndex] * ((float)centroidIndex/(centroidIndex+1)))
-					+ (trainSet[samIndex][dimIndex] / (centroidIndex+1));
-				//currentCentroid[dimIndex] =	centroids[centroidIndex-1][dimIndex] + trainSet[samIndex][dimIndex];
+		float divCentroidIndex = 1.0f / (centroidIndex+1);
+		int samIndexLimit = trainSet.nrSamples - centroidIndex;
+		for (int samIndex = 0; samIndex < samIndexLimit; samIndex++) {
+			for (int dimIndex = 0; dimIndex < trainSetNrDims; dimIndex++) {
+				currentCentroid[dimIndex] =	((centroids[centroidIndex-1][dimIndex] * centroidIndex)
+					+ (trainSet[samIndex][dimIndex])) * divCentroidIndex; //TODO: bootleneck!
 			}
 			Distance currentNNdist(trainSet[samIndex].index, trainSet[samIndex].label,
 				countManhattanDistance(currentCentroid, testSample, trainSet.nrDims)); //TODO: hardcoded Manhattan
@@ -102,3 +134,6 @@ void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
 	return findkNCN(trainSet, testSample, this->distances[testSample.index], this->nndists[testSample.index], this->k);
 }
 
+int Sequential_kNCN::assignLabel(const int testSampleIndex) {
+	return Classifier::assignLabel(this->distances[testSampleIndex], this->k);
+}

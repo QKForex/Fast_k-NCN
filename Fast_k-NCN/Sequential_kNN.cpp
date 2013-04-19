@@ -3,7 +3,13 @@
 Sequential_kNN::Sequential_kNN() : Classifier() {}
 
 Sequential_kNN::Sequential_kNN(const int k, const int nrTrainSamples, const int nrTestSamples)
-	: Classifier(k, nrTrainSamples, nrTestSamples) {}
+	: Classifier(k, nrTrainSamples, nrTestSamples) {
+	distances = new Distance*[nrTestSamples];
+	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
+		distances[distIndex] = new Distance[nrTrainSamples];
+		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
+	}
+}
 
 Sequential_kNN::~Sequential_kNN() {
 	if (!results) { delete[] results; }
@@ -23,14 +29,38 @@ void Sequential_kNN::preprocess(const SampleSet& trainSet, const SampleSet& test
 	}
 }
 
+//
+//	Perform classification
+//
+//	Input:	trainSet, testSet
+//	Output:	vector of assigned labels
+//
+void Sequential_kNN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
+	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		results[samIndex] = classifySample(trainSet, testSet[samIndex]);
+	}
+}
+
 int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& testSample,
-								   Distance* testSampleDists, Distance* testSampleNNdists, const int k) {	  
+	Distance* testSampleDists, Distance* testSampleNNdists, const int k) {	  
 	if (k == 1) {
-		return find1NN(trainSet, testSample, testSampleDists).sampleLabel;
+		return Classifier::find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
 		findkNN(trainSet, testSample, testSampleDists, testSampleNNdists, k);
-		return assignLabel(testSampleNNdists, k);
+		return Classifier::assignLabel(testSampleNNdists, k);
 	}
+}
+
+int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& testSample) {
+	return classifySample(trainSet, testSample, this->distances[testSample.index],
+		this->nndists[testSample.index], this->k);
+}
+
+//
+//	Wrapper for find1NN that uses distances attribute instead of specified distances
+//
+const Distance Sequential_kNN::find1NN(const SampleSet& trainSet, const Sample& testSample) {
+	return Classifier::find1NN(trainSet, testSample, this->distances[testSample.index]);
 }
 
 //
@@ -72,4 +102,8 @@ void Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample& testSample
 //
 void Sequential_kNN::findkNN(const SampleSet& trainSet, const Sample& testSample) {
 	return findkNN(trainSet, testSample, this->distances[testSample.index], this->nndists[testSample.index], this->k);
+}
+
+int Sequential_kNN::assignLabel(const int testSampleIndex) {
+	return Classifier::assignLabel(this->distances[testSampleIndex], this->k);
 }
