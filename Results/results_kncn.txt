@@ -290,3 +290,14 @@
 10.15%  457       1050ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Fri May 03 09:55:10 2013
 10.15%  457       1008ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Fri May 03 09:55:58 2013
 10.15%  457       1037ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sat May 04 21:15:01 2013
+10.15%  457       7034ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sat May 04 21:37:27 2013
+10.15%  457       7094ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sat May 04 21:38:24 2013
+10.15%  457       7025ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sat May 04 21:39:48 2013
+10.15%  457       7100ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sat May 04 23:16:39 2013
+10.15%  457       1041ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sat May 04 23:20:17 2013
+10.15%  457       1027ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sat May 04 23:45:31 2013
+10.15%  457       1026ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sat May 04 23:45:44 2013
+10.15%  457       1425ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sat May 04 23:57:54 2013
+10.15%  457       1122ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sun May 05 00:07:11 2013
+10.15%  457       1067ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sun May 05 00:07:37 2013
+10.15%  457       1402ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sun May 05 00:25:26 2013

@@ -1,9 +1,8 @@
 #include "Classifier.h"
 
-Classifier::Classifier() : k(1), nrTrainSamples(0), nrTestSamples(0), nrClassificationErrors(0), errorRate(0.0f) {
-	nndists = nullptr;
-	results = nullptr;
-}
+Classifier::Classifier()
+	: k(1), nrTrainSamples(0), nrTestSamples(0), nrClassificationErrors(0), errorRate(0.0f),
+	nndists(nullptr), results(nullptr) {}
 
 Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSamples)
 	: k(k), nrTrainSamples(nrTrainSamples), nrTestSamples(nrTestSamples), nrClassificationErrors(0), errorRate(0.0f) {

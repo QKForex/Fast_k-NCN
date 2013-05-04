@@ -2,7 +2,7 @@
 
 LoggerPtr Sequential_kNCN::logger(Logger::getLogger("kNCNLogger"));
 
-Sequential_kNCN::Sequential_kNCN() : Classifier(), centroids(SampleSet(8, 30, k)) {}
+Sequential_kNCN::Sequential_kNCN() : Classifier(), centroids(SampleSet(-1, -1, k)) {}
 
 Sequential_kNCN::Sequential_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples, 
 								 const int nrClasses, const int nrDims)
@@ -34,7 +34,6 @@ Sequential_kNCN::~Sequential_kNCN() {
 void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		countDistances(trainSet, testSet[samIndex], this->distances[samIndex]);
-		//LOG4CXX_DEBUG(logger, "" << samIndex << " " << distances[samIndex]->distValue);
 	}
 }
 
@@ -73,7 +72,14 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 	} else {
 		findkNCN(const_cast<SampleSet&> (trainSet), testSample,
 			testSampleDists, testSampleNNdists, k);
-		return Classifier::assignLabel(testSampleNNdists, k);
+		LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
+			<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
+			<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
+			<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
+			<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
+			);
+
+		return assignLabel(testSample.index);
 	}
 }
 
@@ -229,5 +235,5 @@ void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample) {
 }
 
 int Sequential_kNCN::assignLabel(const int testSampleIndex) {
-	return Classifier::assignLabel(this->distances[testSampleIndex], this->k);
+	return Classifier::assignLabel(this->nndists[testSampleIndex], this->k);
 }

@@ -36,7 +36,7 @@ namespace Fast_kNCN_Test {
 			Assert::IsNotNull(&testSet);
 
 			std::unique_ptr<Sequential_kNCN> classifier = std::unique_ptr<Sequential_kNCN>(
-				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
 			
 			Assert::AreEqual(classifier->k, ir.k);
 			Assert::AreEqual(classifier->nrTrainSamples, trainSet.nrSamples);
@@ -84,7 +84,7 @@ namespace Fast_kNCN_Test {
 			Assert::AreEqual(testSet.nrSamples, 5);
 
 			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
-				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
 
 			int optimalK = classifier->learnOptimalK(trainSet, ir.largestK);
 			Assert::AreEqual(optimalK, 1);
@@ -110,7 +110,7 @@ namespace Fast_kNCN_Test {
 			Assert::AreEqual(testSet.nrSamples, 5);
 
 			std::unique_ptr<Sequential_kNCN> classifier = std::unique_ptr<Sequential_kNCN>(
-				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));	
+				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));	
 
 			classifier->preprocess(trainSet, testSet);
 			Assert::AreEqual(classifier->distances[0][0].distValue, 11.5216f, 0.0001f);
@@ -144,7 +144,7 @@ namespace Fast_kNCN_Test {
 			//Assert::AreEqual(testSet.nrSamples, 5);
 
 			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
-				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
 
 			classifier->preprocess(trainSet, testSet);
 
@@ -184,7 +184,7 @@ namespace Fast_kNCN_Test {
 			//Assert::AreEqual(testSet.nrSamples, 5);
 
 			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
-				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
 
 			classifier->preprocess(trainSet, testSet);
 

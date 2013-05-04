@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 		classifier = std::unique_ptr<Parallel_kNCN>(new Parallel_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case PT_KNCN:
-		classifier = std::unique_ptr<PrematureTerm_kNCN>(new PrematureTerm_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, ir.threshold));
+		classifier = std::unique_ptr<PrematureTerm_kNCN>(new PrematureTerm_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.threshold));
 		break;
 	case RAND_KNCN:
 		classifier = std::unique_ptr<RandomizedSelect_kNCN>(new RandomizedSelect_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
