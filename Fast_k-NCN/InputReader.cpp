@@ -30,7 +30,7 @@ namespace Utility {
 				"provide name of classifier to use")
 				("number-nn,k", po::value<int>(&k)->default_value(1),
 				"provide number of neares (centroid) neighbours")
-				("largest-k-to-check,l", po::value<int>(&largestK)->default_value(30),
+				("largest-k-to-check,l", po::value<int>(&largestK)->default_value(0),
 				"provide number of neares (centroid) neighbours")
 				("nr-load-train-samples", po::value<int>(&nrLoadTrainSamples)->implicit_value(0),
 				"provide number of training samples to load, default (0) - all")

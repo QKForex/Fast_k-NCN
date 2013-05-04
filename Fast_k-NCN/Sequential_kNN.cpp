@@ -1,5 +1,7 @@
 #include "Sequential_kNN.h"
 
+LoggerPtr Sequential_kNN::logger(Logger::getLogger("kNNLogger"));
+
 Sequential_kNN::Sequential_kNN() : Classifier() {}
 
 Sequential_kNN::Sequential_kNN(const int k, const int nrTrainSamples, const int nrTestSamples)
@@ -47,6 +49,12 @@ int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& test
 		return Classifier::find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
 		findkNN(trainSet, testSample, testSampleDists, testSampleNNdists, k);
+		LOG4CXX_DEBUG(logger, "" << testSample.index 
+			<< " " << testSampleNNdists[0].sampleIndex
+			<< " " << testSampleNNdists[1].sampleIndex
+			<< " " << testSampleNNdists[2].sampleIndex
+			<< " " << testSampleNNdists[3].sampleIndex
+			<< " " << testSampleNNdists[4].sampleIndex);
 		return Classifier::assignLabel(testSampleNNdists, k);
 	}
 }

@@ -9,6 +9,7 @@
 
 #include <boost\bind.hpp>
 
+#include "Logger.h"
 #include "DistanceCalculation.h"
 #include "SampleSet.h"
 
@@ -19,6 +20,8 @@ using namespace Common;
 //
 class Classifier {
 public:
+
+
 	Distance** nndists; // distances to k nearest neighbors for all test samples
 	int* results; // labels assigned to every sample as number of one of classes, ordered by index
 

@@ -96,6 +96,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\Fast_k-NCN;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -134,6 +135,7 @@
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\Fast_k-NCN;C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -175,6 +177,7 @@
     <Text Include="..\Datasets\ftest02.txt" />
     <Text Include="..\Datasets\ftrain01.txt" />
     <Text Include="..\Datasets\ftrain02.txt" />
+    <Text Include="..\Logs\log.txt" />
     <Text Include="..\Results\results_kncn.txt" />
     <Text Include="..\Results\results_knn.txt" />
     <Text Include="..\Results\results_pt_kncn.txt" />

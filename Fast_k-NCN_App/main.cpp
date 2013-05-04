@@ -4,13 +4,7 @@
 
 #include <ctime>
 
-#include <windows.h>
-
 #include <boost/format.hpp>
-#include <boost/program_options.hpp>
-
-#include <log4cxx\logger.h>
-#include <log4cxx\xml\domconfigurator.h>
 
 #include "InputReader.h"
 #include "SampleSetFactory.h"
@@ -25,28 +19,19 @@
 #include "LimitedV2_kNCN.h"
 #include "CacheEfficient_kNCN.h"
 
-namespace po = boost::program_options;
-
-using namespace log4cxx;
-using namespace log4cxx::xml;
-using namespace log4cxx::helpers;
-
 using namespace Common;
 using namespace Utility;
 
-LoggerPtr loggerToFile(Logger::getLogger("MyLogger"));
+using namespace log4cxx;
+using namespace log4cxx::helpers;
+
+LoggerPtr logger(Logger::getLogger("Fast_k-NCN"));
 
 int main(int argc, char** argv) {
 
-	//DOMConfigurator::configure("logger_config.xml");
+	DOMConfigurator::configure("../Fast_k-NCN/LoggerConfig.xml");
 
-	//LOG4CXX_DEBUG(loggerToFile, "this is a debug message.");
-	//LOG4CXX_INFO (loggerToFile, "this is a info message, just ignore.");
-	//LOG4CXX_WARN (loggerToFile, "this is a warn message, dont worry too much.");
-	//LOG4CXX_ERROR(loggerToFile, "this is a error message, something serious is happening.");
-	//LOG4CXX_FATAL(loggerToFile, "this is a fatal message, crash and burn!!!");
-
-	//loggerToFile->closeNestedAppenders();
+	//logger->closeNestedAppenders();
 
 	InputReader ir;	
 	if (!ir.readInput(argc, argv)) {
@@ -75,7 +60,7 @@ int main(int argc, char** argv) {
 		classifier = std::unique_ptr<Sequential_kNN>(new Sequential_kNN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case SEQ_KNCN:
-		classifier = std::unique_ptr<Sequential_kNCN>(new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+		classifier = std::unique_ptr<Sequential_kNCN>(new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
 		break;
 	case PAR_KNCN:
 		classifier = std::unique_ptr<Parallel_kNCN>(new Parallel_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));

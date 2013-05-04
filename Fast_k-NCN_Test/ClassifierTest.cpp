@@ -162,7 +162,61 @@ namespace Fast_kNCN_Test {
 
 			classifier->calculateErrorRate(testSet);
 
-			Assert::AreEqual(529, classifier->nrClassificationErrors);
+			Assert::AreEqual(457, classifier->nrClassificationErrors);
+		}
+
+		TEST_METHOD(KNCNTestNoDuplicates) {
+			const int argc = 2;
+			char *argv[] = {"",	"../../Properties/test.properties"};
+
+			InputReader ir;
+			Assert::IsTrue(ir.readInput(argc, argv));
+
+			SampleSetFactory ssf;
+			SampleSet trainSet = ssf.createSampleSet(
+				ir.trainFilename, 0, 0);
+			Assert::IsNotNull(&trainSet);
+			//Assert::AreEqual(trainSet.nrSamples, 50);
+
+			SampleSet testSet = ssf.createSampleSet(
+				ir.testFilename, 0, 0);
+			Assert::IsNotNull(&testSet);
+			//Assert::AreEqual(testSet.nrSamples, 5);
+
+			std::unique_ptr<Classifier> classifier = std::unique_ptr<Sequential_kNCN>(
+				new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+
+			classifier->preprocess(trainSet, testSet);
+
+			//for (int samIndex = 0; samIndex < classifier->nrTestSamples; samIndex++) {
+			//	if (classifier->k == 1) {
+			//		results[samIndex] = classifier->find1NN(trainSet, testSet[samIndex], classifier->distances[samIndex]).sampleLabel;
+			//	} else {
+			//		(Sequential_kNCN)classifier->findkNCN(const_cast<SampleSet&> (trainSet), testSet[samIndex],
+			//			classifier->distances[samIndex], classifier->nndists[samIndex], classifier->k);
+			//		results[samIndex] = classifier->assignLabel(classifier->nndists[samIndex], classifier->k);
+			//	}
+			//}
+
+			classifier->classify(trainSet, testSet);
+
+			for (int samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
+				Assert::AreEqual(samIndex, trainSet[samIndex].index);
+			}
+
+			for (int samIndex = 0; samIndex < testSet.nrSamples; samIndex ++) {
+				for (int ncnIndex = 0; ncnIndex < classifier->k; ncnIndex++) {
+					for (int ncnIndex2 = 0; ncnIndex2 < classifier->k; ncnIndex2++) {
+						if (ncnIndex != ncnIndex2) {
+							Assert::AreNotEqual(classifier->nndists[samIndex][ncnIndex].sampleIndex, classifier->nndists[samIndex][ncnIndex2].sampleIndex);
+						}
+					}
+				}
+			}
+
+			classifier->calculateErrorRate(testSet);
+
+			Assert::AreEqual(457, classifier->nrClassificationErrors);
 		}
 	};
 }

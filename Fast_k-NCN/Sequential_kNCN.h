@@ -4,10 +4,13 @@
 
 class Sequential_kNCN: public Classifier {
 public:
+	static LoggerPtr logger;
+
 	Distance** distances; // distances for all combinations of train and test samples, preprocessed
-	// centroids
+	SampleSet centroids;
 	
-	Sequential_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples);
+	Sequential_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples, 
+		const int nrClasses, const int nrDims);
 	~Sequential_kNCN();
 
 	void preprocess(const SampleSet& trainSet, const SampleSet& testSet);

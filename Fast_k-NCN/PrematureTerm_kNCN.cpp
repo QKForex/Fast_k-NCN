@@ -1,6 +1,7 @@
 #include "PrematureTerm_kNCN.h"
 
 
+
 PrematureTerm_kNCN::PrematureTerm_kNCN(): Classifier() {} 
 
 PrematureTerm_kNCN::PrematureTerm_kNCN(const int k,
@@ -129,6 +130,11 @@ void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample
 			}
 		}
 		//trainSet[testSampleNNdists[centroidIndex].sampleIndex].swap(trainSet[trainSet.nrSamples-1 - centroidIndex]);
+		trainSet.swapSamples(testSampleNNdists[centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
+	}
+
+	// move swapped samples in trainSet to their original positions according to Sample.index for use for next testSample
+	for (int centroidIndex = 0; centroidIndex < k; centroidIndex++) {
 		trainSet.swapSamples(testSampleNNdists[centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
 	}
 }

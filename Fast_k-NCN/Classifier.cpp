@@ -172,16 +172,12 @@ int Classifier::assignLabel(const Distance* testSampleNNdists, const int k) {
 
 int Classifier::calculateError(const SampleSet& orig, const int* results) {
 	int nrError = 0;
-	// comments in this function - uncomment for more verbose logging purposes
-	//ofstream file("result.txt");
+
 	for (int origIndex = 0; origIndex < orig.nrSamples; origIndex++) {
-		//file << orig[origIndex].getLabel() << " " << result[origIndex];
 		if (orig[origIndex].label != results[origIndex]) {
 			nrError++;
-			//file << " error";
 		}
-		//file << std::endl;
 	}
-	//file << "Number of errors: " << nrError << std::endl;
+
 	return nrError;
 }

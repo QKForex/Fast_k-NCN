@@ -2,16 +2,10 @@
 
 namespace Common {
 
-	SampleSet::SampleSet()
-		: nrClasses(0), nrDims(0), nrSamples(0) {
-		samples = NULL;
-	}
+	SampleSet::SampleSet() : nrClasses(0), nrDims(0), nrSamples(0), samples(nullptr) {}
 
 	SampleSet::SampleSet(int c, int d, int s)
-		: nrClasses(c), nrDims(d), nrSamples(s)	{
-		samples = new Sample[s]; // heap allocation
-		//TODO: consider adding () for initialization
-
+		: nrClasses(c), nrDims(d), nrSamples(s), samples(new Sample[s]())	{
 #ifdef LOGGING
 		cerr << "Allocated " << s * sizeof(Sample) << " byte(s) at address " << samples
 			<< " in " << __FILE__ << ":" << __LINE__ << endl;
@@ -87,25 +81,17 @@ namespace Common {
 
 	const Sample& SampleSet::operator[](int i) const { return samples[i]; }
 
-	//const Sample& SampleSet::operator++() {
-
-	//}
-
 	void SampleSet::swapSamples(const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
 		//trainSet[samIndexToMoveToBack].swap(trainSet[samIndexToMoveFromBack]);
-		Sample tempSample(samples[samIndexToMoveToBack]);
-		samples[samIndexToMoveToBack] = samples[samIndexToMoveFromBack];
-		samples[samIndexToMoveFromBack] = tempSample;
+		if (samIndexToMoveToBack != samIndexToMoveFromBack) {
+			Sample tempSample(samples[samIndexToMoveToBack]);
+			samples[samIndexToMoveToBack] = samples[samIndexToMoveFromBack];
+			samples[samIndexToMoveFromBack] = tempSample;
+		}
 	}
 
 	std::ostream& operator<<(std::ostream& out, const SampleSet& s) {
 		return out << s.nrClasses << " " << s.nrDims << " " << s.nrSamples;
 	}
-
-	//Sample operator*() const {
-	//	return 
-	//}
-
-
 
 }
