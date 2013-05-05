@@ -3,7 +3,7 @@
  	<!-- Output the log message to a log file named "log.txt"
  	-->
  	<appender name="FileAppender" class="org.apache.log4j.FileAppender">
- 		<param name="file" value="..\logs\log4.txt" />
+ 		<param name="file" value="..\logs\log.txt" />
  		<param name="append" value="true" />
  		<layout class="org.apache.log4j.PatternLayout">
  			<!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
@@ -17,12 +17,12 @@
  	</root>
  
   <category name="kNCNLogger" >
-        <priority value ="debug" />
+        <priority value ="info" />
         <appender-ref ref="FileAppender"/>
   </category>
  
   <category name="PT_kNCNLogger" >
-        <priority value ="debug" />
+        <priority value ="info" />
         <appender-ref ref="FileAppender"/>
   </category>
 </log4j:configuration>

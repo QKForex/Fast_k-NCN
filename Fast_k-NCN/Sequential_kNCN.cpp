@@ -195,7 +195,7 @@ void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
 				currentCentroid->dims[dimIndex] = ((previousCentroid->dims[dimIndex] * centroidIndex) + trainSample->dims[dimIndex]) * divCentroidIndex;
 			}
 #endif
-			DistanceValue currentNCNdistVal = countManhattanDistance(*currentCentroid, testSample, trainSet.nrDims); //TODO: hardcoded Manhattan
+			DistanceValue currentNCNdistVal = countManhattanDistance(*currentCentroid, testSample, 0, trainSet.nrDims); //TODO: hardcoded Manhattan
 
 			if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue) {
 				// update current centroid candidate

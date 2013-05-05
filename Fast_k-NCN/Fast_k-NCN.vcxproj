@@ -142,6 +142,7 @@
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Qvec-report:2 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -180,7 +181,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <PreprocessorDefinitions>LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>AVX;MANHATTAN_DIST;LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

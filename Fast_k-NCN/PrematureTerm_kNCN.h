@@ -5,8 +5,6 @@
 class PrematureTerm_kNCN: public Classifier {
 public:
 	static LoggerPtr logger;
-
-	//Distance** distances; // distances for all combinations of train and test samples, preprocessed
 	SampleSet centroids;
 
 	PrematureTerm_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples,
@@ -23,14 +21,6 @@ private:
 	int threshold;
 
 	PrematureTerm_kNCN();
-
-	void countDistancePrematureTerm(const Sample& trainSample, const Sample& testSample,
-		Distance* distances, int samIndex, int threshold);
-	Distance countDistancePrematureTerm(const Sample& trainSample, const Sample& testSample, int threshold);
-
-	DistanceValue countManhattanDistancePrematureTerm(const Sample& train, const Sample& test,
-		const int firstDim, const int lastDim);
-
 
 	const Distance find1NNPrematureTerm(const SampleSet& trainSet, const Sample& testSample);
 

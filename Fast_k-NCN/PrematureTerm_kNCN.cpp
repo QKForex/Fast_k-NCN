@@ -59,38 +59,15 @@ int PrematureTerm_kNCN::classifySample(const SampleSet& trainSet, const Sample& 
 		this->nndists[testSample.index], this->k);
 }
 
-DistanceValue PrematureTerm_kNCN::countManhattanDistancePrematureTerm(const Sample& train, const Sample& test, const int firstDim, const int lastDim) {
-	int registersNumber = (((lastDim-1)-firstDim) >> 3) + 1;
-	const __m256* pSrc1 = (__m256*) &train.dims[firstDim];
-	const __m256* pSrc2 = (__m256*) &test.dims[firstDim];
-	__m256 tmp;
-	union immregister
-	{
-		__m256 m;
-		DistanceValue f[8];
-	} result;
-
-	result.m = _mm256_set1_ps(0x0);
-	for (int registerIndex = 0; registerIndex < registersNumber; registerIndex++) {
-		tmp = _mm256_sub_ps(*pSrc2, *pSrc1);
-		tmp = _mm256_and_ps(abs4maskAVX, tmp);
-		result.m = _mm256_add_ps(tmp, result.m);
-		pSrc1++;
-		pSrc2++;
-	}
-	return result.f[0] + result.f[1] + result.f[2] + result.f[3]
-		+ result.f[4] + result.f[5] + result.f[6] + result.f[7];
-}
-
 const Distance PrematureTerm_kNCN::find1NNPrematureTerm(const SampleSet& trainSet, const Sample& testSample) {
 	DistanceValue candidateNNdistVal;
 	Distance nearestNeighbourDist = Distance(trainSet[0].index, trainSet[0].label, 
-		countManhattanDistancePrematureTerm(trainSet[0], testSample, 0, testSample.nrDims));
+		countManhattanDistance(trainSet[0], testSample, 0, testSample.nrDims));
 
 	for (int distsIndex = 1; distsIndex < trainSet.nrSamples; distsIndex++) {
-		candidateNNdistVal = countManhattanDistancePrematureTerm(trainSet[distsIndex], testSample, 0, this->threshold);
+		candidateNNdistVal = countManhattanDistance(trainSet[distsIndex], testSample, 0, this->threshold);
 		if (candidateNNdistVal < nearestNeighbourDist.distValue) {
-			candidateNNdistVal += countManhattanDistancePrematureTerm(trainSet[distsIndex], testSample, this->threshold, testSample.nrDims);
+			candidateNNdistVal += countManhattanDistance(trainSet[distsIndex], testSample, this->threshold, testSample.nrDims);
 			if (candidateNNdistVal < nearestNeighbourDist.distValue) {
 				nearestNeighbourDist.sampleIndex = trainSet[distsIndex].index;
 				nearestNeighbourDist.sampleLabel = trainSet[distsIndex].label;
@@ -103,7 +80,7 @@ const Distance PrematureTerm_kNCN::find1NNPrematureTerm(const SampleSet& trainSe
 }
 
 void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample& testSample,
-										  Distance* testSampleNNdists, const int k) {
+											Distance* testSampleNNdists, const int k) {
 	int trainSetNrDims = trainSet.nrDims;
 #if defined SSE
 	int registersNumber = (trainSet.nrDims >> 2) + 1;
@@ -142,15 +119,15 @@ void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample
 		const __m128 centroidIndexSrc = (__m128) _mm_set1_ps((float)centroidIndex);
 		const __m128 divCentroidIndexSrc = (__m128) _mm_set1_ps(divCentroidIndex);
 #elif defined AVX
-
-		const __m256 centroidIndexSrc = (__m256) _mm256_set1_ps((float)centroidIndex);
+		const __m256i centroidIndexISrc = _mm256_set1_epi32(centroidIndex);
+		const __m256 centroidIndexSrc = (__m256) _mm256_cvtepi32_ps(centroidIndexISrc);
 		const __m256 divCentroidIndexSrc = (__m256) _mm256_set1_ps(divCentroidIndex);
 #endif
 
 		for (int samIndex = 0; samIndex < samIndexLimit; samIndex++) {
 			Sample* trainSample = &trainSet[samIndex];
 
-#ifdef SSE	
+#if defined SSE	
 			const __m128* currentCentroidSrc = (__m128*) currentCentroid->dims;
 			const __m128* previousCentroidSrc = (__m128*) previousCentroid->dims;
 			const __m128* trainSampleSrc = (__m128*) trainSample->dims;
@@ -189,10 +166,10 @@ void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample
 				currentCentroid->dims[dimIndex] = ((previousCentroid->dims[dimIndex] * centroidIndex) + trainSample->dims[dimIndex]) * divCentroidIndex;
 			}
 #endif
-			DistanceValue currentNCNdistVal = countManhattanDistancePrematureTerm(*currentCentroid, testSample, 0, this->threshold);
+			DistanceValue currentNCNdistVal = countManhattanDistance(*currentCentroid, testSample, 0, this->threshold);
 
 			if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue) {
-				currentNCNdistVal += countManhattanDistancePrematureTerm(*currentCentroid, testSample, this->threshold, testSample.nrDims);
+				currentNCNdistVal += countManhattanDistance(*currentCentroid, testSample, this->threshold, testSample.nrDims);
 				
 				if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue) {
 					closestCentroid = centroids[centroidIndex];		
