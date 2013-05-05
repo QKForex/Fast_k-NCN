@@ -23,8 +23,9 @@ namespace Common {
 		}
 
 		result.m = _mm_hadd_ps(result.m, result.m);
-		
-		return result.f[0] + result.f[2];
+		result.m = _mm_hadd_ps(result.m, result.m);
+
+		return result.f[0];
 	}
 #elif defined AVX
 	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, const int firstDim, const int lastDim) {

@@ -26,7 +26,6 @@ namespace Fast_kNCN_Test
 	Sample trainSample(-1, 1, 30, trainSampleDims);
 	Sample _testSample(-1, 1, 30, testSampleDims);
 
-
 	TEST_CLASS(DistanceCalculationTest)	{
 	private:
 
@@ -43,13 +42,13 @@ namespace Fast_kNCN_Test
 	public:
 		TEST_METHOD(CountManhattanDistanceTest) {
 			Distance dist;
-			dist.distValue = countManhattanDistance(trainSample, _testSample, trainSample.nrDims);
+			dist.distValue = countManhattanDistance(trainSample, _testSample, 0, trainSample.nrDims);
 			Assert::IsTrue(0.0002 - dist.distValue < 0.00001);
 		}
 
 		TEST_METHOD(CountEuclideanDistanceTest)	{
 			Distance dist;
-			dist.distValue = countEuclideanDistance(trainSample, _testSample, trainSample.nrDims);
+			dist.distValue = countEuclideanDistance(trainSample, _testSample, 0, trainSample.nrDims);
 			Assert::IsTrue(0.0000000400 - dist.distValue < 0.000000001);
 		}
 
@@ -64,7 +63,6 @@ namespace Fast_kNCN_Test
 
 			delete[] resultDists;
 		}
-
 
 	};
 }
