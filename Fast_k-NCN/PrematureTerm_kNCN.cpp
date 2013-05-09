@@ -43,12 +43,12 @@ int PrematureTerm_kNCN::classifySample(const SampleSet& trainSet, const Sample& 
 			return find1NNPrematureTerm(trainSet, testSample).sampleLabel;
 		} else {
 			findkNCNPrematureTerm(const_cast<SampleSet&> (trainSet), testSample, testSampleNNdists, k);
-			LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
-			<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
-			<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
-			<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
-			<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
-			);
+			//LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
+			//<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
+			//<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
+			//<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
+			//<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
+			//);
 			return Classifier::assignLabel(testSampleNNdists, k);
 		}
 
@@ -80,7 +80,7 @@ const Distance PrematureTerm_kNCN::find1NNPrematureTerm(const SampleSet& trainSe
 }
 
 void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample& testSample,
-											Distance* testSampleNNdists, const int k) {
+	Distance* testSampleNNdists, const int k) {
 	int trainSetNrDims = trainSet.nrDims;
 #if defined SSE
 	int registersNumber = (trainSet.nrDims >> 2) + 1;
@@ -99,13 +99,10 @@ void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample
 #endif
 
 	testSampleNNdists[0] = find1NNPrematureTerm(trainSet, testSample);
-	//testSampleNNdists[0] = Classifier::find1NN(trainSet, testSample, testSampleDists);
 	centroids[0] = trainSet[testSampleNNdists[0].sampleIndex];
 	trainSet.swapSamples(testSampleNNdists[0].sampleIndex, trainSet.nrSamples - 1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
-		// current centroid candidate
-		// centroid does not have index or label, just dimensions
 		Sample* currentCentroid = &centroids[centroidIndex]; 
 		Sample closestCentroid;
 		Sample* previousCentroid = &centroids[centroidIndex-1];
@@ -114,9 +111,9 @@ void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample
 		int currentSamPos = -1;
 		float divCentroidIndex = 1.0f / (centroidIndex+1);
 
-#ifdef SSE
-
-		const __m128 centroidIndexSrc = (__m128) _mm_set1_ps((float)centroidIndex);
+#if defined SSE
+		const __m128i centroidIndexISrc = _mm_set1_epi32(centroidIndex);
+		const __m128 centroidIndexSrc = (__m128) _mm_cvtepi32_ps(centroidIndexISrc);
 		const __m128 divCentroidIndexSrc = (__m128) _mm_set1_ps(divCentroidIndex);
 #elif defined AVX
 		const __m256i centroidIndexISrc = _mm256_set1_epi32(centroidIndex);

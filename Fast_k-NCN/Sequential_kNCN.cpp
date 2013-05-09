@@ -72,13 +72,12 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 	} else {
 		findkNCN(const_cast<SampleSet&> (trainSet), testSample,
 			testSampleDists, testSampleNNdists, k);
-		LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
-			<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
-			<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
-			<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
-			<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
-			);
-
+		//LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
+		//	<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
+		//	<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
+		//	<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
+		//	<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
+		//	);
 		return assignLabel(testSample.index);
 	}
 }
@@ -110,7 +109,7 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 //	trainSet needs to be changed, moving already used to the back of array, swap samples
 //
 void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
-										  Distance* testSampleDists, Distance* testSampleNNdists, const int k) {
+	Distance* testSampleDists, Distance* testSampleNNdists, const int k) {
 	int trainSetNrDims = trainSet.nrDims;
 #if defined SSE
 	int registersNumber = (trainSet.nrDims >> 2) + 1;
@@ -143,20 +142,20 @@ void Sequential_kNCN::findkNCN(SampleSet& trainSet, const Sample& testSample,
 		int currentSamPos = -1;
 		float divCentroidIndex = 1.0f / (centroidIndex+1);
 
-#ifdef SSE
-
-		const __m128 centroidIndexSrc = (__m128) _mm_set1_ps((float)centroidIndex);
+#if defined SSE
+		const __m128i centroidIndexISrc = _mm_set1_epi32(centroidIndex);
+		const __m128 centroidIndexSrc = (__m128) _mm_cvtepi32_ps(centroidIndexISrc);
 		const __m128 divCentroidIndexSrc = (__m128) _mm_set1_ps(divCentroidIndex);
 #elif defined AVX
-
-		const __m256 centroidIndexSrc = (__m256) _mm256_set1_ps((float)centroidIndex);
+		const __m256i centroidIndexISrc = _mm256_set1_epi32(centroidIndex);
+		const __m256 centroidIndexSrc = (__m256) _mm256_cvtepi32_ps(centroidIndexISrc);
 		const __m256 divCentroidIndexSrc = (__m256) _mm256_set1_ps(divCentroidIndex);
 #endif
 
 		for (int samIndex = 0; samIndex < samIndexLimit; samIndex++) {
 			Sample* trainSample = &trainSet[samIndex];
 
-#ifdef SSE	
+#if defined SSE	
 			const __m128* currentCentroidSrc = (__m128*) currentCentroid->dims;
 			const __m128* previousCentroidSrc = (__m128*) previousCentroid->dims;
 			const __m128* trainSampleSrc = (__m128*) trainSample->dims;

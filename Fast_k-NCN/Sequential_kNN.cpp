@@ -50,7 +50,7 @@ int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& test
 	} else {
 		findkNN(trainSet, testSample, testSampleDists, testSampleNNdists, k);
 		LOG4CXX_DEBUG(logger, "" << testSample.index 
-			<< " " << testSampleNNdists[0].sampleIndex
+			<< " " << testSampleNNdists[0].sampleIndex 
 			<< " " << testSampleNNdists[1].sampleIndex
 			<< " " << testSampleNNdists[2].sampleIndex
 			<< " " << testSampleNNdists[3].sampleIndex

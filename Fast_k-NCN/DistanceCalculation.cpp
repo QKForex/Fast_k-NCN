@@ -5,8 +5,8 @@ namespace Common {
 #if defined SSE
 	DistanceValue countManhattanDistance(const Sample& train, const Sample& test, const int firstDim, const int lastDim) {
 		const int registersNumber = (((lastDim-1)-firstDim) >> 2) + 1;
-		const __m128* trainDimsSrc = (__m128*) train.dims;
-		const __m128* testDimsSrc = (__m128*) test.dims;
+		const __m128* trainDimsSrc = (__m128*) &train.dims[firstDim];
+		const __m128* testDimsSrc = (__m128*) &test.dims[firstDim];
 		__m128 tmp;
 		union xmmregister {
 			__m128 m;

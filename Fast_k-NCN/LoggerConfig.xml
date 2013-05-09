@@ -16,6 +16,11 @@
  		<appender-ref ref="FileAppender"/>
  	</root>
  
+  <category name="kNNLogger" >
+        <priority value ="info" />
+        <appender-ref ref="FileAppender"/>
+  </category>
+       
   <category name="kNCNLogger" >
         <priority value ="info" />
         <appender-ref ref="FileAppender"/>
