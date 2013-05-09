@@ -1,33 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
- <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
- 	<!-- Output the log message to a log file named "log.txt"
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <!-- Output the log message to a log file named "log.txt"
  	-->
- 	<appender name="FileAppender" class="org.apache.log4j.FileAppender">
- 		<param name="file" value="..\logs\log.txt" />
- 		<param name="append" value="true" />
- 		<layout class="org.apache.log4j.PatternLayout">
- 			<!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
- 			<param name="ConversionPattern" value="%m%n" />
- 		</layout>
- 	</appender>
+  
+  <appender name="FileAppender" class="org.apache.log4j.FileAppender">
+    <param name="file" value="..\logs\log.txt" />
+    <param name="append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
+      <param name="ConversionPattern" value="%m%n" />
+    </layout>
+  </appender>  
+    
+  <appender name="kNNFileAppender" class="org.apache.log4j.FileAppender">
+    <param name="file" value="..\logs\log_knn.txt" />
+    <param name="append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
+      <param name="ConversionPattern" value="%m%n" />
+    </layout>
+  </appender>
 
- 	<root>
- 		<priority value="all" />
- 		<appender-ref ref="FileAppender"/>
- 	</root>
- 
+  <appender name="kNCNFileAppender" class="org.apache.log4j.FileAppender">
+    <param name="file" value="..\logs\log_kncn.txt" />
+    <param name="append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
+      <param name="ConversionPattern" value="%m%n" />
+    </layout>
+  </appender>
+  <appender name="Pt_kNCNFileAppender" class="org.apache.log4j.FileAppender">
+    <param name="file" value="..\logs\log_pt_kncn.txt" />
+    <param name="append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
+      <param name="ConversionPattern" value="%m%n" />
+    </layout>
+  </appender>
+
+  <root>
+    <priority value="all" />
+    <appender-ref ref="FileAppender"/>
+  </root>
+
   <category name="kNNLogger" >
-        <priority value ="info" />
-        <appender-ref ref="FileAppender"/>
+    <priority value ="info" />
+    <appender-ref ref="kNNFileAppender"/>
   </category>
-       
+
   <category name="kNCNLogger" >
-        <priority value ="info" />
-        <appender-ref ref="FileAppender"/>
+    <priority value ="info" />
+    <appender-ref ref="kNCNFileAppender"/>
   </category>
- 
+
   <category name="PT_kNCNLogger" >
-        <priority value ="info" />
-        <appender-ref ref="FileAppender"/>
+    <priority value ="info" />
+    <appender-ref ref="PT_kNCNFileAppender"/>
   </category>
 </log4j:configuration>
