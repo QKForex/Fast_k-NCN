@@ -84,6 +84,9 @@
     <ClCompile Include="PrematureTerm_kNCN.cpp">
       <Filter>Source Files\Classifiers</Filter>
     </ClCompile>
+    <ClCompile Include="Distance.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classifier.h">

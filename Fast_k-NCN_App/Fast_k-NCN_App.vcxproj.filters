@@ -56,6 +56,9 @@
     <Text Include="..\Logs\log.txt">
       <Filter>Resource Files\Logs</Filter>
     </Text>
+    <Text Include="..\Results\results_limv1_kncn.txt">
+      <Filter>Resource Files\Results</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Properties\cache_kncn.properties">
