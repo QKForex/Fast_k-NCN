@@ -1,4 +1,4 @@
-10.08%	454	1196ms	1400	4503	3-NN	Sat Jan 05 01:51:13 2013
+ 10.08%	454	1196ms	1400	4503	3-NN	Sat Jan 05 01:51:13 2013
 10.7%	482	1258ms	1400	4503	9-NN	Sun Jan 06 17:14:13 2013
 10.7%	482	1185ms	1400	4503	9-NN	Sun Jan 06 17:15:03 2013
 10.33%	465	1211ms	1400	4503	9-NN	Sun Jan 06 17:15:36 2013
@@ -325,3 +325,14 @@
 10.15%  457       5078ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Thu May 09 14:01:45 2013
 10.15%  457       1534ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Thu May 09 14:04:56 2013
 10.15%  457       1090ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Thu May 09 14:50:25 2013
+10.15%  457       4554ms   5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Thu May 09 17:01:13 2013
+10.15%  457       4553ms   5  Sequential_kNCN       2009537489  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Thu May 09 17:06:57 2013
+10.15%  457       4552ms   5  Sequential_kNCN          -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Thu May 09 17:16:11 2013
+10.15%  457       7467ms   5  Sequential_kNCN          -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Fri May 10 18:54:38 2013
+10.15%  457       8576ms   5  Sequential_kNCN          -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Fri May 10 18:55:16 2013
+9.82%   442        919ms   5  Sequential_kNCN          -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 17:01:56 2013
+9.82%   442        953ms   5  Sequential_kNCN          -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 17:02:31 2013
+9.82%   442       8294ms   5  Sequential_kNCN          -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 17:14:04 2013
+10.15%  457      84249ms   5  Sequential_kNCN          -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 17:22:25 2013
+10.15%  457       1272ms   5  Sequential_kNCN          -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 17:23:40 2013
+10.15%  457        890ms   5  Sequential_kNCN          -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 20:18:54 2013

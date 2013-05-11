@@ -16,6 +16,7 @@
 #include "DistanceCalculation.h"
 #include "InputReader.h"
 #include "Sequential_kNCN.h"
+#include "LimitedV1_kNCN.h"
 #include "SampleSetFactory.h"
 
 using namespace Common;

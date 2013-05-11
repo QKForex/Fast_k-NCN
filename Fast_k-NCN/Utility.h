@@ -21,14 +21,12 @@ namespace Utility {
 
 	// Template classes
 	template <typename T>
-	class EnumParser
-	{
+	class EnumParser {
 		std::map <std::string, T> enumMap;
 	public:
 		EnumParser(){};
 
-		T ParseEnum(const std::string &value)
-		{ 
+		T ParseEnum(const std::string &value) { 
 			std::map <std::string, T>::const_iterator iValue = enumMap.find(value);
 			if (iValue  == enumMap.end())
 				throw NoSuchEnumException();
@@ -53,7 +51,7 @@ namespace Utility {
 	}
 
 	//void crossValidateSamples(SampleSet* train, SampleSet* test); //TODO: implement
-	
+
 	//void standardizeSamples(SampleSet* train, SampleSet* test); //TODO: fix
 
 }

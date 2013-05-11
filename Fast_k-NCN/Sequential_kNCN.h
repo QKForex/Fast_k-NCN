@@ -24,9 +24,9 @@ private:
 
 	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample);
 
-	void findkNCN(SampleSet& trainSet, const Sample& testSample,
+	void findkNCN(const SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists, Distance* testSampleNNdists, const int k);
-	void findkNCN(SampleSet& trainSet, const Sample& testSample);
+	void findkNCN(const SampleSet& trainSet, const Sample& testSample);
 
 	int assignLabel(const int testSampleIndex);
 };

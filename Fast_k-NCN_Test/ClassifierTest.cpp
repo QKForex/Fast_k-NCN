@@ -218,5 +218,31 @@ namespace Fast_kNCN_Test {
 
 			Assert::AreEqual(457, classifier->nrClassificationErrors);
 		}
+
+		TEST_METHOD(LimitedV1_kNCNPreprocessTest) {
+			const int argc = 2;
+			char *argv[] = {"",	"../../Properties/test.properties"};
+
+			InputReader ir;
+			Assert::IsTrue(ir.readInput(argc, argv));
+
+			SampleSetFactory ssf;
+			SampleSet trainSet = ssf.createSampleSet(
+				ir.trainFilename, ir.nrLoadTrainSamples, ir.nrLoadSampleDims);
+			Assert::IsNotNull(&trainSet);
+			Assert::AreEqual(trainSet.nrSamples, 50);
+
+			SampleSet testSet = ssf.createSampleSet(
+				ir.testFilename, ir.nrLoadTestSamples, ir.nrLoadSampleDims);
+			Assert::IsNotNull(&testSet);
+			Assert::AreEqual(testSet.nrSamples, 5);
+
+			// hardcoded percentMRobustRank
+			std::unique_ptr<LimitedV1_kNCN> classifier = std::unique_ptr<LimitedV1_kNCN>(
+				new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, 95.0));	
+
+			classifier->preprocess(trainSet, testSet);
+
+		}
 	};
 }

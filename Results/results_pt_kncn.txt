@@ -70,3 +70,6 @@
 10.15%  457       1024ms   5  PrematureTerm_kNCN    ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Thu May 09 14:13:03 2013
 10.15%  457       1017ms   5  PrematureTerm_kNCN    ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Thu May 09 14:13:14 2013
 10.15%  457       1021ms   5  PrematureTerm_kNCN    ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Thu May 09 14:49:32 2013
+9.75%   439        941ms   5  PrematureTerm_kNCN       16  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 20:13:00 2013
+10.15%  457        808ms   5  PrematureTerm_kNCN       16  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 20:15:22 2013
+10.15%  457       1109ms   5  PrematureTerm_kNCN       16  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 20:16:40 2013

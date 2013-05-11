@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
 		classifier = std::unique_ptr<RandomizedSelect_kNCN>(new RandomizedSelect_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case LIMV1_KNCN:
-		classifier = std::unique_ptr<LimitedV1_kNCN>(new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+		classifier = std::unique_ptr<LimitedV1_kNCN>(new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.percentMaxRobustRank));
 		break;
 	case LIMV2_KNCN:
 		classifier = std::unique_ptr<LimitedV2_kNCN>(new LimitedV2_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
@@ -102,9 +102,10 @@ int main(int argc, char** argv) {
 		std::chrono::system_clock::now();
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
 	std::ofstream resultFile(ir.resultFilename, std::fstream::app);
-	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %26t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 
+	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %26t %d %t %-20s %t %5d %t %-25s %t %6d %t %-25s %t %6d %125t") 
 		% classifier->errorRate % classifier->nrClassificationErrors % pa.totalTime 
 		% ir.k % ir.classifierName
+		% ir.threshold
 		% ir.trainFilename % trainSet.nrSamples 
 		% ir.testFilename % testSet.nrSamples 
 		<< std::ctime(&current_time_c);

@@ -1,0 +1,11 @@
+10.10%  455       6187ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 15:35:17 2013
+10.10%  455       1131ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 15:38:13 2013
+10.10%  455       1068ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 16:47:52 2013
+10.10%  455       6149ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 17:03:49 2013
+10.10%  455       1061ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 20:19:15 2013
+10.10%  455       1065ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 20:21:55 2013
+10.06%  453      19339ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 21:18:25 2013
+10.06%  453       1091ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 21:19:44 2013
+10.06%  453       1097ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 21:33:13 2013
+10.06%  453       1199ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 21:33:55 2013
+10.06%  453       1186ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 22:02:22 2013

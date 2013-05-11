@@ -29,8 +29,18 @@
       <param name="ConversionPattern" value="%m%n" />
     </layout>
   </appender>
-  <appender name="Pt_kNCNFileAppender" class="org.apache.log4j.FileAppender">
+  
+  <appender name="PT_kNCNFileAppender" class="org.apache.log4j.FileAppender">
     <param name="file" value="..\logs\log_pt_kncn.txt" />
+    <param name="append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
+      <param name="ConversionPattern" value="%m%n" />
+    </layout>
+  </appender>
+  
+  <appender name="LimitedV1_kNCNFileAppender" class="org.apache.log4j.FileAppender">
+    <param name="file" value="..\logs\log_limv1_kncn.txt" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
       <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
@@ -56,5 +66,10 @@
   <category name="PT_kNCNLogger" >
     <priority value ="info" />
     <appender-ref ref="PT_kNCNFileAppender"/>
+  </category>
+
+  <category name="LimitedV1_kNCNLogger" >
+    <priority value ="debug" />
+    <appender-ref ref="LimitedV1_kNCNFileAppender"/>
   </category>
 </log4j:configuration>

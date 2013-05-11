@@ -38,8 +38,10 @@ namespace Utility {
 				"provide number of testing samples to load, default (0) - all")
 				("nr-load-sample-dims", po::value<int>(&nrLoadSampleDims)->implicit_value(0),
 				"provide number of dimensions for each sample to load, default (0) - all")
-				("threshold", po::value<int>(&threshold)->implicit_value(0),
-				"provide threshold dimension for premature termination, default (0) - all")
+				("threshold", po::value<int>(&threshold)->default_value(-1),
+				"provide threshold dimension for premature termination, default (-1) - all")
+				("percentmaxrobustrank", po::value<float>(&percentMaxRobustRank)->default_value(95.0),
+				"provide percent of samples from training set for mRobustRank calculation in LimitedV1_kNCN, default (0) - all")
 				;
 
 			po::options_description cmdline_options;
@@ -96,6 +98,8 @@ namespace Utility {
 					return false;
 				}
 			}
+
+			std::cout << "Results file: " << resultFilename << std::endl;
 
 			EnumParser<ClassifierType> parser;
 			classifier = parser.ParseEnum(classifierName);

@@ -6,7 +6,19 @@ PrematureTerm_kNCN::PrematureTerm_kNCN(): Classifier(), centroids(SampleSet(-1, 
 
 PrematureTerm_kNCN::PrematureTerm_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples,
 									   const int nrClasses, const int nrDims, const int threshold)
-	: Classifier(k, nrTrainSamples, nrTestSamples), centroids(SampleSet(nrClasses, nrDims, k)), threshold(threshold) {
+	: Classifier(k, nrTrainSamples, nrTestSamples), centroids(SampleSet(nrClasses, nrDims, k)) {
+	if (threshold == -1) {
+		this->threshold = nrDims; // no threshold set
+	} else {
+		this->threshold = threshold;
+	}
+
+	distances = new Distance*[nrTestSamples];
+	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
+		distances[distIndex] = new Distance[nrTrainSamples];
+		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
+	}
+
 	for (int centroidIndex = 0; centroidIndex < k; centroidIndex++) {
 		centroids[centroidIndex].nrDims = nrDims;
 		centroids[centroidIndex].dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
@@ -19,9 +31,14 @@ PrematureTerm_kNCN::~PrematureTerm_kNCN() {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
 		delete[] nndists;
 	}
+	if (!distances) {
+		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
+		delete[] distances;
+	}
 }
 
 // no preprocessing phase in this algorithm
+// distances are counted in find1NN step of classification
 void PrematureTerm_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {}
 
 //
@@ -38,49 +55,48 @@ void PrematureTerm_kNCN::classify(const SampleSet& trainSet, const SampleSet& te
 
 int PrematureTerm_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
 	Distance* testSampleDists, Distance* testSampleNNdists, const int k) {	 
-
-		if (k == 1) {
-			return find1NNPrematureTerm(trainSet, testSample).sampleLabel;
-		} else {
-			findkNCNPrematureTerm(const_cast<SampleSet&> (trainSet), testSample, testSampleNNdists, k);
-			//LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
-			//<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
-			//<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
-			//<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
-			//<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
-			//);
-			return Classifier::assignLabel(testSampleNNdists, k);
-		}
-
+	if (k == 1) {
+		return find1NNPrematureTerm(trainSet, testSample, testSampleDists).sampleLabel;
+	} else {
+		findkNCNPrematureTerm(trainSet, testSample, testSampleDists, testSampleNNdists, k);
+		LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
+		<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
+		<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
+		<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
+		<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
+		);
+		return Classifier::assignLabel(testSampleNNdists, k);
+	}
 }
 
 int PrematureTerm_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample) {
-	return classifySample(trainSet, testSample, nullptr,
+	return classifySample(trainSet, testSample, this->distances[testSample.index],
 		this->nndists[testSample.index], this->k);
 }
 
-const Distance PrematureTerm_kNCN::find1NNPrematureTerm(const SampleSet& trainSet, const Sample& testSample) {
-	DistanceValue candidateNNdistVal;
-	Distance nearestNeighbourDist = Distance(trainSet[0].index, trainSet[0].label, 
+const Distance PrematureTerm_kNCN::find1NNPrematureTerm(const SampleSet& trainSet, const Sample& testSample,
+	Distance* testSampleDists) {
+	testSampleDists[0] = Distance(trainSet[0].index, trainSet[0].label, 
 		countManhattanDistance(trainSet[0], testSample, 0, testSample.nrDims));
+	Distance* nearestNeighbourDist = &testSampleDists[0];
 
 	for (int distsIndex = 1; distsIndex < trainSet.nrSamples; distsIndex++) {
-		candidateNNdistVal = countManhattanDistance(trainSet[distsIndex], testSample, 0, this->threshold);
-		if (candidateNNdistVal < nearestNeighbourDist.distValue) {
-			candidateNNdistVal += countManhattanDistance(trainSet[distsIndex], testSample, this->threshold, testSample.nrDims);
-			if (candidateNNdistVal < nearestNeighbourDist.distValue) {
-				nearestNeighbourDist.sampleIndex = trainSet[distsIndex].index;
-				nearestNeighbourDist.sampleLabel = trainSet[distsIndex].label;
-				nearestNeighbourDist.distValue = candidateNNdistVal;
+		testSampleDists[distsIndex].sampleIndex = trainSet[distsIndex].index;
+		testSampleDists[distsIndex].sampleLabel = trainSet[distsIndex].label;
+		testSampleDists[distsIndex].distValue = countManhattanDistance(trainSet[distsIndex], testSample, 0, this->threshold);
+		if (testSampleDists[distsIndex].distValue < (*nearestNeighbourDist).distValue) {
+			testSampleDists[distsIndex].distValue += countManhattanDistance(trainSet[distsIndex], testSample, this->threshold, testSample.nrDims);
+			if (testSampleDists[distsIndex].distValue < (*nearestNeighbourDist).distValue) {
+				nearestNeighbourDist = &testSampleDists[distsIndex];
 			}
 		}
 	}
 
-	return nearestNeighbourDist;
+	return *nearestNeighbourDist;
 }
 
-void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample& testSample,
-	Distance* testSampleNNdists, const int k) {
+void PrematureTerm_kNCN::findkNCNPrematureTerm(const SampleSet& trainSet, const Sample& testSample,
+	Distance* testSampleDists, Distance* testSampleNNdists, const int k) {
 	int trainSetNrDims = trainSet.nrDims;
 #if defined SSE
 	int registersNumber = (trainSet.nrDims >> 2) + 1;
@@ -98,9 +114,9 @@ void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample
 	} result;
 #endif
 
-	testSampleNNdists[0] = find1NNPrematureTerm(trainSet, testSample);
+	testSampleNNdists[0] = find1NNPrematureTerm(trainSet, testSample, testSampleDists);
 	centroids[0] = trainSet[testSampleNNdists[0].sampleIndex];
-	trainSet.swapSamples(testSampleNNdists[0].sampleIndex, trainSet.nrSamples - 1);
+	swapDistances(testSampleDists, testSampleNNdists[0].sampleIndex, trainSet.nrSamples - 1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
 		Sample* currentCentroid = &centroids[centroidIndex]; 
@@ -122,7 +138,7 @@ void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample
 #endif
 
 		for (int samIndex = 0; samIndex < samIndexLimit; samIndex++) {
-			Sample* trainSample = &trainSet[samIndex];
+			const Sample* trainSample = &trainSet[testSampleDists[samIndex].sampleIndex];
 
 #if defined SSE	
 			const __m128* currentCentroidSrc = (__m128*) currentCentroid->dims;
@@ -163,36 +179,31 @@ void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample
 				currentCentroid->dims[dimIndex] = ((previousCentroid->dims[dimIndex] * centroidIndex) + trainSample->dims[dimIndex]) * divCentroidIndex;
 			}
 #endif
+
+#if defined MANHATTAN_DIST
 			DistanceValue currentNCNdistVal = countManhattanDistance(*currentCentroid, testSample, 0, this->threshold);
+#else
+			DistanceValue currentNCNdistVal = countEuclideanDistance(*currentCentroid, testSample, 0, this->threshold);
+#endif
 
 			if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue) {
 				currentNCNdistVal += countManhattanDistance(*currentCentroid, testSample, this->threshold, testSample.nrDims);
 				
 				if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue) {
-					closestCentroid = centroids[centroidIndex];		
-					testSampleNNdists[centroidIndex] = Distance(trainSet[samIndex].index, trainSet[samIndex].label, currentNCNdistVal);
+					closestCentroid = *currentCentroid;		
+					testSampleNNdists[centroidIndex] = Distance(testSampleDists[samIndex].sampleIndex, testSampleDists[samIndex].sampleLabel, currentNCNdistVal);
 					currentSamPos = samIndex;
 				}
 			}
 		}
 		
 		centroids[centroidIndex] = closestCentroid;
-		trainSet.swapSamples(currentSamPos, trainSet.nrSamples-1 - centroidIndex);
-	}
-
-	for (int centroidIndex = 0; centroidIndex < k; centroidIndex++) {
-		if (testSampleNNdists[centroidIndex].sampleIndex == trainSet[trainSet.nrSamples-1 - centroidIndex].index) {
-			trainSet.swapSamples(testSampleNNdists[centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
-		} else {
-			trainSet.swapSamples(testSampleNNdists[centroidIndex].sampleIndex, trainSet[trainSet.nrSamples-1 - centroidIndex].index);
-			trainSet.swapSamples(trainSet[trainSet.nrSamples-1 - centroidIndex].index, trainSet.nrSamples-1 - centroidIndex);
-			trainSet.swapSamples(testSampleNNdists[centroidIndex].sampleIndex, trainSet.nrSamples-1 - centroidIndex);
-		}
+		swapDistances(testSampleDists, currentSamPos, trainSet.nrSamples-1 - centroidIndex);
 	}
 }
 
-void PrematureTerm_kNCN::findkNCNPrematureTerm(SampleSet& trainSet, const Sample& testSample) {
-	return findkNCNPrematureTerm(trainSet, testSample, this->nndists[testSample.index], this->k);
+void PrematureTerm_kNCN::findkNCNPrematureTerm(const SampleSet& trainSet, const Sample& testSample) {
+	return findkNCNPrematureTerm(trainSet, testSample, this->distances[testSample.index], this->nndists[testSample.index], this->k);
 }
 
 int PrematureTerm_kNCN::assignLabel(const int testSampleIndex) {

@@ -5,6 +5,8 @@
 class PrematureTerm_kNCN: public Classifier {
 public:
 	static LoggerPtr logger;
+	
+	Distance** distances;
 	SampleSet centroids;
 
 	PrematureTerm_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples,
@@ -22,11 +24,12 @@ private:
 
 	PrematureTerm_kNCN();
 
-	const Distance find1NNPrematureTerm(const SampleSet& trainSet, const Sample& testSample);
+	const Distance find1NNPrematureTerm(const SampleSet& trainSet, const Sample& testSample,
+		Distance* testSampleDists);
 
-	void findkNCNPrematureTerm(SampleSet& trainSet, const Sample& testSample,
-		Distance* testSampleNNdists, const int k);
-	void findkNCNPrematureTerm(SampleSet& trainSet, const Sample& testSample);
+	void findkNCNPrematureTerm(const SampleSet& trainSet, const Sample& testSample,
+		Distance* testSampleDists, Distance* testSampleNNdists, const int k);
+	void findkNCNPrematureTerm(const SampleSet& trainSet, const Sample& testSample);
 
 	int assignLabel(const int testSampleIndex);
 };
