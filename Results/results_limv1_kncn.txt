@@ -9,3 +9,4 @@
 10.06%  453       1097ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 21:33:13 2013
 10.06%  453       1199ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 21:33:55 2013
 10.06%  453       1186ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 22:02:22 2013
+10.06%  453      15613ms   5  LimitedV1_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sat May 11 22:31:33 2013

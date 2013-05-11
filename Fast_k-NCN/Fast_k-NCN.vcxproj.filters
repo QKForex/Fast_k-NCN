@@ -78,9 +78,6 @@
     <ClCompile Include="Parallel_kNCN.cpp">
       <Filter>Source Files\Classifiers</Filter>
     </ClCompile>
-    <ClCompile Include="RandomizedSelect_kNCN.cpp">
-      <Filter>Source Files\Classifiers</Filter>
-    </ClCompile>
     <ClCompile Include="PrematureTerm_kNCN.cpp">
       <Filter>Source Files\Classifiers</Filter>
     </ClCompile>
@@ -138,9 +135,6 @@
       <Filter>Header Files\Classifiers</Filter>
     </ClInclude>
     <ClInclude Include="Parallel_kNCN.h">
-      <Filter>Header Files\Classifiers</Filter>
-    </ClInclude>
-    <ClInclude Include="RandomizedSelect_kNCN.h">
       <Filter>Header Files\Classifiers</Filter>
     </ClInclude>
     <ClInclude Include="PrematureTerm_kNCN.h">

@@ -35,7 +35,7 @@ namespace Utility {
 	};
 
 	// Enumerations
-	enum ClassifierType {KNN, SEQ_KNCN, PAR_KNCN, PT_KNCN, RAND_KNCN, 
+	enum ClassifierType {KNN, SEQ_KNCN, PAR_KNCN, PT_KNCN, 
 		LIMV1_KNCN, LIMV2_KNCN, CACHE_KNCN};
 
 	EnumParser<ClassifierType>::EnumParser()
@@ -44,7 +44,6 @@ namespace Utility {
 		enumMap["Sequential_kNCN"] = SEQ_KNCN;
 		enumMap["Parallel_kNCN"] = PAR_KNCN;
 		enumMap["PrematureTerm_kNCN"] = PT_KNCN;
-		enumMap["RandomizedSelect_kNCN"] = RAND_KNCN;
 		enumMap["LimitedV1_kNCN"] = LIMV1_KNCN;
 		enumMap["LimitedV2_kNCN"] = LIMV2_KNCN;
 		enumMap["CacheEfficient_kNCN"] = CACHE_KNCN;

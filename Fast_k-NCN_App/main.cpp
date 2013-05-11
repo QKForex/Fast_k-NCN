@@ -14,7 +14,6 @@
 #include "Sequential_kNCN.h"
 #include "Parallel_kNCN.h"
 #include "PrematureTerm_kNCN.h"
-#include "RandomizedSelect_kNCN.h"
 #include "LimitedV1_kNCN.h"
 #include "LimitedV2_kNCN.h"
 #include "CacheEfficient_kNCN.h"
@@ -67,9 +66,6 @@ int main(int argc, char** argv) {
 		break;
 	case PT_KNCN:
 		classifier = std::unique_ptr<PrematureTerm_kNCN>(new PrematureTerm_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.threshold));
-		break;
-	case RAND_KNCN:
-		classifier = std::unique_ptr<RandomizedSelect_kNCN>(new RandomizedSelect_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case LIMV1_KNCN:
 		classifier = std::unique_ptr<LimitedV1_kNCN>(new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.percentMaxRobustRank));
