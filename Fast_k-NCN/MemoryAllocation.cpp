@@ -31,7 +31,7 @@ namespace Utility {
 		SampleDim* sampleDimsPtr = new SampleDim[nrDims]();
 
 		//TODO: OutOfMemoryException(size)
-		if (sampleDimsPtr == NULL) {
+		if (!sampleDimsPtr) {
 			throw "Not enough memory for sampleDims\n";
 		}		
 #endif
@@ -45,7 +45,7 @@ namespace Utility {
 	}
 
 	void freeSampleDimsMemory(SampleDim* sampleDims, char* file, unsigned int line) {
-		if (sampleDims != NULL) {			
+		if (sampleDims) {			
 #if defined SSE || defined AVX
 			_aligned_free(sampleDims);			
 #else
@@ -56,7 +56,7 @@ namespace Utility {
 			cerr << "Freed memory at address " << sampleDims
 				<< " in " << file << ":" << line << endl;
 #endif
-			sampleDims = NULL;
+			sampleDims = nullptr;
 		}
 	}
 
