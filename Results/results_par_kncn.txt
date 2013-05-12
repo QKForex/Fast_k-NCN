@@ -1,0 +1,1 @@
+10.15%  457       7352ms   5  Parallel_kNCN            -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 12:39:36 2013

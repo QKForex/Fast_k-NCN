@@ -56,25 +56,32 @@ int main(int argc, char** argv) {
 	std::unique_ptr<Classifier> classifier;
 	switch (ir.classifier) {
 	case KNN:
-		classifier = std::unique_ptr<Sequential_kNN>(new Sequential_kNN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+		classifier = std::unique_ptr<Sequential_kNN>(
+			new Sequential_kNN(ir.k, trainSet.nrSamples, testSet.nrSamples));
 		break;
 	case SEQ_KNCN:
-		classifier = std::unique_ptr<Sequential_kNCN>(new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
+		classifier = std::unique_ptr<Sequential_kNCN>(
+			new Sequential_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
 		break;
 	case PAR_KNCN:
-		classifier = std::unique_ptr<Parallel_kNCN>(new Parallel_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+		classifier = std::unique_ptr<Parallel_kNCN>(
+			new Parallel_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
 		break;
 	case PT_KNCN:
-		classifier = std::unique_ptr<PrematureTerm_kNCN>(new PrematureTerm_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.threshold));
+		classifier = std::unique_ptr<PrematureTerm_kNCN>(
+			new PrematureTerm_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.threshold));
 		break;
 	case LIMV1_KNCN:
-		classifier = std::unique_ptr<LimitedV1_kNCN>(new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.percentMaxRobustRank));
+		classifier = std::unique_ptr<LimitedV1_kNCN>(
+			new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.percentMaxRobustRank));
 		break;
 	case LIMV2_KNCN:
-		classifier = std::unique_ptr<LimitedV2_kNCN>(new LimitedV2_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.percentMaxRobustRank));
+		classifier = std::unique_ptr<LimitedV2_kNCN>(
+			new LimitedV2_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.percentMaxRobustRank));
 		break;
 	case CACHE_KNCN:
-		classifier = std::unique_ptr<CacheEfficient_kNCN>(new CacheEfficient_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+		classifier = std::unique_ptr<CacheEfficient_kNCN>(
+			new CacheEfficient_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
 		break;
 	default:
 		exit(-1);

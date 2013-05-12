@@ -117,7 +117,7 @@ namespace Common {
 			// in reality the distance is 0, because it is the same sample
 			// but it should not be taken into consideration
 		}
-
+		// no swapping for last testSample
 		for (int trainSamIndex = 0; trainSamIndex < sampleSet.nrSamples-1; trainSamIndex++) {
 			distances[sampleSet.nrSamples - 1][trainSamIndex].sampleIndex = sampleSet[trainSamIndex].index;
 			distances[sampleSet.nrSamples - 1][trainSamIndex].sampleLabel = sampleSet[trainSamIndex].label;

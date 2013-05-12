@@ -487,10 +487,12 @@
     <Text Include="..\Datasets\ftrain01.txt" />
     <Text Include="..\Datasets\ftrain02.txt" />
     <Text Include="..\Logs\log.txt" />
+    <Text Include="..\Results\results_cache_kncn.txt" />
     <Text Include="..\Results\results_kncn.txt" />
     <Text Include="..\Results\results_knn.txt" />
     <Text Include="..\Results\results_limv1_kncn.txt" />
     <Text Include="..\Results\results_limv2_kncn.txt" />
+    <Text Include="..\Results\results_par_kncn.txt" />
     <Text Include="..\Results\results_pt_kncn.txt" />
   </ItemGroup>
   <ItemGroup>

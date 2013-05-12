@@ -62,6 +62,12 @@
     <Text Include="..\Results\results_limv2_kncn.txt">
       <Filter>Resource Files\Results</Filter>
     </Text>
+    <Text Include="..\Results\results_cache_kncn.txt">
+      <Filter>Resource Files\Results</Filter>
+    </Text>
+    <Text Include="..\Results\results_par_kncn.txt">
+      <Filter>Resource Files\Results</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Properties\cache_kncn.properties">
