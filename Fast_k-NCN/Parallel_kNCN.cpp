@@ -20,12 +20,12 @@ Parallel_kNCN::Parallel_kNCN(const int k, const int nrTrainSamples, const int nr
 }
 
 Parallel_kNCN::~Parallel_kNCN() {
-	if (!results) { delete[] results; }
-	if (!nndists) {
+	if (results) { delete[] results; }
+	if (nndists) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
 		delete[] nndists;
 	}
-	if (!distances) {
+	if (distances) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
 		delete[] distances;
 	}
@@ -102,10 +102,6 @@ int Parallel_kNCN::classifySample(const SampleSet& trainSet, const Sample& testS
 //	this action will be repeated for the rest 
 //	distances[nndists[0].sampleIndex].distValue = FLT_MAX;
 //	check if given sample is not kNCN already
-//
-//TODO: inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
-//  TRICK:
-//	trainSet needs to be changed, moving already used to the back of array, swap samples
 //
 void Parallel_kNCN::findkNCN(const SampleSet& trainSet, const Sample& testSample,
 	Distance* testSampleDists, Distance* testSampleNNdists, const int k) {

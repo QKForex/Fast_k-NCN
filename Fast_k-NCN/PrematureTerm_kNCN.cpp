@@ -26,12 +26,12 @@ PrematureTerm_kNCN::PrematureTerm_kNCN(const int k, const int nrTrainSamples, co
 }
 
 PrematureTerm_kNCN::~PrematureTerm_kNCN() {
-	if (!results) { delete[] results; }
-	if (!nndists) {
+	if (results) { delete[] results; }
+	if (nndists) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
 		delete[] nndists;
 	}
-	if (!distances) {
+	if (distances) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
 		delete[] distances;
 	}

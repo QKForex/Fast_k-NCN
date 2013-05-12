@@ -1,1 +1,4 @@
 10.15%  457       7333ms   5  CacheEfficient_kNCN      -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 12:32:46 2013
+10.15%  457       7362ms   5  CacheEfficient_kNCN      -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 13:45:18 2013
+10.15%  457       7347ms   5  CacheEfficient_kNCN      -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 13:46:07 2013
+10.15%  457       7249ms   5  CacheEfficient_kNCN      -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 13:46:30 2013

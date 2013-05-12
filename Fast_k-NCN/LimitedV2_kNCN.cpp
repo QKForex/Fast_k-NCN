@@ -21,16 +21,16 @@ LimitedV2_kNCN::LimitedV2_kNCN(const int k, const int nrTrainSamples, const int 
 }
 
 LimitedV2_kNCN::~LimitedV2_kNCN() {
-	if (!results) { delete[] results; }
-	if (!nndists) {
+	if (results) { delete[] results; }
+	if (nndists) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
 		delete[] nndists;
 	}
-	if (!distances) {
+	if (distances) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
 		delete[] distances;
 	}
-	if (!maximalRobustRanks) { delete[] maximalRobustRanks; }
+	if (maximalRobustRanks) { delete[] maximalRobustRanks; }
 }
 
 void LimitedV2_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {

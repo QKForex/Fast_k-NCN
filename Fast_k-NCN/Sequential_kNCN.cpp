@@ -20,12 +20,12 @@ Sequential_kNCN::Sequential_kNCN(const int k, const int nrTrainSamples, const in
 }
 
 Sequential_kNCN::~Sequential_kNCN() {
-	if (!results) { delete[] results; }
-	if (!nndists) {
+	if (results) { delete[] results; }
+	if (nndists) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
 		delete[] nndists;
 	}
-	if (!distances) {
+	if (distances) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
 		delete[] distances;
 	}
@@ -102,10 +102,6 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 //	this action will be repeated for the rest 
 //	distances[nndists[0].sampleIndex].distValue = FLT_MAX;
 //	check if given sample is not kNCN already
-//
-//TODO: inne rozw. ew. mozna zamienic z ostatnim i iterowaæ po n - j
-//  TRICK:
-//	trainSet needs to be changed, moving already used to the back of array, swap samples
 //
 void Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sample& testSample,
 	Distance* testSampleDists, Distance* testSampleNNdists, const int k) {
