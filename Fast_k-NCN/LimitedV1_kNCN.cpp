@@ -1,6 +1,6 @@
 #include "LimitedV1_kNCN.h"
 
-LoggerPtr LimitedV1_kNCN::logger(Logger::getLogger("LimitedV1_kNCNLogger"));
+LoggerPtr LimitedV1_kNCN::logger(Logger::getLogger("LimV1_kNCNLogger"));
 
 LimitedV1_kNCN::LimitedV1_kNCN() : Classifier(), centroids(SampleSet(-1, -1, k)) {}
 
@@ -49,14 +49,11 @@ void LimitedV1_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSe
 }
 
 int LimitedV1_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
-								   Distance* testSampleDists, Distance* testSampleNNdists,
-								   const int k) {	  
-	
-	int currentTestSampleDistIndex = -1;								   
+	Distance* testSampleDists, Distance* testSampleNNdists, const int k) {	  						   
 	if (k == 1) {
-		return find1NNLimited(trainSet, testSample, testSampleDists, this->maximalRobustRank, &currentTestSampleDistIndex).sampleLabel;
+		return find1NNLimited(trainSet, testSample, testSampleDists, this->maximalRobustRank).sampleLabel;
 	} else {
-		findkNCNLimitedV1(const_cast<SampleSet&> (trainSet), testSample, testSampleDists, testSampleNNdists, k);
+		findkNCNLimitedV1(trainSet, testSample, testSampleDists, testSampleNNdists, k);
 		//LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
 		//	<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
 		//	<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
@@ -68,12 +65,11 @@ int LimitedV1_kNCN::classifySample(const SampleSet& trainSet, const Sample& test
 }
 
 const Distance LimitedV1_kNCN::find1NNLimited(const SampleSet& trainSet, const Sample& testSample,
-	const Distance* testSampleDists, int maximalRobustRank, int* currentTestSampleDistIndex) {
+	const Distance* testSampleDists, const int maximalRobustRank) {
 	Distance nearestNeighbourDist = testSampleDists[0];
 	for (int distsIndex = 1; distsIndex < maximalRobustRank; distsIndex++) {
 		if (testSampleDists[distsIndex].distValue < nearestNeighbourDist.distValue) {
 			nearestNeighbourDist = testSampleDists[distsIndex];
-			*currentTestSampleDistIndex = distsIndex;
 		}
 	}
 	return nearestNeighbourDist;
@@ -167,7 +163,7 @@ void LimitedV1_kNCN::findkNCNLearn(const SampleSet& trainSet, const Sample& test
 #endif
 			DistanceValue currentNCNdistVal = countManhattanDistance(*currentCentroid, testSample, 0, trainSet.nrDims); //TODO: hardcoded Manhattan
 
-			if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue && trainSet[samIndex].index != testSample.index) {
+			if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue && testSampleDists[samIndex].sampleIndex != testSample.index) {
 				// update current centroid candidate
 				closestCentroid = *currentCentroid;
 				
@@ -215,9 +211,19 @@ void LimitedV1_kNCN::findkNCNLimitedV1(const SampleSet& trainSet, const Sample& 
 		DistanceValue f[8];
 	} result;
 #endif
-	int currentTestSampleDistIndex = -1;
-	testSampleNNdists[0] = find1NNLimited(trainSet, testSample, testSampleDists, maximalRobustRank, &currentTestSampleDistIndex);
+
+	testSampleNNdists[0] = find1NNLimited(trainSet, testSample, testSampleDists, maximalRobustRank);
 	centroids[0] = trainSet[testSampleNNdists[0].sampleIndex];
+
+	// find 1NN in trainSampleDists so it can be swapped
+	int currentTestSampleDistIndex = -1;
+	for (int distsIndex = 0; distsIndex < maximalRobustRank; distsIndex++) {
+		if (testSampleDists[distsIndex].sampleIndex == testSampleNNdists[0].sampleIndex) {
+			currentTestSampleDistIndex = distsIndex;
+			break;
+		}
+	}
+
 	swapDistances(testSampleDists, currentTestSampleDistIndex, maximalRobustRank-1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
@@ -321,7 +327,7 @@ void LimitedV1_kNCN::findkNCNLimitedV1(const SampleSet& trainSet, const Sample& 
 // result of this method will be used than later as hardcoded value
 // this should not be a part of preprocessing process
 // it takes too many iterations to find the result
-void LimitedV1_kNCN::learnMRobustRank(SampleSet& trainSet) {
+void LimitedV1_kNCN::learnMRobustRank(const SampleSet& trainSet) {
 	Distance** trainDists = new Distance*[trainSet.nrSamples];
 	for (int distIndex = 0; distIndex < trainSet.nrSamples; distIndex++) {
 		trainDists[distIndex] = new Distance[trainSet.nrSamples];
@@ -337,10 +343,10 @@ void LimitedV1_kNCN::learnMRobustRank(SampleSet& trainSet) {
 	// find the farthest of kNCN neighbors for each sample
 	// last Sample - trainSet.nrSamples - is the leave-one-out sample
 	
-	countDistancesLeaveOneOut(trainSet, trainDists);
+	countDistancesLeaveOneOut(const_cast<SampleSet&> (trainSet), trainDists);
 
 	for (int samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
-		findkNCNLearn(const_cast<SampleSet&> (trainSet), trainSet[samIndex],
+		findkNCNLearn(trainSet, trainSet[samIndex],
 			trainDists[samIndex], trainNNdists[samIndex], k);
 		//LOG4CXX_DEBUG(logger, "" << trainNNdists[samIndex][0].sampleIndex << " " << trainNNdists[samIndex][0].distValue
 		//	<< " " << trainNNdists[samIndex][1].sampleIndex << " " << trainNNdists[samIndex][1].distValue
@@ -371,7 +377,6 @@ void LimitedV1_kNCN::learnMRobustRank(SampleSet& trainSet) {
 				maximalRank = distIndex;
 				break;
 			}
-
 		}
 	}
 	
@@ -384,7 +389,7 @@ void LimitedV1_kNCN::learnMRobustRank(SampleSet& trainSet) {
 	//delete[] maximalRanks;
 
 	// find percentSampleMaximal as (maximalRank/(nrTrainSamples-1) = 1330
-	// maximalRobustRank = 113
+	// maximalRobustRank = 115
 	int percentSampleMaximal = (int)((percentMaxRobustRank * trainSet.nrSamples)/100.0);
 
 	// look for mRobustRank decreasing m as long as there are more than 95% of samples that have 

@@ -1,0 +1,15 @@
+10.88%  490       6289ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 02:17:56 2013
+10.88%  490       1170ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 02:20:39 2013
+10.88%  490       1212ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 02:27:03 2013
+10.88%  490       6331ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 02:45:35 2013
+11.01%  496       1197ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 03:56:36 2013
+11.01%  496       1427ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 03:59:12 2013
+10.04%  452       1323ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 04:09:59 2013
+9.95%   448       1458ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 04:22:32 2013
+9.95%   448       1395ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 04:22:47 2013
+9.99%   450       1452ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 04:37:47 2013
+9.99%   450       1082ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 12:01:04 2013
+9.99%   450       1052ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 12:01:34 2013
+9.99%   450        867ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 12:01:48 2013
+9.99%   450       3090ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 12:10:09 2013
+9.99%   450       1156ms   5  LimitedV2_kNCN           -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 12:11:05 2013

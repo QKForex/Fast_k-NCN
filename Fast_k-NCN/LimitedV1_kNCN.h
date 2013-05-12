@@ -10,7 +10,6 @@ public:
 	SampleSet centroids;
 
 	float percentMaxRobustRank;
-	//float sampleSetFraction;
 	int maximalRobustRank;
 
 	LimitedV1_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples, 
@@ -27,7 +26,7 @@ private:
 	LimitedV1_kNCN();
 
 	const Distance find1NNLimited(const SampleSet& trainSet, const Sample& testSample,
-		const Distance* testSampleDists, int maximalRobustRank, int* currentTestSampleDistIndex);
+		const Distance* testSampleDists, const int maximalRobustRank);
 
 	void findkNCNLearn(const SampleSet& trainSet, const Sample& testSample,
 		Distance* testSampleDists, Distance* testSampleNNdists, const int k);
@@ -37,7 +36,7 @@ private:
 		Distance* testSampleDists, Distance* testSampleNNdists, const int k);
 	void findkNCNLimitedV1(const SampleSet& trainSet, const Sample& testSample);
 
-	void learnMRobustRank(SampleSet& trainSet);
+	void learnMRobustRank(const SampleSet& trainSet);
 
 	int assignLabel(const int testSampleIndex);
 };

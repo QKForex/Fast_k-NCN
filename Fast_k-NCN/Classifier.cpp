@@ -28,6 +28,7 @@ Classifier::Classifier(const int k, const int nrTrainSamples, const int nrTestSa
 //	Input:
 //	Output:
 //
+// TODO: Make all classifiers compatible with this method
 const int Classifier::learnOptimalK(const SampleSet& trainSet, const int largestK) {
 	std::vector< std::pair<int,int> > errorsForK;
 

@@ -39,8 +39,35 @@
     </layout>
   </appender>
   
-  <appender name="LimitedV1_kNCNFileAppender" class="org.apache.log4j.FileAppender">
+  <appender name="LimV1_kNCNFileAppender" class="org.apache.log4j.FileAppender">
     <param name="file" value="..\logs\log_limv1_kncn.txt" />
+    <param name="append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
+      <param name="ConversionPattern" value="%m%n" />
+    </layout>
+  </appender>
+
+  <appender name="LimV2_kNCNFileAppender" class="org.apache.log4j.FileAppender">
+    <param name="file" value="..\logs\log_limv2_kncn.txt" />
+    <param name="append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
+      <param name="ConversionPattern" value="%m%n" />
+    </layout>
+  </appender>
+
+  <appender name="Cache_kNCNFileAppender" class="org.apache.log4j.FileAppender">
+    <param name="file" value="..\logs\log_cache_kncn.txt" />
+    <param name="append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
+      <param name="ConversionPattern" value="%m%n" />
+    </layout>
+  </appender>
+
+  <appender name="Par_kNCNFileAppender" class="org.apache.log4j.FileAppender">
+    <param name="file" value="..\logs\log_par_kncn.txt" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
       <!--<param name="ConversionPattern" value="%d %-4r [%t] %5p %c{1} %x - %m%n" />-->
@@ -68,8 +95,23 @@
     <appender-ref ref="PT_kNCNFileAppender"/>
   </category>
 
-  <category name="LimitedV1_kNCNLogger" >
+  <category name="LimV1_kNCNLogger" >
+    <priority value ="info" />
+    <appender-ref ref="LimV1_kNCNFileAppender"/>
+  </category>
+
+  <category name="LimV2_kNCNLogger" >
+    <priority value ="info" />
+    <appender-ref ref="LimV2_kNCNFileAppender"/>
+  </category>
+
+  <category name="Cache_kNCNLogger" >
     <priority value ="debug" />
-    <appender-ref ref="LimitedV1_kNCNFileAppender"/>
+    <appender-ref ref="Cache_kNCNFileAppender"/>
+  </category>
+
+  <category name="Par_kNCNLogger" >
+    <priority value ="debug" />
+    <appender-ref ref="Par_kNCNFileAppender"/>
   </category>
 </log4j:configuration>

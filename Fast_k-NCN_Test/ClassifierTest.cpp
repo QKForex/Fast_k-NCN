@@ -17,8 +17,6 @@ namespace Fast_kNCN_Test {
 		}
 
 	public:
-
-
 		TEST_METHOD(ClassifierConstructorTest) {
 			const int argc = 2;
 			char *argv[] = {"",	"../../Properties/test.properties"};
@@ -219,7 +217,7 @@ namespace Fast_kNCN_Test {
 			Assert::AreEqual(457, classifier->nrClassificationErrors);
 		}
 
-		TEST_METHOD(LimitedV1_kNCNPreprocessTest) {
+		TEST_METHOD(LimV1_KNCNTestNoDuplicates) {
 			const int argc = 2;
 			char *argv[] = {"",	"../../Properties/test.properties"};
 
@@ -228,21 +226,49 @@ namespace Fast_kNCN_Test {
 
 			SampleSetFactory ssf;
 			SampleSet trainSet = ssf.createSampleSet(
-				ir.trainFilename, ir.nrLoadTrainSamples, ir.nrLoadSampleDims);
+				ir.trainFilename, 0, 0);
 			Assert::IsNotNull(&trainSet);
-			Assert::AreEqual(trainSet.nrSamples, 50);
+			//Assert::AreEqual(trainSet.nrSamples, 50);
 
 			SampleSet testSet = ssf.createSampleSet(
-				ir.testFilename, ir.nrLoadTestSamples, ir.nrLoadSampleDims);
+				ir.testFilename, 0, 0);
 			Assert::IsNotNull(&testSet);
-			Assert::AreEqual(testSet.nrSamples, 5);
+			//Assert::AreEqual(testSet.nrSamples, 5);
 
-			// hardcoded percentMRobustRank
 			std::unique_ptr<LimitedV1_kNCN> classifier = std::unique_ptr<LimitedV1_kNCN>(
 				new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, 95.0));	
 
 			classifier->preprocess(trainSet, testSet);
 
+			//for (int samIndex = 0; samIndex < classifier->nrTestSamples; samIndex++) {
+			//	if (classifier->k == 1) {
+			//		results[samIndex] = classifier->find1NN(trainSet, testSet[samIndex], classifier->distances[samIndex]).sampleLabel;
+			//	} else {
+			//		(Sequential_kNCN)classifier->findkNCN(const_cast<SampleSet&> (trainSet), testSet[samIndex],
+			//			classifier->distances[samIndex], classifier->nndists[samIndex], classifier->k);
+			//		results[samIndex] = classifier->assignLabel(classifier->nndists[samIndex], classifier->k);
+			//	}
+			//}
+
+			classifier->classify(trainSet, testSet);
+
+			for (int samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
+				Assert::AreEqual(samIndex, trainSet[samIndex].index);
+			}
+
+			for (int samIndex = 0; samIndex < testSet.nrSamples; samIndex ++) {
+				for (int ncnIndex = 0; ncnIndex < classifier->k; ncnIndex++) {
+					for (int ncnIndex2 = 0; ncnIndex2 < classifier->k; ncnIndex2++) {
+						if (ncnIndex != ncnIndex2) {
+							Assert::AreNotEqual(classifier->nndists[samIndex][ncnIndex].sampleIndex, classifier->nndists[samIndex][ncnIndex2].sampleIndex);
+						}
+					}
+				}
+			}
+
+			classifier->calculateErrorRate(testSet);
+
+			Assert::AreEqual(454, classifier->nrClassificationErrors);
 		}
 	};
 }

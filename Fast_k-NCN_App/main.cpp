@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
 		classifier = std::unique_ptr<LimitedV1_kNCN>(new LimitedV1_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.percentMaxRobustRank));
 		break;
 	case LIMV2_KNCN:
-		classifier = std::unique_ptr<LimitedV2_kNCN>(new LimitedV2_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));
+		classifier = std::unique_ptr<LimitedV2_kNCN>(new LimitedV2_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.percentMaxRobustRank));
 		break;
 	case CACHE_KNCN:
 		classifier = std::unique_ptr<CacheEfficient_kNCN>(new CacheEfficient_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples));

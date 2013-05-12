@@ -93,26 +93,44 @@ namespace Common {
 		//int samIndex;
 		//TODO: introduce multithreading
 		//#pragma omp parallel for default(none) private(samIndex, d) shared(distances, sampleSet, testSample) 
-		for (int testSamIndex = 0; testSamIndex < sampleSet.nrSamples; testSamIndex++) {
+		for (int testSamIndex = 0; testSamIndex < sampleSet.nrSamples - 1; testSamIndex++) {
 			sampleSet.swapSamples(testSamIndex, sampleSet.nrSamples - 1);
+			//swapDistances(distances[testSamIndex], testSamIndex, sampleSet.nrSamples - 1);
 			for (int trainSamIndex = 0; trainSamIndex < sampleSet.nrSamples - 1; trainSamIndex++) {
-				distances[testSamIndex][trainSamIndex].sampleIndex = trainSamIndex;
-				distances[testSamIndex][trainSamIndex].sampleLabel = sampleSet[sampleSet[trainSamIndex].index].label;
+				distances[testSamIndex][trainSamIndex].sampleIndex = sampleSet[trainSamIndex].index;
+				distances[testSamIndex][trainSamIndex].sampleLabel = sampleSet[trainSamIndex].label;
 #ifdef MANHATTAN_DIST
-				distances[testSamIndex][trainSamIndex].distValue = 
-						countManhattanDistance(sampleSet[trainSamIndex], sampleSet[sampleSet.nrSamples - 1], 0, sampleSet.nrDims);
+					distances[testSamIndex][trainSamIndex].distValue = 
+							countManhattanDistance(sampleSet[trainSamIndex], sampleSet[sampleSet.nrSamples - 1], 0, sampleSet.nrDims);
 #elif EUCLIDEAN_DIST
-				distances[testSamIndex][trainSamIndex].distValue
-					= countEuclideanDistance(sampleSet[trainSamIndex], sampleSet[sampleSet.nrSamples - 1], 0, sampleSet.nrDims);
+					distances[testSamIndex][trainSamIndex].distValue
+						= countEuclideanDistance(sampleSet[trainSamIndex], sampleSet[sampleSet.nrSamples - 1], 0, sampleSet.nrDims);
 #endif
 			}	
-			sampleSet.swapSamples(sampleSet.nrSamples - 1, testSamIndex);
-
 			distances[testSamIndex][sampleSet.nrSamples - 1].sampleIndex = sampleSet[sampleSet.nrSamples - 1].index;
 			distances[testSamIndex][sampleSet.nrSamples - 1].sampleLabel = sampleSet[sampleSet.nrSamples - 1].label;
+			swapDistances(distances[testSamIndex], sampleSet.nrSamples - 1, testSamIndex);
+			sampleSet.swapSamples(sampleSet.nrSamples - 1, testSamIndex);
+
+
 			// do not set distValue, because it was already set with FLT_MAX
 			// in reality the distance is 0, because it is the same sample
 			// but it should not be taken into consideration
 		}
+
+		for (int trainSamIndex = 0; trainSamIndex < sampleSet.nrSamples-1; trainSamIndex++) {
+			distances[sampleSet.nrSamples - 1][trainSamIndex].sampleIndex = sampleSet[trainSamIndex].index;
+			distances[sampleSet.nrSamples - 1][trainSamIndex].sampleLabel = sampleSet[trainSamIndex].label;
+#ifdef MANHATTAN_DIST
+			distances[sampleSet.nrSamples - 1][trainSamIndex].distValue = 
+					countManhattanDistance(sampleSet[trainSamIndex], sampleSet[sampleSet.nrSamples - 1], 0, sampleSet.nrDims);
+#elif EUCLIDEAN_DIST
+			distances[sampleSet.nrSamples - 1][trainSamIndex].distValue
+				= countEuclideanDistance(sampleSet[trainSamIndex], sampleSet[sampleSet.nrSamples - 1], 0, sampleSet.nrDims);
+#endif
+		}
+		distances[sampleSet.nrSamples - 1][sampleSet.nrSamples - 1].sampleIndex = sampleSet[sampleSet.nrSamples - 1].index;
+		distances[sampleSet.nrSamples - 1][sampleSet.nrSamples - 1].sampleLabel = sampleSet[sampleSet.nrSamples - 1].label;
+
 	}
 }

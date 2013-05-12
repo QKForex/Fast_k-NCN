@@ -65,8 +65,7 @@ const Distance Sequential_kNCN::find1NN(const SampleSet& trainSet, const Sample&
 //	Output:	vector of assigned labels
 //
 int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& testSample,
-								   Distance* testSampleDists, Distance* testSampleNNdists,
-								   const int k) {	 
+	 Distance* testSampleDists, Distance* testSampleNNdists,  const int k) {	 
 	if (k == 1) {
 		return Classifier::find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
