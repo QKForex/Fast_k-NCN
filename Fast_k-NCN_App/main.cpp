@@ -95,35 +95,42 @@ int main(int argc, char** argv) {
 	}
 
 	PerformanceAnalyzer pa;
-	pa.startTimer();
+
+	pa.startPreprocessTimer();
 	classifier->preprocess(trainSet, testSet);
+	pa.stopPreprocessTimer();
+	pa.startClassifyTimer();
 	classifier->classify(trainSet, testSet);
-	pa.stopTimer();
+	pa.stopClassifyTimer();
+	
 	classifier->calculateErrorRate(testSet);
 
 	std::chrono::time_point<std::chrono::system_clock> current_time = 
 		std::chrono::system_clock::now();
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
 	std::ofstream resultFile(ir.resultFilename, std::fstream::app);
-	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %26t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 
-		% classifier->errorRate % classifier->nrClassificationErrors % pa.totalTime 
+	
+	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %t %6dms %t %6dms %36t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %135t") 
+		% classifier->errorRate % classifier->nrClassificationErrors
+		% pa.totalPreprocessTime % pa.totalClassifyTime % pa.getTotalTime()
 		% ir.k % ir.classifierName
 		% ir.trainFilename % trainSet.nrSamples 
 		% ir.testFilename % testSet.nrSamples;
-	
 	ir.classifier == PT_KNCN ? resultFile << ir.threshold << " ": resultFile << "";
 	(ir.classifier == LIMV1_KNCN || ir.classifier == LIMV2_KNCN) ?  resultFile << ir.percentMaxRobustRank << "% " : resultFile << "";
 	ir.classifier == LIMV1_KNCN ? resultFile << classifier->maximalRobustRank << " " : resultFile << "";
 	if (ir.classifier == LIMV2_KNCN) {
 		for (int i = 0; i < classifier->k; i++) { resultFile << classifier->maximalRobustRanks[i] << " "; } 
 	}
-	resultFile	<< std::ctime(&current_time_c);
+	resultFile	<< "\t" << std::ctime(&current_time_c);
 
 	std::cout << std::endl;
-	std::cout << boost::format("Classifier:%25tk=%d, %s")  % ir.k % ir.classifierName << std::endl;
-	std::cout << boost::format("Error rate:%25t%.2f%%") % classifier->errorRate << std::endl;
-	std::cout << boost::format("Classification error:%25t%d/%d") % classifier->nrClassificationErrors % testSet.nrSamples << std::endl;
-	std::cout << boost::format("Total time:%25t%d ms") % pa.totalTime << std::endl;
+	std::cout << boost::format("Classifier:%30tk=%d, %s")  % ir.k % ir.classifierName << std::endl;
+	std::cout << boost::format("Error rate:%30t%.2f%%") % classifier->errorRate << std::endl;
+	std::cout << boost::format("Classification error:%30t%d/%d") % classifier->nrClassificationErrors % testSet.nrSamples << std::endl;
+	std::cout << boost::format("Total preprocessing time:%30t%d ms") % pa.totalPreprocessTime << std::endl;
+	std::cout << boost::format("Total classification time:%30t%d ms") % pa.totalClassifyTime << std::endl;
+	std::cout << boost::format("Total time:%30t%d ms") % pa.getTotalTime() << std::endl;
 	std::cout << std::ctime(&current_time_c);
 
 	return 0;
