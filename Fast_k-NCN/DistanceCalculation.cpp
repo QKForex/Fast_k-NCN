@@ -75,10 +75,7 @@ namespace Common {
 	}
 
 	void countDistances(const SampleSet& trainSet, const Sample& testSample, Distance* distances) {
-		int samIndex;
-		//TODO: introduce multithreading
-		//#pragma omp parallel for default(none) private(samIndex, d) shared(distances, trainSet, testSample) 
-		for (samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
+		for (int samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
 			distances[samIndex].sampleIndex = samIndex;
 			distances[samIndex].sampleLabel = trainSet[samIndex].label;
 #ifdef MANHATTAN_DIST
@@ -89,6 +86,20 @@ namespace Common {
 		}
 	}
 
+	void countDistancesParallel(const SampleSet& trainSet, const Sample& testSample, Distance* distances) {
+		int samIndex;
+		#pragma omp parallel for default(shared) private(samIndex) 
+		for (samIndex = 0; samIndex < trainSet.nrSamples; samIndex++) {
+			distances[samIndex].sampleIndex = samIndex;
+			distances[samIndex].sampleLabel = trainSet[samIndex].label;
+#ifdef MANHATTAN_DIST
+			distances[samIndex].distValue = countManhattanDistance(trainSet[samIndex], testSample, 0, testSample.nrDims);
+#elif EUCLIDEAN_DIST
+			distances[samIndex].distValue = countEuclideanDistance(trainSet[samIndex], testSample, 0, testSample.nrDims);
+#endif
+		}
+	}
+	
 	void countDistancesLeaveOneOut(SampleSet& sampleSet, Distance** distances) {
 		//int samIndex;
 		//TODO: introduce multithreading

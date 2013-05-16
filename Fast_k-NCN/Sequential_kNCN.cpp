@@ -69,8 +69,7 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 	if (k == 1) {
 		return Classifier::find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		findkNCN(const_cast<SampleSet&> (trainSet), testSample,
-			testSampleDists, testSampleNNdists, k);
+		findkNCN(trainSet, testSample, testSampleDists, testSampleNNdists, k);
 		//LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
 		//	<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
 		//	<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue

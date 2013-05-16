@@ -29,6 +29,13 @@ public:
 	int nrClassificationErrors;
 	float errorRate;
 
+	// moved here to print in results
+	// LimitedV1_kNCN
+	int maximalRobustRank;
+
+	// LimitedV2_kNCN
+	int* maximalRobustRanks;
+
 	virtual ~Classifier() {}; // cannot implement pure virtual destructor
 	virtual void preprocess(const SampleSet& trainSet, const SampleSet& testSet) = 0;
 	virtual void classify(const SampleSet& trainSet, const SampleSet& testSet) = 0;

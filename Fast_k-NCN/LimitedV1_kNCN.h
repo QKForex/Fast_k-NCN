@@ -10,7 +10,6 @@ public:
 	SampleSet centroids;
 
 	float percentMaxRobustRank;
-	int maximalRobustRank;
 
 	LimitedV1_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples, 
 		const int nrClasses, const int nrDims, const float percentMRobust);

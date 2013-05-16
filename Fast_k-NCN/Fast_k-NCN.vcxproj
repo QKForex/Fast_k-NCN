@@ -300,6 +300,7 @@
       <PreprocessorDefinitions>MANHATTAN_DIST;LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Qvec-report:2 %(AdditionalOptions)</AdditionalOptions>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -321,6 +322,7 @@
       <PreprocessorDefinitions>AVX;MANHATTAN_DIST;LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Qvec-report:2 %(AdditionalOptions)</AdditionalOptions>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -342,6 +344,7 @@
       <PreprocessorDefinitions>SSE;MANHATTAN_DIST;LOG4CXX_STATIC;WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Qvec-report:2 %(AdditionalOptions)</AdditionalOptions>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -417,6 +420,8 @@
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <PreprocessorDefinitions>MANHATTAN_DIST;LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -435,6 +440,7 @@
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <PreprocessorDefinitions>AVX;MANHATTAN_DIST;LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -453,6 +459,7 @@
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_52_0;C:\Dev\Cpp\apache-log4cxx-0.10.0\src\main\include</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <PreprocessorDefinitions>SSE;MANHATTAN_DIST;LOG4CXX_STATIC;WIN32;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

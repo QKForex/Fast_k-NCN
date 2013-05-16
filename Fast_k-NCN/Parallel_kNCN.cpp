@@ -32,8 +32,10 @@ Parallel_kNCN::~Parallel_kNCN() {
 }
 
 void Parallel_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-		countDistances(trainSet, testSet[samIndex], this->distances[samIndex]);
+	int samIndex;
+	#pragma omp parallel for default(shared) private(samIndex)
+	for (samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		countDistancesParallel(trainSet, testSet[samIndex], this->distances[samIndex]);
 	}
 }
 
@@ -44,7 +46,9 @@ void Parallel_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testS
 //	Output:	vector of assigned labels
 //
 void Parallel_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
-	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+	int samIndex;
+	//#pragma omp parallel for default(shared) private(samIndex, distances)
+	for (samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		results[samIndex] = classifySample(trainSet, testSet[samIndex]);
 	}
 }
@@ -69,7 +73,7 @@ int Parallel_kNCN::classifySample(const SampleSet& trainSet, const Sample& testS
 	if (k == 1) {
 		return Classifier::find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
-		findkNCN(const_cast<SampleSet&> (trainSet), testSample,
+		findkNCN(trainSet, testSample,
 			testSampleDists, testSampleNNdists, k);
 		//LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
 		//	<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
