@@ -105,13 +105,19 @@ int main(int argc, char** argv) {
 		std::chrono::system_clock::now();
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
 	std::ofstream resultFile(ir.resultFilename, std::fstream::app);
-	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %26t %d %t %-20s %t %5d %t %-25s %t %6d %t %-25s %t %6d %125t") 
+	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %26t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %125t") 
 		% classifier->errorRate % classifier->nrClassificationErrors % pa.totalTime 
 		% ir.k % ir.classifierName
-		% ir.threshold
 		% ir.trainFilename % trainSet.nrSamples 
-		% ir.testFilename % testSet.nrSamples 
-		<< std::ctime(&current_time_c);
+		% ir.testFilename % testSet.nrSamples;
+	
+	ir.classifier == PT_KNCN ? resultFile << ir.threshold << " ": resultFile << "";
+	(ir.classifier == LIMV1_KNCN || ir.classifier == LIMV2_KNCN) ?  resultFile << ir.percentMaxRobustRank << "% " : resultFile << "";
+	ir.classifier == LIMV1_KNCN ? resultFile << classifier->maximalRobustRank << " " : resultFile << "";
+	if (ir.classifier == LIMV2_KNCN) {
+		for (int i = 0; i < classifier->k; i++) { resultFile << classifier->maximalRobustRanks[i] << " "; } 
+	}
+	resultFile	<< std::ctime(&current_time_c);
 
 	std::cout << std::endl;
 	std::cout << boost::format("Classifier:%25tk=%d, %s")  % ir.k % ir.classifierName << std::endl;
