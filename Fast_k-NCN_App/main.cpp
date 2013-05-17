@@ -30,8 +30,6 @@ int main(int argc, char** argv) {
 
 	DOMConfigurator::configure("../Fast_k-NCN/LoggerConfig.xml");
 
-	//logger->closeNestedAppenders();
-
 	InputReader ir;	
 	if (!ir.readInput(argc, argv)) {
 		exit(-1);
@@ -132,6 +130,8 @@ int main(int argc, char** argv) {
 	std::cout << boost::format("Total classification time:%30t%d ms") % pa.totalClassifyTime << std::endl;
 	std::cout << boost::format("Total time:%30t%d ms") % pa.getTotalTime() << std::endl;
 	std::cout << std::ctime(&current_time_c);
+
+	logger->closeNestedAppenders();
 
 	return 0;
 }

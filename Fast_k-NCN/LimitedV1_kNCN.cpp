@@ -33,15 +33,13 @@ LimitedV1_kNCN::~LimitedV1_kNCN() {
 
 void LimitedV1_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
 	learnMRobustRank(const_cast<SampleSet&> (trainSet));
-	
-	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-		countDistances(trainSet, testSet[samIndex], distances[samIndex]);
-	}
-
-
 }
 
 void LimitedV1_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
+	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		countDistances(trainSet, testSet[samIndex], distances[samIndex]);
+	}
+	
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		results[samIndex] = classifySample(trainSet, testSet[samIndex],
 			distances[samIndex], nndists[samIndex], k);

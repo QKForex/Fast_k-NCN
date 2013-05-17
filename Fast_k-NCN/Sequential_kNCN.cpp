@@ -31,11 +31,7 @@ Sequential_kNCN::~Sequential_kNCN() {
 	}
 }
 
-void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-		countDistances(trainSet, testSet[samIndex], this->distances[samIndex]);
-	}
-}
+void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {}
 
 //
 //	Perform classification
@@ -44,6 +40,10 @@ void Sequential_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& tes
 //	Output:	vector of assigned labels
 //
 void Sequential_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
+	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		countDistances(trainSet, testSet[samIndex], this->distances[samIndex]);
+	}
+	
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		results[samIndex] = classifySample(trainSet, testSet[samIndex]);
 	}

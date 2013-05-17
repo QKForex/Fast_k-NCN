@@ -28,3 +28,7 @@
 9.99%   450        895ms     222ms  5  LimitedV2_kNCN        ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 95% 0 26 50 91 113 %tThu May 16 11:56:42 2013
 9.99%   450        863ms     223ms    1086ms  5  LimitedV2_kNCN        ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 95% 0 26 50 91 113 %tThu May 16 12:01:07 2013
 9.99%   450        857ms     224ms    1081ms  5  LimitedV2_kNCN        ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 95% 0 26 50 91 113 	Thu May 16 12:01:58 2013
+9.99%   450        855ms     223ms    1078ms  5  LimitedV2_kNCN        ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 95% 0 26 50 91 113 	Thu May 16 12:05:36 2013
+9.99%   450        860ms     222ms    1082ms  5  LimitedV2_kNCN        ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 95% 0 26 50 91 113 	Thu May 16 12:06:57 2013
+9.99%   450        942ms     227ms    1169ms  5  LimitedV2_kNCN        ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 95% 0 26 50 91 113 	Thu May 16 12:07:03 2013
+9.99%   450        938ms     383ms    1321ms  5  LimitedV2_kNCN        ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 95% 0 26 50 91 113 	Fri May 17 19:28:29 2013

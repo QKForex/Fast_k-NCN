@@ -32,9 +32,7 @@ CacheEfficient_kNCN::~CacheEfficient_kNCN() {
 }
 
 void CacheEfficient_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {
-	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-		countDistances(trainSet, testSet[samIndex], this->distances[samIndex]);
-	}
+
 }
 
 //
@@ -44,6 +42,10 @@ void CacheEfficient_kNCN::preprocess(const SampleSet& trainSet, const SampleSet&
 //	Output:	vector of assigned labels
 //
 void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
+	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
+		countDistances(trainSet, testSet[samIndex], this->distances[samIndex]);
+	}
+	
 	for (int samIndex = 0; samIndex < nrTestSamples; samIndex++) {
 		results[samIndex] = classifySample(trainSet, testSet[samIndex]);
 	}
