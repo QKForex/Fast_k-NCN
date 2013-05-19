@@ -6,23 +6,21 @@
 
 #include <boost/format.hpp>
 
+#include "Logger.h"
 #include "InputReader.h"
 #include "SampleSetFactory.h"
 #include "PerformanceAnalyzer.h"
 
 #include "Sequential_kNN.h"
 #include "Sequential_kNCN.h"
-#include "Parallel_kNCN.h"
 #include "PrematureTerm_kNCN.h"
 #include "LimitedV1_kNCN.h"
 #include "LimitedV2_kNCN.h"
+#include "Parallel_kNCN.h"
 #include "CacheEfficient_kNCN.h"
 
 using namespace Common;
 using namespace Utility;
-
-using namespace log4cxx;
-using namespace log4cxx::helpers;
 
 LoggerPtr logger(Logger::getLogger("Fast_k-NCN"));
 
@@ -35,21 +33,39 @@ int main(int argc, char** argv) {
 		exit(-1);
 	}
 
+	// Cross-validation
+	if (!ir.toCrossValidateFilename.empty()) {
+		std::cout << "10-fold cross-validation of dataset " + ir.toCrossValidateFilename << std::endl;
+		SampleSetFactory ssf;
+		// always read all samples and dims
+		SampleSet dataSet = ssf.createSampleSet(ir.toCrossValidateFilename  + ".txt", 0, 0);
+	
+		crossvalidateSamples(&dataSet, ir.toCrossValidateFilename, K_FOLD);
+	
+		exit(0);
+	}
+
 	SampleSetFactory ssf;
 	SampleSet trainSet = ssf.createSampleSet(ir.trainFilename, ir.nrLoadTrainSamples, ir.nrLoadSampleDims);
-	if (&trainSet == NULL) {
+	if (&trainSet == nullptr) {
 		std::cerr << "Reading training samples unsuccesful." << std::endl;
 		exit(-1);
 	}
 	std::cout << boost::format("Reading %1% training samples with %2% dimensions each succesful.")
 		% trainSet.nrSamples % trainSet.nrDims << std::endl;
 	SampleSet testSet = ssf.createSampleSet(ir.testFilename, ir.nrLoadTestSamples, ir.nrLoadSampleDims);
-	if (&testSet == NULL) {
+	if (&testSet == nullptr) {
 		std::cerr << "Reading test samples unsuccesful." << std::endl;
 		exit(-1);
 	}
 	std::cout << boost::format("Reading %1% testing samples with %2% dimensions each succesful.")
 		% testSet.nrSamples % testSet.nrDims << std::endl;
+
+	// Standardization
+	if (ir.isStandardizationEnabled) { 
+		std::cout << "Standardization of dataset's samples enabled" << std::endl;
+		standardizeSamples(&trainSet, &testSet);
+	}
 
 	std::unique_ptr<Classifier> classifier;
 	switch (ir.classifier) {

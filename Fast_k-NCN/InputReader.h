@@ -1,14 +1,13 @@
 #pragma once
 
 #include <iostream>
-#include <string>
+#include <fstream>
 
 #include <boost/format.hpp>
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include "SampleSet.h"
-#include "Utility.h"
+#include "Config.h"
 
 namespace Utility {
 
@@ -33,10 +32,9 @@ namespace Utility {
 		int threshold;
 		float percentMaxRobustRank;
 
-		// Dataset cross-valdiation and 
+		// Dataset cross-valdiation and standardization
 		std::string toCrossValidateFilename;
-		std::string fromStandarizeFilename;
-		std::string toStandarizeFilename;
+		bool isStandardizationEnabled;
 
 		InputReader();
 		~InputReader();

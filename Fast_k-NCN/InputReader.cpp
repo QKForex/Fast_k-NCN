@@ -2,7 +2,7 @@
 
 namespace Utility {
 
-	InputReader::InputReader() {}
+	InputReader::InputReader() : isStandardizationEnabled(false) {}
 
 	InputReader::~InputReader() {}
 
@@ -13,9 +13,8 @@ namespace Utility {
 				("help", "produce help message")
 				("properties-file,p", po::value<std::string>(&propertiesFilename)->implicit_value(""),
 				"provide filepath to file with properties")
-				("cross-validate,C", po::value<std::string>()->implicit_value(""),	"10-fold cross-validate provided dataset")
-				("standardize,S", po::value<std::string>()->multitoken(),
-				"standardize data in provided dataset")
+				("cross-validate,C", po::value<std::string>(&toCrossValidateFilename)->implicit_value(""),	"10-fold cross-validate provided dataset")
+				("standardize,S", "standardize data in provided dataset")
 				;
 
 			po::options_description config("Configuration options");
@@ -60,10 +59,19 @@ namespace Utility {
 				options(cmdline_options).positional(p).run(), vars);
 			po::notify(vars);
 
-			if (vars.count("help")) 
-			{
+			if (vars.count("help")) {
 				std::cout << visible;
 				exit(0);
+			}
+
+			if (vars.count("cross-validate")) {
+				std::cout << "File with data to cross-validate: " << toCrossValidateFilename  + ".txt" << std::endl;
+				std::ifstream toCrossValdiateFile(toCrossValidateFilename + ".txt");
+				if (!toCrossValdiateFile.is_open()) {
+					std::cerr << "File with data to cross-validate does not exist." << std::endl;
+					return false;
+				}
+				return true;
 			}
 
 			if (vars.count("properties-file")) {
@@ -100,6 +108,10 @@ namespace Utility {
 			}
 
 			std::cout << "Results file: " << resultFilename << std::endl;
+
+			if (vars.count("standardize")) {
+				isStandardizationEnabled = true;
+			}
 
 			EnumParser<ClassifierType> parser;
 			classifier = parser.ParseEnum(classifierName);

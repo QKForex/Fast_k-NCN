@@ -2,10 +2,6 @@
 
 #include <Windows.h>
 
-#include "SampleSet.h"
-
-using namespace Common;
-
 namespace Utility {
 
 	class PerformanceAnalyzer {

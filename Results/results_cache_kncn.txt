@@ -9,3 +9,5 @@
 10.15%  457       4829ms   5  CacheEfficient_kNCN      -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 14:46:39 2013
 10.15%  457       4835ms   5  CacheEfficient_kNCN      -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 14:48:13 2013
 10.15%  457       4819ms   5  CacheEfficient_kNCN      -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 14:49:43 2013
+10.15%  457          0ms     874ms     874ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sun May 19 04:12:13 2013
+10.15%  457          0ms     854ms     854ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sun May 19 04:12:29 2013
