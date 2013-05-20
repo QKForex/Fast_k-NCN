@@ -50,7 +50,7 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 	const int firstRemainingTestSampleIndex = nrTestSetBlocks != 1 ? (nrTestSetBlocks - 1)*nrSamplesInTestBlock : 0;
 	const int nrRemainingTestSamples = testSet.nrSamples - firstRemainingTestSampleIndex;
 
-	for (int testBlockIndex = 0; testBlockIndex < nrTestSetBlocks - 1; testBlockIndex++)	{
+	for (int testBlockIndex = 0; testBlockIndex < nrTestSetBlocks - 1; testBlockIndex++) {
 		SampleSet testSetBlock(testSet.nrClasses, testSet.nrDims, nrSamplesInTestBlock);
 		for (int samIndex = 0; samIndex < nrSamplesInTestBlock; samIndex++)	{
 			testSetBlock[samIndex] = testSet[testBlockIndex*nrSamplesInTestBlock + samIndex]; 
@@ -65,7 +65,7 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 				trainSetBlock[samIndex] = trainSet[trainBlockIndex*nrSamplesInTrainBlock + samIndex]; 
 			}
 			
-			blockNCNDists[trainBlockIndex] = classifyBlock(trainSetBlock, testSetBlock, testBlockIndex*nrSamplesInTestBlock);
+			blockNCNDists[trainBlockIndex] = classifyBlock(trainSetBlock, testSetBlock, trainBlockIndex*nrSamplesInTestBlock, testBlockIndex*nrSamplesInTestBlock);
 		}
 
 		// last train block
@@ -74,16 +74,18 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 			trainSetBlock[samIndex] = trainSet[firstRemainingTrainSampleIndex + samIndex]; 
 		}
 
-		blockNCNDists[nrTrainSetBlocks - 1] = classifyBlock(trainSetBlock, testSetBlock, testBlockIndex*nrSamplesInTestBlock);
+		blockNCNDists[nrTrainSetBlocks - 1] = classifyBlock(trainSetBlock, testSetBlock, firstRemainingTrainSampleIndex, testBlockIndex*nrSamplesInTestBlock);
 
+
+
+		// find the closest candidate for every testSample from current testSetBlock
+		// for kNCN from all trainBlocks for every k
 		Distance** closestNCNDists = new Distance*[testSetBlock.nrSamples];
 		for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) {
 			closestNCNDists[distIndex] = new Distance[this->k];
 			std::fill(closestNCNDists[distIndex], closestNCNDists[distIndex]+k, Distance(-1,-1, FLT_MAX));
 		}
 
-		// find the closest candidate for every testSample from current testSetBlock
-		// for kNCN from all trainBlocks for every k
 		for (int blockIndex = 0; blockIndex < nrTrainSetBlocks; blockIndex++) {
 			for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++)	{
 				for (int kIndex = 0; kIndex < k; kIndex++)	{
@@ -119,6 +121,8 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 		}
 	}
 
+
+
 	// last test block
 	SampleSet testSetBlock(testSet.nrClasses, testSet.nrDims, nrRemainingTestSamples);
 	for (int samIndex = 0; samIndex < nrRemainingTestSamples; samIndex++)	{
@@ -134,7 +138,7 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 			trainSetBlock[samIndex] = trainSet[trainBlockIndex*nrSamplesInTrainBlock + samIndex]; 
 		}
 
-		blockNCNDists[trainBlockIndex] = classifyBlock(trainSetBlock, testSetBlock, firstRemainingTestSampleIndex);
+		blockNCNDists[trainBlockIndex] = classifyBlock(trainSetBlock, testSetBlock, trainBlockIndex*nrSamplesInTestBlock, firstRemainingTestSampleIndex);
 	}
 
 	// last train block for last test block
@@ -143,19 +147,22 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 		trainSetBlock[samIndex] = trainSet[firstRemainingTrainSampleIndex + samIndex]; 
 	}
 
-	blockNCNDists[nrTrainSetBlocks - 1] = classifyBlock(trainSetBlock, testSetBlock, firstRemainingTestSampleIndex);
+	blockNCNDists[nrTrainSetBlocks - 1] = classifyBlock(trainSetBlock, testSetBlock, firstRemainingTrainSampleIndex, firstRemainingTestSampleIndex);
 
+
+
+	// find the closest candidate for every testSample from current testSetBlock
+	// for kNCN from all trainBlocks for every k
 	Distance** closestNCNDists = new Distance*[testSetBlock.nrSamples];
 	for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) {
 		closestNCNDists[distIndex] = new Distance[this->k];
 		std::fill(closestNCNDists[distIndex], closestNCNDists[distIndex]+k, Distance(-1,-1, FLT_MAX));
 	}
 
-	// find the closest candidate for every testSample from current testSetBlock
-	// for kNCN from all trainBlocks for every k
+
 	for (int blockIndex = 0; blockIndex < nrTrainSetBlocks; blockIndex++) {
 		for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
-			for (int kIndex = 0; kIndex < k; kIndex++)	{
+			for (int kIndex = 0; kIndex < k; kIndex++) {
 				if (blockNCNDists[blockIndex][samIndex][kIndex].distValue < closestNCNDists[samIndex][kIndex].distValue) {
 					closestNCNDists[samIndex][kIndex] = blockNCNDists[blockIndex][samIndex][kIndex];
 				}
@@ -164,7 +171,7 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 	}
 
 	// assign label on basis of closestNCNDists
-	for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++)	{
+	for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
 		results[firstRemainingTestSampleIndex + samIndex] = assignLabel(closestNCNDists[samIndex], k);
 		LOG4CXX_DEBUG(logger, "" << closestNCNDists[samIndex][0].sampleIndex << " " << closestNCNDists[samIndex][0].distValue
 			<< " " << closestNCNDists[samIndex][1].sampleIndex << " " << closestNCNDists[samIndex][1].distValue
@@ -179,7 +186,6 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 		delete[] closestNCNDists;
 	}
 
-
 	if (blockNCNDists) {
 		for (int blockIndex = 0; blockIndex < nrTrainSetBlocks; blockIndex++) {
 			for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) { delete blockNCNDists[blockIndex][distIndex]; }
@@ -190,7 +196,7 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 }
 
 Distance** CacheEfficient_kNCN::classifyBlock(const SampleSet& trainSetBlock,
-	const SampleSet& testSetBlock, const int testBlockOffset) {
+	const SampleSet& testSetBlock, const int trainBlockOffset, const int testBlockOffset) {
 	Distance** distances = new Distance*[testSetBlock.nrSamples];
 	for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) {
 		distances[distIndex] = new Distance[trainSetBlock.nrSamples];
@@ -204,7 +210,7 @@ Distance** CacheEfficient_kNCN::classifyBlock(const SampleSet& trainSetBlock,
 	}
 
 	for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
-		countDistancesCache(trainSetBlock, testSetBlock[samIndex], distances[samIndex], testBlockOffset);
+		countDistancesCache(trainSetBlock, testSetBlock[samIndex], distances[samIndex], trainBlockOffset);
 	}
 
 	if (k == 1) {
@@ -213,7 +219,7 @@ Distance** CacheEfficient_kNCN::classifyBlock(const SampleSet& trainSetBlock,
 		}
 	} else {
 		for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
-			findkNCN(trainSetBlock, testSetBlock[samIndex], distances[samIndex], ncndists[samIndex], k, testBlockOffset);
+			findkNCN(trainSetBlock, testSetBlock[samIndex], distances[samIndex], ncndists[samIndex], k, trainBlockOffset, testBlockOffset);
 		}
 	}
 
@@ -256,7 +262,7 @@ int CacheEfficient_kNCN::classifySample(const SampleSet& trainSet, const Sample&
 //	check if given sample is not kNCN already
 //
 void CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const Sample& testSample,
-	Distance* testSampleDists, Distance* testSampleNNdists, const int k, const int testBlockOffset) {
+	Distance* testSampleDists, Distance* testSampleNNdists, const int k, const int trainBlockOffset, const int testBlockOffset) {
 	const int trainSetNrDims = trainSet.nrDims;
 #if defined SSE
 	int registersNumber = (trainSet.nrDims >> 2) + 1;
@@ -275,8 +281,8 @@ void CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const Sample& test
 #endif
 
 	testSampleNNdists[0] = Classifier::find1NN(trainSet, testSample, testSampleDists);
-	centroids[0] = trainSet[testSampleNNdists[0].sampleIndex - testBlockOffset];
-	swapDistances(testSampleDists, testSampleNNdists[0].sampleIndex - testBlockOffset, trainSet.nrSamples - 1);
+	centroids[0] = trainSet[testSampleNNdists[0].sampleIndex - trainBlockOffset];
+	swapDistances(testSampleDists, testSampleNNdists[0].sampleIndex - trainBlockOffset, trainSet.nrSamples - 1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
 		// current centroid candidate
@@ -300,8 +306,7 @@ void CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const Sample& test
 #endif
 
 		for (int samIndex = 0; samIndex < samIndexLimit; samIndex++) {
-			const Sample* trainSample = &trainSet[testSampleDists[samIndex].sampleIndex - testBlockOffset];
-
+			const Sample* trainSample = &trainSet[testSampleDists[samIndex].sampleIndex - trainBlockOffset];
 #if defined SSE	
 			const __m128* currentCentroidSrc = (__m128*) currentCentroid->dims;
 			const __m128* previousCentroidSrc = (__m128*) previousCentroid->dims;
@@ -351,7 +356,7 @@ void CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const Sample& test
 			if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue) {
 				// update current centroid candidate
 				closestCentroid = *currentCentroid;
-				
+
 				// update data structure that keeps track of the trainSample that give the current nearest centroid
 				testSampleNNdists[centroidIndex] =
 					Distance(testSampleDists[samIndex].sampleIndex, testSampleDists[samIndex].sampleLabel, currentNCNdistVal);

@@ -26,11 +26,9 @@ public:
 private:
 	CacheEfficient_kNCN();
 
-	Distance** classifyBlock(const SampleSet& trainSetBlock,
-		const SampleSet& testSetBlock, const int testBlockOffset);
-
-	const Distance find1NN(const SampleSet& trainSet, const Sample& testSample);
+	Distance** classifyBlock(const SampleSet& trainSetBlock, const SampleSet& testSetBlock,
+		const int trainBlockOffset, const int testBlockOffset);
 
 	void findkNCN(const SampleSet& trainSet, const Sample& testSample,
-		Distance* testSampleDists, Distance* testSampleNNdists, const int k, const int testBlockOffset);
+		Distance* testSampleDists, Distance* testSampleNNdists, const int k, const int trainBlockOffset, const int testBlockOffset);
 };

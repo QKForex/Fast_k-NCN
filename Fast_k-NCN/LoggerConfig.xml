@@ -86,7 +86,7 @@
   </category>
 
   <category name="kNCNLogger" >
-    <priority value ="info" />
+    <priority value ="debug" />
     <appender-ref ref="kNCNFileAppender"/>
   </category>
 

@@ -70,12 +70,12 @@ int Sequential_kNCN::classifySample(const SampleSet& trainSet, const Sample& tes
 		return Classifier::find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
 		findkNCN(trainSet, testSample, testSampleDists, testSampleNNdists, k);
-		//LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
-		//	<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
-		//	<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
-		//	<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
-		//	<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
-		//	);
+		LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
+			<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
+			<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
+			<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
+			<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
+			);
 		return assignLabel(testSample.index);
 	}
 }
@@ -198,7 +198,7 @@ void Sequential_kNCN::findkNCN(const SampleSet& trainSet, const Sample& testSamp
 			if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue) {
 				// update current centroid candidate
 				closestCentroid = *currentCentroid;
-				
+
 				// update data structure that keeps track of the trainSample that give the current nearest centroid
 				testSampleNNdists[centroidIndex] =
 					Distance(testSampleDists[samIndex].sampleIndex, testSampleDists[samIndex].sampleLabel, currentNCNdistVal);
