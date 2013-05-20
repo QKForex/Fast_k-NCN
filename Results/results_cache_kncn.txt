@@ -11,3 +11,21 @@
 10.15%  457       4819ms   5  CacheEfficient_kNCN      -1  ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 Sun May 12 14:49:43 2013
 10.15%  457          0ms     874ms     874ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sun May 19 04:12:13 2013
 10.15%  457          0ms     854ms     854ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sun May 19 04:12:29 2013
+10.15%  457          0ms     862ms     862ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sun May 19 04:16:57 2013
+10.15%  457          0ms     859ms     859ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sun May 19 04:20:25 2013
+11.24%  506          0ms   11242ms   11242ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Sun May 19 23:34:25 2013
+11.24%  506          0ms   11209ms   11209ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Sun May 19 23:35:19 2013
+11.24%  506          0ms    4312ms    4312ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Sun May 19 23:35:56 2013
+11.24%  506          0ms    4224ms    4224ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Sun May 19 23:37:36 2013
+11.13%  501          0ms    8198ms    8198ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 200 	Sun May 19 23:39:05 2013
+11.24%  506          0ms   11189ms   11189ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Mon May 20 00:59:13 2013
+11.24%  506          0ms    4231ms    4231ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Mon May 20 13:42:20 2013
+11.24%  506          0ms    4141ms    4141ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Mon May 20 13:42:54 2013
+11.24%  506          0ms    4154ms    4154ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Mon May 20 13:58:10 2013
+11.24%  506          0ms    4144ms    4144ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Mon May 20 13:58:27 2013
+11.24%  506          0ms    4150ms    4150ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Mon May 20 14:00:47 2013
+100.00%  4503        0ms       0ms       0ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 -1 	Mon May 20 14:13:29 2013
+10.15%  457          0ms   12001ms   12001ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 -1 	Mon May 20 14:30:05 2013
+10.15%  457          0ms    3484ms    3484ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 -1 	Mon May 20 14:30:32 2013
+10.73%  483          0ms    5443ms    5443ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Mon May 20 14:31:23 2013
+10.73%  483          0ms    5398ms    5398ms  5  CacheEfficient_kNCN   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 500 	Mon May 20 14:36:00 2013

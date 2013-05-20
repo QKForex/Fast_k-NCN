@@ -221,7 +221,6 @@ void LimitedV1_kNCN::findkNCNLimitedV1(const SampleSet& trainSet, const Sample& 
 			break;
 		}
 	}
-
 	swapDistances(testSampleDists, currentTestSampleDistIndex, maximalRobustRank-1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {

@@ -2,7 +2,7 @@
 
 LoggerPtr PrematureTerm_kNCN::logger(Logger::getLogger("PT_kNCNLogger"));
 
-PrematureTerm_kNCN::PrematureTerm_kNCN(): Classifier(), centroids(SampleSet(-1, -1, k)), threshold(0) {} 
+PrematureTerm_kNCN::PrematureTerm_kNCN(): Classifier(), centroids(SampleSet(-1, -1, k)), threshold(-1) {} 
 
 PrematureTerm_kNCN::PrematureTerm_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples,
 									   const int nrClasses, const int nrDims, const int threshold)
@@ -59,12 +59,12 @@ int PrematureTerm_kNCN::classifySample(const SampleSet& trainSet, const Sample& 
 		return find1NNPrematureTerm(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
 		findkNCNPrematureTerm(trainSet, testSample, testSampleDists, testSampleNNdists, k);
-		LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
-		<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
-		<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
-		<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
-		<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
-		);
+		//LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
+		//<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
+		//<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
+		//<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
+		//<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
+		//);
 		return Classifier::assignLabel(testSampleNNdists, k);
 	}
 }

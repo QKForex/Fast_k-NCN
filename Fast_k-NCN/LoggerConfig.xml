@@ -105,13 +105,14 @@
     <appender-ref ref="LimV2_kNCNFileAppender"/>
   </category>
 
+  <category name="Par_kNCNLogger" >
+    <priority value ="info" />
+    <appender-ref ref="Par_kNCNFileAppender"/>
+  </category>
+    
   <category name="Cache_kNCNLogger" >
     <priority value ="debug" />
     <appender-ref ref="Cache_kNCNFileAppender"/>
   </category>
 
-  <category name="Par_kNCNLogger" >
-    <priority value ="debug" />
-    <appender-ref ref="Par_kNCNFileAppender"/>
-  </category>
 </log4j:configuration>

@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
 		break;
 	case CACHE_KNCN:
 		classifier = std::unique_ptr<CacheEfficient_kNCN>(
-			new CacheEfficient_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims));
+			new CacheEfficient_kNCN(ir.k, trainSet.nrSamples, testSet.nrSamples, trainSet.nrClasses, trainSet.nrDims, ir.nrSamplesInBlock));
 		break;
 	default:
 		exit(-1);
@@ -136,6 +136,7 @@ int main(int argc, char** argv) {
 	if (ir.classifier == LIMV2_KNCN) {
 		for (int i = 0; i < classifier->k; i++) { resultFile << classifier->maximalRobustRanks[i] << " "; } 
 	}
+	ir.classifier == CACHE_KNCN ? resultFile << ir.nrSamplesInBlock << " " : resultFile << "";
 	resultFile	<< "\t" << std::ctime(&current_time_c);
 
 	std::cout << std::endl;

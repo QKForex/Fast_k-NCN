@@ -31,6 +31,7 @@ namespace Utility {
 		int nrLoadSampleDims;
 		int threshold;
 		float percentMaxRobustRank;
+		int nrSamplesInBlock;
 
 		// Dataset cross-valdiation and standardization
 		std::string toCrossValidateFilename;

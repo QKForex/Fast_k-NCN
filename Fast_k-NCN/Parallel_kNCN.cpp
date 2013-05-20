@@ -2,20 +2,15 @@
 
 LoggerPtr Parallel_kNCN::logger(Logger::getLogger("Par_kNCNLogger"));
 
-Parallel_kNCN::Parallel_kNCN() : Classifier(), centroids(SampleSet(-1, -1, k)) {}
+Parallel_kNCN::Parallel_kNCN() : Classifier() {}
 
 Parallel_kNCN::Parallel_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples, 
 								 const int nrClasses, const int nrDims)
-	: Classifier(k, nrTrainSamples, nrTestSamples), centroids(SampleSet(nrClasses, nrDims, k)) {
+	: Classifier(k, nrTrainSamples, nrTestSamples) {
 	distances = new Distance*[nrTestSamples];
 	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
 		distances[distIndex] = new Distance[nrTrainSamples];
 		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
-	}
-
-	for (int centroidIndex = 0; centroidIndex < k; centroidIndex++) {
-		centroids[centroidIndex].nrDims = nrDims;
-		centroids[centroidIndex].dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
 	}
 }
 
@@ -46,9 +41,11 @@ void Parallel_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet
 		countDistancesParallel(trainSet, testSet[samIndex], this->distances[samIndex]);
 	}
 	
-	//#pragma omp parallel for default(shared) private(samIndex, distances)
+	#pragma omp parallel for default(shared) private(samIndex)
 	for (samIndex = 0; samIndex < nrTestSamples; samIndex++) {
-		results[samIndex] = classifySample(trainSet, testSet[samIndex]);
+		//results[samIndex] = classifySample(trainSet, testSet[samIndex]);
+		results[samIndex] = classifySample(trainSet, testSet[samIndex],
+			distances[samIndex], nndists[samIndex], k);
 	}
 }
 
@@ -109,6 +106,12 @@ int Parallel_kNCN::classifySample(const SampleSet& trainSet, const Sample& testS
 void Parallel_kNCN::findkNCN(const SampleSet& trainSet, const Sample& testSample,
 	Distance* testSampleDists, Distance* testSampleNNdists, const int k) {
 	int trainSetNrDims = trainSet.nrDims;
+
+	SampleSet centroids(trainSet.nrClasses, trainSetNrDims, k);
+	for (int centroidIndex = 0; centroidIndex < k; centroidIndex++) {
+		centroids[centroidIndex].nrDims = trainSetNrDims;
+		centroids[centroidIndex].dims = allocateSampleDimsMemory(trainSetNrDims, __FILE__, __LINE__);
+	}
 #if defined SSE
 	int registersNumber = (trainSet.nrDims >> 2) + 1;
 	union xmmregister

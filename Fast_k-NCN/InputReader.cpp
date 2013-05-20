@@ -14,7 +14,7 @@ namespace Utility {
 				("properties-file,p", po::value<std::string>(&propertiesFilename)->implicit_value(""),
 				"provide filepath to file with properties")
 				("cross-validate,C", po::value<std::string>(&toCrossValidateFilename)->implicit_value(""),	"10-fold cross-validate provided dataset")
-				("standardize,S", "standardize data in provided dataset")
+				("standardize,S", "standardize data in provided training and testing datasets")
 				;
 
 			po::options_description config("Configuration options");
@@ -31,16 +31,18 @@ namespace Utility {
 				"provide number of neares (centroid) neighbours")
 				("largest-k-to-check,l", po::value<int>(&largestK)->default_value(0),
 				"provide number of neares (centroid) neighbours")
-				("nr-load-train-samples", po::value<int>(&nrLoadTrainSamples)->implicit_value(0),
+				("nr-load-train-samples", po::value<int>(&nrLoadTrainSamples)->default_value(0),
 				"provide number of training samples to load, default (0) - all")
-				("nr-load-test-samples", po::value<int>(&nrLoadTestSamples)->implicit_value(0),
+				("nr-load-test-samples", po::value<int>(&nrLoadTestSamples)->default_value(0),
 				"provide number of testing samples to load, default (0) - all")
-				("nr-load-sample-dims", po::value<int>(&nrLoadSampleDims)->implicit_value(0),
+				("nr-load-sample-dims", po::value<int>(&nrLoadSampleDims)->default_value(0),
 				"provide number of dimensions for each sample to load, default (0) - all")
 				("threshold", po::value<int>(&threshold)->default_value(-1),
 				"provide threshold dimension for premature termination, default (-1) - all")
 				("percentmaxrobustrank", po::value<float>(&percentMaxRobustRank)->default_value(95.0),
-				"provide percent of samples from training set for mRobustRank calculation in LimitedV1_kNCN, default (0) - all")
+				"provide percent of samples from training set for mRobustRank calculation in LimitedV1_kNCN and LimitedV2_kNCN, default (95.0) - all")
+				("nrSamplesInBlock", po::value<int>(&nrSamplesInBlock)->default_value(-1),
+				"provide number of samples in block for CacheEfficient_kNCN, default (-1) - all samples")
 				;
 
 			po::options_description cmdline_options;

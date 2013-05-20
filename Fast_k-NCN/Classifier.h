@@ -29,7 +29,7 @@ public:
 	int nrClassificationErrors;
 	float errorRate;
 
-	// moved here to print in results
+	// moved here in order to print in the output results
 	// LimitedV1_kNCN
 	int maximalRobustRank;
 

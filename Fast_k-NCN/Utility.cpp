@@ -9,12 +9,14 @@ namespace Utility {
 	//	Take dataset and pick samples randomly
 	//	(do not care about the number of samples of given class)
 	//
-	//	Perform 10-fold cross-validation seperating samples into 10 seperate files
+	//	Perform k-fold cross-validation seperating samples into k seperate files
+	//
+	//	In this implementation kFold is fixed to 10 with global constant
 	//
 	void crossvalidateSamples(SampleSet* dataSet,
 		std::string crossvalidatedFilename, const int kFold) {
 
-		int divisor = floor((float)dataSet->nrSamples / kFold);
+		int divisor = (int) floor((float)dataSet->nrSamples / kFold);
 		std::srand(std::time(0));
 
 
