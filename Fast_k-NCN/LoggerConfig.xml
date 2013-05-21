@@ -81,37 +81,37 @@
   </root>
 
   <category name="kNNLogger" >
-    <priority value ="info" />
+    <priority value="info" />
     <appender-ref ref="kNNFileAppender"/>
   </category>
 
   <category name="kNCNLogger" >
-    <priority value ="debug" />
+    <priority value="info" />
     <appender-ref ref="kNCNFileAppender"/>
   </category>
 
   <category name="PT_kNCNLogger" >
-    <priority value ="info" />
+    <priority value="info" />
     <appender-ref ref="PT_kNCNFileAppender"/>
   </category>
 
   <category name="LimV1_kNCNLogger" >
-    <priority value ="info" />
+    <priority value="info" />
     <appender-ref ref="LimV1_kNCNFileAppender"/>
   </category>
 
   <category name="LimV2_kNCNLogger" >
-    <priority value ="info" />
+    <priority value="info" />
     <appender-ref ref="LimV2_kNCNFileAppender"/>
   </category>
 
   <category name="Par_kNCNLogger" >
-    <priority value ="info" />
+    <priority value="info" />
     <appender-ref ref="Par_kNCNFileAppender"/>
   </category>
     
   <category name="Cache_kNCNLogger" >
-    <priority value ="debug" />
+    <priority value="info" />
     <appender-ref ref="Cache_kNCNFileAppender"/>
   </category>
 

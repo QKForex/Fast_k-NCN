@@ -20,6 +20,45 @@ CacheEfficient_kNCN::CacheEfficient_kNCN(const int k, const int nrTrainSamples,
 	nrTrainSetBlocks = (int) ceil((float)nrTrainSamples/nrSamplesInTrainBlock);
 	nrTestSetBlocks = (int) ceil((float)nrTestSamples/nrSamplesInTestBlock);
 
+	firstRemainingTrainSampleIndex = nrTrainSetBlocks != 1 ? (nrTrainSetBlocks - 1)*nrSamplesInTrainBlock : 0;
+	nrRemainingTrainSamples = nrTrainSamples - firstRemainingTrainSampleIndex;
+
+	firstRemainingTestSampleIndex = nrTestSetBlocks != 1 ? (nrTestSetBlocks - 1)*nrSamplesInTestBlock : 0;
+	nrRemainingTestSamples = nrTestSamples - firstRemainingTestSampleIndex;
+
+	blockDistances = new Distance***[nrTestSetBlocks];
+	for (int testDistIndex = 0; testDistIndex < nrTestSetBlocks; testDistIndex++) {
+		blockDistances[testDistIndex] = new Distance**[nrTrainSetBlocks];
+		for (int trainDistIndex = 0; trainDistIndex < nrTrainSetBlocks; trainDistIndex++) {
+			blockDistances[testDistIndex][trainDistIndex] = new Distance*[nrSamplesInTestBlock];
+			for (int distIndex = 0; distIndex < nrSamplesInTestBlock; distIndex++) {
+				blockDistances[testDistIndex][trainDistIndex][distIndex] = new Distance[nrSamplesInTrainBlock];
+				std::fill(blockDistances[testDistIndex][trainDistIndex][distIndex],
+					blockDistances[testDistIndex][trainDistIndex][distIndex]+nrSamplesInTrainBlock,
+					Distance());
+			}		
+		}
+	}
+
+	blockNCNDists = new NCNDistance***[nrTestSetBlocks];
+	for (int testDistIndex = 0; testDistIndex < nrTestSetBlocks; testDistIndex++) {
+		blockNCNDists[testDistIndex] = new NCNDistance**[nrTrainSetBlocks];
+		for (int trainDistIndex = 0; trainDistIndex < nrTrainSetBlocks; trainDistIndex++) {
+			blockNCNDists[testDistIndex][trainDistIndex] = new NCNDistance*[nrSamplesInTestBlock];
+			for (int distIndex = 0; distIndex < nrSamplesInTestBlock; distIndex++) {
+				blockNCNDists[testDistIndex][trainDistIndex][distIndex] = new NCNDistance[k];
+				std::fill(blockNCNDists[testDistIndex][trainDistIndex][distIndex],
+					blockNCNDists[testDistIndex][trainDistIndex][distIndex]+k,
+					NCNDistance());
+			}		
+		}
+	}
+
+	closestNCNDists = new NCNDistance*[nrSamplesInTestBlock];
+	for (int distIndex = 0; distIndex < nrSamplesInTestBlock; distIndex++) {
+		closestNCNDists[distIndex] = new NCNDistance[nrTrainSetBlocks*k];
+		std::fill(closestNCNDists[distIndex], closestNCNDists[distIndex]+nrTrainSetBlocks*k, NCNDistance());
+	}
 
 	for (int centroidIndex = 0; centroidIndex < k; centroidIndex++) {
 		centroids[centroidIndex].nrDims = nrDims;
@@ -28,6 +67,37 @@ CacheEfficient_kNCN::CacheEfficient_kNCN(const int k, const int nrTrainSamples,
 }
 
 CacheEfficient_kNCN::~CacheEfficient_kNCN() {
+	if (closestNCNDists) {
+		for (int distIndex = 0; distIndex < nrSamplesInTestBlock; distIndex++) { delete closestNCNDists[distIndex]; }
+		delete[] closestNCNDists;
+	}	
+	
+	if (blockNCNDists) {
+		for (int testDistIndex = 0; testDistIndex < nrTestSetBlocks; testDistIndex++) {
+			for (int trainDistIndex = 0; trainDistIndex < nrTrainSetBlocks; trainDistIndex++) {
+				for (int distIndex = 0; distIndex < nrSamplesInTestBlock; distIndex++) {
+					delete blockNCNDists[testDistIndex][trainDistIndex][distIndex];
+				}
+				delete[] blockNCNDists[testDistIndex][trainDistIndex];
+			}
+			delete[] blockNCNDists[testDistIndex];
+		}
+		delete[] blockNCNDists;
+	}
+
+	if (blockDistances) {
+		for (int testDistIndex = 0; testDistIndex < nrTestSetBlocks; testDistIndex++) {
+			for (int trainDistIndex = 0; trainDistIndex < nrTrainSetBlocks; trainDistIndex++) {
+				for (int distIndex = 0; distIndex < nrSamplesInTestBlock; distIndex++) {
+					delete blockDistances[testDistIndex][trainDistIndex][distIndex];
+				}
+				delete[] blockDistances[testDistIndex][trainDistIndex];
+			}
+			delete[] blockDistances[testDistIndex];
+		}
+		delete[] blockDistances;
+	}
+	
 	if (results) { delete[] results; }
 	if (nndists) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
@@ -44,191 +114,108 @@ void CacheEfficient_kNCN::preprocess(const SampleSet& trainSet, const SampleSet&
 //	Output:	vector of assigned labels
 //
 void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& testSet) {	  
-	const int firstRemainingTrainSampleIndex = nrTrainSetBlocks != 1 ? (nrTrainSetBlocks - 1)*nrSamplesInTrainBlock : 0;
-	const int nrRemainingTrainSamples = trainSet.nrSamples - firstRemainingTrainSampleIndex;
-
-	const int firstRemainingTestSampleIndex = nrTestSetBlocks != 1 ? (nrTestSetBlocks - 1)*nrSamplesInTestBlock : 0;
-	const int nrRemainingTestSamples = testSet.nrSamples - firstRemainingTestSampleIndex;
-
 	for (int testBlockIndex = 0; testBlockIndex < nrTestSetBlocks - 1; testBlockIndex++) {
 		SampleSet testSetBlock(testSet.nrClasses, testSet.nrDims, nrSamplesInTestBlock);
 		for (int samIndex = 0; samIndex < nrSamplesInTestBlock; samIndex++)	{
 			testSetBlock[samIndex] = testSet[testBlockIndex*nrSamplesInTestBlock + samIndex]; 
 		}
-
-		Distance*** blockNCNDists = new Distance**[nrTrainSetBlocks];
-
-		for (int trainBlockIndex = 0; trainBlockIndex < nrTrainSetBlocks - 1; trainBlockIndex++)	{
-		
+		for (int trainBlockIndex = 0; trainBlockIndex < nrTrainSetBlocks - 1; trainBlockIndex++) {
 			SampleSet trainSetBlock(trainSet.nrClasses, trainSet.nrDims, nrSamplesInTrainBlock);
-			for (int samIndex = 0; samIndex < nrSamplesInTrainBlock; samIndex++)	{
+			for (int samIndex = 0; samIndex < nrSamplesInTrainBlock; samIndex++) {
 				trainSetBlock[samIndex] = trainSet[trainBlockIndex*nrSamplesInTrainBlock + samIndex]; 
 			}
-			
-			blockNCNDists[trainBlockIndex] = classifyBlock(trainSetBlock, testSetBlock, trainBlockIndex*nrSamplesInTestBlock, testBlockIndex*nrSamplesInTestBlock);
+			classifyBlock(trainSetBlock, testSetBlock, this->blockDistances[testBlockIndex][trainBlockIndex], 
+				this->blockNCNDists[testBlockIndex][trainBlockIndex], trainBlockIndex*nrSamplesInTrainBlock, testBlockIndex*nrSamplesInTestBlock);
 		}
-
 		// last train block
 		SampleSet trainSetBlock(trainSet.nrClasses, trainSet.nrDims, nrRemainingTrainSamples);
-		for (int samIndex = 0; samIndex < trainSetBlock.nrSamples; samIndex++)	{
+		for (int samIndex = 0; samIndex < trainSetBlock.nrSamples; samIndex++) {
 			trainSetBlock[samIndex] = trainSet[firstRemainingTrainSampleIndex + samIndex]; 
 		}
-
-		blockNCNDists[nrTrainSetBlocks - 1] = classifyBlock(trainSetBlock, testSetBlock, firstRemainingTrainSampleIndex, testBlockIndex*nrSamplesInTestBlock);
-
-
-
-		// find the closest candidate for every testSample from current testSetBlock
-		// for kNCN from all trainBlocks for every k
-		Distance** closestNCNDists = new Distance*[testSetBlock.nrSamples];
-		for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) {
-			closestNCNDists[distIndex] = new Distance[this->k];
-			std::fill(closestNCNDists[distIndex], closestNCNDists[distIndex]+k, Distance(-1,-1, FLT_MAX));
-		}
-
-		for (int blockIndex = 0; blockIndex < nrTrainSetBlocks; blockIndex++) {
-			for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++)	{
+		classifyBlock(trainSetBlock, testSetBlock, this->blockDistances[testBlockIndex][nrTrainSetBlocks - 1], 
+			this->blockNCNDists[testBlockIndex][nrTrainSetBlocks - 1], firstRemainingTrainSampleIndex, testBlockIndex*nrSamplesInTestBlock);
+		
+		// store NCNs for every testSample from current testSetBlock from all trainBlocks for every k
+		for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
+			for (int trainBlockIndex = 0; trainBlockIndex < nrTrainSetBlocks; trainBlockIndex++) {
 				for (int kIndex = 0; kIndex < k; kIndex++)	{
-					if (blockNCNDists[blockIndex][samIndex][kIndex].distValue < closestNCNDists[samIndex][kIndex].distValue) {
-						closestNCNDists[samIndex][kIndex] = blockNCNDists[blockIndex][samIndex][kIndex];
-					}
+					closestNCNDists[samIndex][trainBlockIndex*k + kIndex] = blockNCNDists[testBlockIndex][trainBlockIndex][samIndex][kIndex];
 				}
 			}
 		}
-
-		// assign label on basis of closestNCNDists
-		for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++)	{
+		for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
+			// sort NCNs on basis of distance from sample
+			qsort(closestNCNDists[samIndex], nrTrainSetBlocks*k, sizeof(NCNDistance), compareNCNDistances);
+			// assign label on basis of closestNCNDists
 			results[testBlockIndex*nrSamplesInTestBlock + samIndex] = assignLabel(closestNCNDists[samIndex], k);
-			LOG4CXX_DEBUG(logger, "" << closestNCNDists[samIndex][0].sampleIndex << " " << closestNCNDists[samIndex][0].distValue
-				<< " " << closestNCNDists[samIndex][1].sampleIndex << " " << closestNCNDists[samIndex][1].distValue
-				<< " " << closestNCNDists[samIndex][2].sampleIndex << " " << closestNCNDists[samIndex][2].distValue
-				<< " " << closestNCNDists[samIndex][3].sampleIndex << " " << closestNCNDists[samIndex][3].distValue
-				<< " " << closestNCNDists[samIndex][4].sampleIndex << " " << closestNCNDists[samIndex][4].distValue
-				);
-		}
-
-		if (closestNCNDists) {
-			for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) { delete closestNCNDists[distIndex]; }
-			delete[] closestNCNDists;
-		}
-
-		if (blockNCNDists) {
-			for (int blockIndex = 0; blockIndex < nrTrainSetBlocks; blockIndex++) {
-				for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) { delete blockNCNDists[blockIndex][distIndex]; }
-				delete[] blockNCNDists[blockIndex];
-			}
-			delete[] blockNCNDists;
+			//LOG4CXX_DEBUG(logger, "" << closestNCNDists[samIndex][0].sampleIndex << " " << closestNCNDists[samIndex][0].distValue
+			//	<< " " << closestNCNDists[samIndex][1].sampleIndex << " " << closestNCNDists[samIndex][1].distValue
+			//	<< " " << closestNCNDists[samIndex][2].sampleIndex << " " << closestNCNDists[samIndex][2].distValue
+			//	<< " " << closestNCNDists[samIndex][3].sampleIndex << " " << closestNCNDists[samIndex][3].distValue
+			//	<< " " << closestNCNDists[samIndex][4].sampleIndex << " " << closestNCNDists[samIndex][4].distValue
+			//	);
 		}
 	}
-
-
 
 	// last test block
 	SampleSet testSetBlock(testSet.nrClasses, testSet.nrDims, nrRemainingTestSamples);
-	for (int samIndex = 0; samIndex < nrRemainingTestSamples; samIndex++)	{
+	for (int samIndex = 0; samIndex < nrRemainingTestSamples; samIndex++) {
 		testSetBlock[samIndex] = testSet[firstRemainingTestSampleIndex + samIndex]; 
 	}
-
-	Distance*** blockNCNDists = new Distance**[nrTrainSetBlocks];
-
-	for (int trainBlockIndex = 0; trainBlockIndex < nrTrainSetBlocks - 1; trainBlockIndex++)	{
-
+	for (int trainBlockIndex = 0; trainBlockIndex < nrTrainSetBlocks - 1; trainBlockIndex++) {
 		SampleSet trainSetBlock(trainSet.nrClasses, trainSet.nrDims, nrSamplesInTrainBlock);
-		for (int samIndex = 0; samIndex < nrSamplesInTrainBlock; samIndex++)	{
+		for (int samIndex = 0; samIndex < nrSamplesInTrainBlock; samIndex++) {
 			trainSetBlock[samIndex] = trainSet[trainBlockIndex*nrSamplesInTrainBlock + samIndex]; 
 		}
-
-		blockNCNDists[trainBlockIndex] = classifyBlock(trainSetBlock, testSetBlock, trainBlockIndex*nrSamplesInTestBlock, firstRemainingTestSampleIndex);
+		classifyBlock(trainSetBlock, testSetBlock, this->blockDistances[nrTestSetBlocks - 1][trainBlockIndex], 
+			this->blockNCNDists[nrTestSetBlocks - 1][trainBlockIndex], trainBlockIndex*nrSamplesInTrainBlock, firstRemainingTestSampleIndex);
 	}
-
 	// last train block for last test block
 	SampleSet trainSetBlock(trainSet.nrClasses, trainSet.nrDims, nrRemainingTrainSamples);
-	for (int samIndex = 0; samIndex < nrRemainingTrainSamples; samIndex++)	{
+	for (int samIndex = 0; samIndex < nrRemainingTrainSamples; samIndex++) {
 		trainSetBlock[samIndex] = trainSet[firstRemainingTrainSampleIndex + samIndex]; 
 	}
+	classifyBlock(trainSetBlock, testSetBlock, this->blockDistances[nrTestSetBlocks - 1][nrTrainSetBlocks - 1], 
+		this->blockNCNDists[nrTestSetBlocks - 1][nrTrainSetBlocks - 1], firstRemainingTrainSampleIndex, firstRemainingTestSampleIndex);
 
-	blockNCNDists[nrTrainSetBlocks - 1] = classifyBlock(trainSetBlock, testSetBlock, firstRemainingTrainSampleIndex, firstRemainingTestSampleIndex);
-
-
-
-	// find the closest candidate for every testSample from current testSetBlock
-	// for kNCN from all trainBlocks for every k
-	Distance** closestNCNDists = new Distance*[testSetBlock.nrSamples];
-	for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) {
-		closestNCNDists[distIndex] = new Distance[this->k];
-		std::fill(closestNCNDists[distIndex], closestNCNDists[distIndex]+k, Distance(-1,-1, FLT_MAX));
-	}
-
-
-	for (int blockIndex = 0; blockIndex < nrTrainSetBlocks; blockIndex++) {
-		for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
-			for (int kIndex = 0; kIndex < k; kIndex++) {
-				if (blockNCNDists[blockIndex][samIndex][kIndex].distValue < closestNCNDists[samIndex][kIndex].distValue) {
-					closestNCNDists[samIndex][kIndex] = blockNCNDists[blockIndex][samIndex][kIndex];
-				}
+	// find the closest candidate for every testSample from current testSetBlock for kNCN from all trainBlocks for every k
+	for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
+		for (int trainBlockIndex = 0; trainBlockIndex < nrTrainSetBlocks; trainBlockIndex++) {
+			for (int kIndex = 0; kIndex < k; kIndex++)	{
+				closestNCNDists[samIndex][trainBlockIndex*k + kIndex] = blockNCNDists[nrTestSetBlocks - 1][trainBlockIndex][samIndex][kIndex];
 			}
 		}
 	}
-
-	// assign label on basis of closestNCNDists
 	for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
+		// sort NCNs on basis of distance from sample
+		qsort(closestNCNDists[samIndex], nrTrainSetBlocks*k, sizeof(NCNDistance), compareNCNDistances);
 		results[firstRemainingTestSampleIndex + samIndex] = assignLabel(closestNCNDists[samIndex], k);
-		LOG4CXX_DEBUG(logger, "" << closestNCNDists[samIndex][0].sampleIndex << " " << closestNCNDists[samIndex][0].distValue
-			<< " " << closestNCNDists[samIndex][1].sampleIndex << " " << closestNCNDists[samIndex][1].distValue
-			<< " " << closestNCNDists[samIndex][2].sampleIndex << " " << closestNCNDists[samIndex][2].distValue
-			<< " " << closestNCNDists[samIndex][3].sampleIndex << " " << closestNCNDists[samIndex][3].distValue
-			<< " " << closestNCNDists[samIndex][4].sampleIndex << " " << closestNCNDists[samIndex][4].distValue
-			);
-	}
-
-	if (closestNCNDists) {
-		for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) { delete closestNCNDists[distIndex]; }
-		delete[] closestNCNDists;
-	}
-
-	if (blockNCNDists) {
-		for (int blockIndex = 0; blockIndex < nrTrainSetBlocks; blockIndex++) {
-			for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) { delete blockNCNDists[blockIndex][distIndex]; }
-			delete[] blockNCNDists[blockIndex];
-		}
-		delete[] blockNCNDists;
+		//LOG4CXX_DEBUG(logger, "" << closestNCNDists[samIndex][0].sampleIndex << " " << closestNCNDists[samIndex][0].distValue
+		//	<< " " << closestNCNDists[samIndex][1].sampleIndex << " " << closestNCNDists[samIndex][1].distValue
+		//	<< " " << closestNCNDists[samIndex][2].sampleIndex << " " << closestNCNDists[samIndex][2].distValue
+		//	<< " " << closestNCNDists[samIndex][3].sampleIndex << " " << closestNCNDists[samIndex][3].distValue
+		//	<< " " << closestNCNDists[samIndex][4].sampleIndex << " " << closestNCNDists[samIndex][4].distValue
+		//	);
 	}
 }
 
-Distance** CacheEfficient_kNCN::classifyBlock(const SampleSet& trainSetBlock,
-	const SampleSet& testSetBlock, const int trainBlockOffset, const int testBlockOffset) {
-	Distance** distances = new Distance*[testSetBlock.nrSamples];
-	for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) {
-		distances[distIndex] = new Distance[trainSetBlock.nrSamples];
-		std::fill(distances[distIndex], distances[distIndex]+trainSetBlock.nrSamples, Distance(-1,-1, FLT_MAX));
-	}
+void CacheEfficient_kNCN::classifyBlock(const SampleSet& trainSetBlock,
+	const SampleSet& testSetBlock, Distance** distances, NCNDistance** ncndists, 
+	const int trainBlockOffset, const int testBlockOffset) {
 	
-	Distance** ncndists = new Distance*[testSetBlock.nrSamples];
-	for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) {
-		ncndists[distIndex] = new Distance[k];
-		std::fill(ncndists[distIndex], ncndists[distIndex]+k, Distance(-1,-1, FLT_MAX));
-	}
-
 	for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
 		countDistancesCache(trainSetBlock, testSetBlock[samIndex], distances[samIndex], trainBlockOffset);
 	}
 
 	if (k == 1) {
 		for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
-			ncndists[samIndex][0] = Classifier::find1NN(trainSetBlock, testSetBlock[samIndex], distances[samIndex]);
+			//ncndists[samIndex][0] = Classifier::find1NN(trainSetBlock, testSetBlock[samIndex], distances[samIndex]);
 		}
 	} else {
 		for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
 			findkNCN(trainSetBlock, testSetBlock[samIndex], distances[samIndex], ncndists[samIndex], k, trainBlockOffset, testBlockOffset);
 		}
 	}
-
-	if (distances) {
-		for (int distIndex = 0; distIndex < testSetBlock.nrSamples; distIndex++) { delete distances[distIndex]; }
-		delete[] distances;
-	}
-
-	return ncndists;
 }
 
 //
@@ -262,7 +249,7 @@ int CacheEfficient_kNCN::classifySample(const SampleSet& trainSet, const Sample&
 //	check if given sample is not kNCN already
 //
 void CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const Sample& testSample,
-	Distance* testSampleDists, Distance* testSampleNNdists, const int k, const int trainBlockOffset, const int testBlockOffset) {
+	Distance* testSampleDists, NCNDistance* testSampleNCNdists, const int k, const int trainBlockOffset, const int testBlockOffset) {
 	const int trainSetNrDims = trainSet.nrDims;
 #if defined SSE
 	int registersNumber = (trainSet.nrDims >> 2) + 1;
@@ -280,9 +267,14 @@ void CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const Sample& test
 	} result;
 #endif
 
-	testSampleNNdists[0] = Classifier::find1NN(trainSet, testSample, testSampleDists);
-	centroids[0] = trainSet[testSampleNNdists[0].sampleIndex - trainBlockOffset];
-	swapDistances(testSampleDists, testSampleNNdists[0].sampleIndex - trainBlockOffset, trainSet.nrSamples - 1);
+	Distance testSampleNNdist = Classifier::find1NN(trainSet, testSample, testSampleDists);
+	testSampleNCNdists[0].sampleIndex = testSampleNNdist.sampleIndex;
+	testSampleNCNdists[0].sampleLabel = testSampleNNdist.sampleLabel;
+	testSampleNCNdists[0].distValue = testSampleNNdist.distValue;
+	testSampleNCNdists[0].ncnDistValue = 0.0; //TODO: refactor
+
+	centroids[0] = trainSet[testSampleNCNdists[0].sampleIndex - trainBlockOffset];
+	swapDistances(testSampleDists, testSampleNCNdists[0].sampleIndex - trainBlockOffset, trainSet.nrSamples - 1);
 
 	for (int centroidIndex = 1; centroidIndex < k; centroidIndex++) {
 		// current centroid candidate
@@ -353,13 +345,14 @@ void CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const Sample& test
 			DistanceValue currentNCNdistVal = countEuclideanDistance(*currentCentroid, testSample, 0, trainSet.nrDims);
 #endif
 
-			if (currentNCNdistVal < testSampleNNdists[centroidIndex].distValue) {
+			if (currentNCNdistVal < testSampleNCNdists[centroidIndex].ncnDistValue) {
 				// update current centroid candidate
 				closestCentroid = *currentCentroid;
 
 				// update data structure that keeps track of the trainSample that give the current nearest centroid
-				testSampleNNdists[centroidIndex] =
-					Distance(testSampleDists[samIndex].sampleIndex, testSampleDists[samIndex].sampleLabel, currentNCNdistVal);
+				testSampleNCNdists[centroidIndex] =
+					NCNDistance(testSampleDists[samIndex].sampleIndex, testSampleDists[samIndex].sampleLabel,
+						testSampleDists[samIndex].distValue, currentNCNdistVal);
 
 				// update current trainSample postion in trainSet (because it could have been changed)
 				// for situation when a just swapped trainSample is chosen
@@ -373,4 +366,15 @@ void CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const Sample& test
 		// so it is not taken into account anymore
 		swapDistances(testSampleDists, currentSamPos, trainSet.nrSamples-1 - centroidIndex);
 	}
+}
+
+int CacheEfficient_kNCN::assignLabel(const NCNDistance* testSampleNCNdists, const int k) {
+	Distance* testSampleNNdists = new Distance[k];
+	for (int distIndex = 0; distIndex < k; distIndex++) {
+		testSampleNNdists[distIndex].sampleIndex = testSampleNCNdists[distIndex].sampleIndex;
+		testSampleNNdists[distIndex].sampleLabel = testSampleNCNdists[distIndex].sampleLabel;
+		testSampleNNdists[distIndex].distValue = testSampleNCNdists[distIndex].distValue;
+	}
+
+	return Classifier::assignLabel(testSampleNNdists, k);
 }

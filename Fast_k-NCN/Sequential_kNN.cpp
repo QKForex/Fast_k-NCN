@@ -49,12 +49,12 @@ int Sequential_kNN::classifySample(const SampleSet& trainSet, const Sample& test
 		return Classifier::find1NN(trainSet, testSample, testSampleDists).sampleLabel;
 	} else {
 		findkNN(trainSet, testSample, testSampleDists, testSampleNNdists, k);
-		//LOG4CXX_DEBUG(logger, "" << testSample.index 
-		//	<< " " << testSampleNNdists[0].sampleIndex 
-		//	<< " " << testSampleNNdists[1].sampleIndex
-		//	<< " " << testSampleNNdists[2].sampleIndex
-		//	<< " " << testSampleNNdists[3].sampleIndex
-		//	<< " " << testSampleNNdists[4].sampleIndex);
+		//LOG4CXX_DEBUG(logger, "" << testSampleNNdists[0].sampleIndex << " " << testSampleNNdists[0].distValue
+		//	<< " " << testSampleNNdists[1].sampleIndex << " " << testSampleNNdists[1].distValue
+		//	<< " " << testSampleNNdists[2].sampleIndex << " " << testSampleNNdists[2].distValue
+		//	<< " " << testSampleNNdists[3].sampleIndex << " " << testSampleNNdists[3].distValue
+		//	<< " " << testSampleNNdists[4].sampleIndex << " " << testSampleNNdists[4].distValue
+		//	);
 		return Classifier::assignLabel(testSampleNNdists, k);
 	}
 }

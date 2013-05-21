@@ -50,3 +50,4 @@
 10.13%  456        123ms   5  kNN                   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sun Apr 28 12:18:54 2013
 10.13%  456        295ms   5  kNN                   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sun Apr 28 14:13:01 2013
 10.13%  456        292ms   5  kNN                   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503     Sun Apr 28 14:14:11 2013
+10.15%  457          0ms     382ms     382ms  5  kNN                   ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Tue May 21 03:15:32 2013

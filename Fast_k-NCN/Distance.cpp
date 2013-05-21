@@ -10,6 +10,14 @@ namespace Common {
 		return 0;
 	}
 
+	int compareNCNDistances(const void* a, const void* b) {
+		NCNDistance arg1 = *reinterpret_cast<const NCNDistance*>(a);
+		NCNDistance arg2 = *reinterpret_cast<const NCNDistance*>(b);
+		if (arg1.distValue < arg2.distValue) return -1;
+		if (arg1.distValue > arg2.distValue) return 1;
+		return 0;
+	}
+
 	void swapDistances(Distance* dists,
 		const int samIndexToMoveToBack, const int samIndexToMoveFromBack) {
 		if (samIndexToMoveToBack != samIndexToMoveFromBack) {
