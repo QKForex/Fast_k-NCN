@@ -6,7 +6,8 @@ class Sequential_kNN: public Classifier {
 public:
 	static LoggerPtr logger;
 
-	Distance** distances; // distances for all combinations of train and test samples, preprocessed
+	Distance** distances;
+	Distance** nndists;
 
 	Sequential_kNN(const int k, const int nrTrainSamples, const int nrTestSamples);
 	~Sequential_kNN();

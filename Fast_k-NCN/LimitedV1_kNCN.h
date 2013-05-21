@@ -7,6 +7,8 @@ public:
 	static LoggerPtr logger;
 
 	Distance** distances;
+	Distance** nndists;
+
 	SampleSet centroids;
 
 	float percentMaxRobustRank;

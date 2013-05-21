@@ -7,6 +7,8 @@ public:
 	static LoggerPtr logger;
 
 	Distance** distances; // distances for all combinations of train and test samples, preprocessed
+	Distance** nndists; // distances to k nearest neighbors for all test samples
+
 	SampleSet centroids;
 	
 	Sequential_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples, 

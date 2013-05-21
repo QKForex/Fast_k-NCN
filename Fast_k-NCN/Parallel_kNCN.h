@@ -6,7 +6,8 @@ class Parallel_kNCN: public Classifier {
 public:
 	static LoggerPtr logger;
 
-	Distance** distances; // distances for all combinations of train and test samples, preprocessed
+	Distance** distances;
+	Distance** nndists;
 	
 	Parallel_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples, 
 		const int nrClasses, const int nrDims);

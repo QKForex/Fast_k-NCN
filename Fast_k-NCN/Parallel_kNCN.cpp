@@ -12,10 +12,15 @@ Parallel_kNCN::Parallel_kNCN(const int k, const int nrTrainSamples, const int nr
 		distances[distIndex] = new Distance[nrTrainSamples];
 		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
 	}
+
+	nndists = new Distance*[nrTestSamples];
+	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
+		nndists[distIndex] = new Distance[k];
+		std::fill(nndists[distIndex], nndists[distIndex]+k, Distance(-1,-1, FLT_MAX));
+	}
 }
 
 Parallel_kNCN::~Parallel_kNCN() {
-	if (results) { delete[] results; }
 	if (nndists) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
 		delete[] nndists;
@@ -24,6 +29,8 @@ Parallel_kNCN::~Parallel_kNCN() {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
 		delete[] distances;
 	}
+
+	if (results) { delete[] results; }
 }
 
 void Parallel_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {}

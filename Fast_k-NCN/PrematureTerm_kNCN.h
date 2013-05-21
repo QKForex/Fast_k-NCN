@@ -7,6 +7,8 @@ public:
 	static LoggerPtr logger;
 	
 	Distance** distances;
+	Distance** nndists;
+
 	SampleSet centroids;
 
 	PrematureTerm_kNCN(const int k, const int nrTrainSamples, const int nrTestSamples,

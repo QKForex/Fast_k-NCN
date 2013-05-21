@@ -13,6 +13,12 @@ LimitedV1_kNCN::LimitedV1_kNCN(const int k, const int nrTrainSamples, const int 
 		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
 	}
 
+	nndists = new Distance*[nrTestSamples];
+	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
+		nndists[distIndex] = new Distance[k];
+		std::fill(nndists[distIndex], nndists[distIndex]+k, Distance(-1,-1, FLT_MAX));
+	}
+
 	for (int centroidIndex = 0; centroidIndex < k; centroidIndex++) {
 		centroids[centroidIndex].nrDims = nrDims;
 		centroids[centroidIndex].dims = allocateSampleDimsMemory(nrDims, __FILE__, __LINE__);
@@ -20,7 +26,6 @@ LimitedV1_kNCN::LimitedV1_kNCN(const int k, const int nrTrainSamples, const int 
 }
 
 LimitedV1_kNCN::~LimitedV1_kNCN() {
-	if (results) { delete[] results; }
 	if (nndists) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
 		delete[] nndists;
@@ -29,6 +34,8 @@ LimitedV1_kNCN::~LimitedV1_kNCN() {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete distances[distIndex]; }
 		delete[] distances;
 	}
+
+	if (results) { delete[] results; }
 }
 
 void LimitedV1_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {

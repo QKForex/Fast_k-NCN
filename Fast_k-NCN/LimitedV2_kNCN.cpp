@@ -8,10 +8,17 @@ LimitedV2_kNCN::LimitedV2_kNCN(const int k, const int nrTrainSamples, const int 
 								 const int nrClasses, const int nrDims, const float percentMaxRobustRank)
 	: Classifier(k, nrTrainSamples, nrTestSamples), centroids(SampleSet(nrClasses, nrDims, k)), percentMaxRobustRank(percentMaxRobustRank) {
 	maximalRobustRanks = new int[k];
+	
 	distances = new Distance*[nrTestSamples];
 	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
 		distances[distIndex] = new Distance[nrTrainSamples];
 		std::fill(distances[distIndex], distances[distIndex]+nrTrainSamples, Distance(-1,-1, FLT_MAX));
+	}
+
+	nndists = new Distance*[nrTestSamples];
+	for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) {
+		nndists[distIndex] = new Distance[k];
+		std::fill(nndists[distIndex], nndists[distIndex]+k, Distance(-1,-1, FLT_MAX));
 	}
 
 	for (int centroidIndex = 0; centroidIndex < k; centroidIndex++) {
@@ -21,7 +28,6 @@ LimitedV2_kNCN::LimitedV2_kNCN(const int k, const int nrTrainSamples, const int 
 }
 
 LimitedV2_kNCN::~LimitedV2_kNCN() {
-	if (results) { delete[] results; }
 	if (nndists) {
 		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
 		delete[] nndists;
@@ -31,6 +37,8 @@ LimitedV2_kNCN::~LimitedV2_kNCN() {
 		delete[] distances;
 	}
 	if (maximalRobustRanks) { delete[] maximalRobustRanks; }
+
+	if (results) { delete[] results; }
 }
 
 void LimitedV2_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {

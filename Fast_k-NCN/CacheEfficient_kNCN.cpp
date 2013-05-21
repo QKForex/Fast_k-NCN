@@ -2,8 +2,7 @@
 
 LoggerPtr CacheEfficient_kNCN::logger(Logger::getLogger("Cache_kNCNLogger"));
 
-CacheEfficient_kNCN::CacheEfficient_kNCN() : Classifier(), centroids(SampleSet(-1, -1, k)),
-	nrSamplesInTrainBlock(-1), nrSamplesInTestBlock(-1), nrTrainSetBlocks(-1), nrTestSetBlocks(-1) {}
+CacheEfficient_kNCN::CacheEfficient_kNCN() : Classifier(), centroids(SampleSet(-1, -1, k)) {}
 
 CacheEfficient_kNCN::CacheEfficient_kNCN(const int k, const int nrTrainSamples,
 	const int nrTestSamples, const int nrClasses, const int nrDims, const int nrSamplesInBlock)
@@ -99,10 +98,6 @@ CacheEfficient_kNCN::~CacheEfficient_kNCN() {
 	}
 	
 	if (results) { delete[] results; }
-	if (nndists) {
-		for (int distIndex = 0; distIndex < nrTestSamples; distIndex++) { delete nndists[distIndex]; }
-		delete[] nndists;
-	}
 }
 
 void CacheEfficient_kNCN::preprocess(const SampleSet& trainSet, const SampleSet& testSet) {}
