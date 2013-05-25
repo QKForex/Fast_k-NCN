@@ -17,8 +17,7 @@ namespace Utility {
 		std::string crossvalidatedFilename, const int kFold) {
 
 		int divisor = (int) floor((float)dataSet->nrSamples / kFold);
-		std::srand(std::time(0));
-
+		std::srand(std::clock());
 
 		bool* chosenSamples = new bool[dataSet->nrSamples];
 		for (int chosenIndex = 0; chosenIndex < dataSet->nrSamples; chosenIndex++) {
