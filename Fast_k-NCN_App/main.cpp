@@ -124,12 +124,13 @@ int main(int argc, char** argv) {
 	std::time_t current_time_c = std::chrono::system_clock::to_time_t(current_time);
 	std::ofstream resultFile(ir.resultFilename, std::fstream::app);
 	
-	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %t %6dms %t %6dms %36t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %135t") 
+	resultFile << boost::format("%.2f%% %7t %d %15t %6dms %t %6dms %t %6dms %36t %d %t %-20s %t %-25s %t %6d %t %-25s %t %6d %t %3d %140t") 
 		% classifier->errorRate % classifier->nrClassificationErrors
 		% pa.totalPreprocessTime % pa.totalClassifyTime % pa.getTotalTime()
 		% ir.k % ir.classifierName
 		% ir.trainFilename % trainSet.nrSamples 
-		% ir.testFilename % testSet.nrSamples;
+		% ir.testFilename % testSet.nrSamples
+		% trainSet.nrDims;
 	ir.classifier == PT_KNCN ? resultFile << ir.threshold << " ": resultFile << "";
 	(ir.classifier == LIMV1_KNCN || ir.classifier == LIMV2_KNCN) ?  resultFile << ir.percentMaxRobustRank << "% " : resultFile << "";
 	ir.classifier == LIMV1_KNCN ? resultFile << classifier->maximalRobustRank << " " : resultFile << "";
