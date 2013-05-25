@@ -202,14 +202,14 @@ void LimitedV1_kNCN::findkNCNLimitedV1(const SampleSet& trainSet, const Sample& 
 	// then use the fraction of trainSamples to classify the testSamples in classification part
 	int trainSetNrDims = trainSet.nrDims;
 #if defined SSE
-	int registersNumber = (trainSet.nrDims >> 2) + 1;
+	int registersNumber = ((trainSet.nrDims-1) >> 2) + 1;
 	union xmmregister
 	{
 		__m128 m;
 		DistanceValue f[4];
 	} result;
 #elif defined AVX
-	int registersNumber = (trainSet.nrDims >> 3) + 1;
+	int registersNumber = ((trainSet.nrDims-1) >> 3) + 1;
 	union immregister
 	{
 		__m256 m;

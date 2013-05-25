@@ -248,14 +248,14 @@ void CacheEfficient_kNCN::findkNCN(const SampleSet& trainSet, const Sample& test
 	Distance* testSampleDists, NCNDistance* testSampleNCNdists, const int k, const int trainBlockOffset, const int testBlockOffset) {
 	const int trainSetNrDims = trainSet.nrDims;
 #if defined SSE
-	int registersNumber = (trainSet.nrDims >> 2) + 1;
+	int registersNumber = ((trainSet.nrDims-1) >> 2) + 1;
 	union xmmregister
 	{
 		__m128 m;
 		DistanceValue f[4];
 	} result;
 #elif defined AVX
-	int registersNumber = (trainSet.nrDims >> 3) + 1;
+	int registersNumber = ((trainSet.nrDims-1) >> 3) + 1;
 	union immregister
 	{
 		__m256 m;
