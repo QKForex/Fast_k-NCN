@@ -13,9 +13,7 @@ namespace Utility {
 	//
 	//	In this implementation kFold is fixed to 10 with global constant
 	//
-	void crossvalidateSamples(SampleSet* dataSet,
-		std::string crossvalidatedFilename, const int kFold) {
-
+	void crossvalidateSamples(SampleSet* dataSet, std::string crossvalidatedFilename, const int kFold) {
 		int divisor = (int) floor((float)dataSet->nrSamples / kFold);
 		std::srand(std::clock());
 
@@ -58,6 +56,8 @@ namespace Utility {
 		for (int chosenIndex = 0; chosenIndex < dataSet->nrSamples; chosenIndex++) {
 			if (!chosenSamples[chosenIndex]) {
 				chosenSamples[chosenIndex] = true;
+
+				lastFoldFile << dataSet->samples[chosenIndex].label << "\t";
 				for (int dimIndex = 0; dimIndex < dataSet->nrDims; dimIndex++) {
 					lastFoldFile << dataSet->samples[chosenIndex][dimIndex] << "\t";
 				}

@@ -370,3 +370,6 @@
 27.69%  1247         0ms    4926ms    4926ms  5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sat May 25 09:39:37 2013
 10.15%  457          0ms    7184ms    7184ms  5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sat May 25 09:40:09 2013
 10.15%  457          0ms    7231ms    7231ms  5  Sequential_kNCN       ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sat May 25 09:47:17 2013
+99.79%  1447         0ms    5261ms    5261ms  5  Sequential_kNCN       ..\Datasets\shuttle_train_10.txt    4350  ..\Datasets\shuttle_test_2.txt    1450    9 	Sat May 25 11:33:50 2013
+99.79%  1447         0ms    5331ms    5331ms  5  Sequential_kNCN       ..\Datasets\shuttle_train_10.txt    4350  ..\Datasets\shuttle_test_2.txt    1450    9 	Sat May 25 11:34:03 2013
+99.79%  1447         0ms    5344ms    5344ms  5  Sequential_kNCN       ..\Datasets\shuttle_train_10.txt    4350  ..\Datasets\shuttle_test_2.txt    1450    9 	Sat May 25 11:34:54 2013
