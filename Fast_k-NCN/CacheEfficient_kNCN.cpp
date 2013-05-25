@@ -184,6 +184,7 @@ void CacheEfficient_kNCN::classify(const SampleSet& trainSet, const SampleSet& t
 	for (int samIndex = 0; samIndex < testSetBlock.nrSamples; samIndex++) {
 		// sort NCNs on basis of distance from sample
 		qsort(closestNCNDists[samIndex], nrTrainSetBlocks*k, sizeof(NCNDistance), compareNCNDistances);
+		// assign label on basis of closestNCNDists
 		results[firstRemainingTestSampleIndex + samIndex] = assignLabel(closestNCNDists[samIndex], k);
 		//LOG4CXX_DEBUG(logger, "" << closestNCNDists[samIndex][0].sampleIndex << " " << closestNCNDists[samIndex][0].distValue
 		//	<< " " << closestNCNDists[samIndex][1].sampleIndex << " " << closestNCNDists[samIndex][1].distValue

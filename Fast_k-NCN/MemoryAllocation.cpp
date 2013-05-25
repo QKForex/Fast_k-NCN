@@ -12,7 +12,7 @@ namespace Utility {
 		//size_t size = nrDims  * sizeof(SampleDim);
 		SampleDim* sampleDimsPtr = (SampleDim*) _aligned_malloc(size, 16); // 16-byte aligned for 128-bit access
 		//TODO: OutOfMemoryException(size)
-		if (sampleDimsPtr == NULL) {
+		if (!sampleDimsPtr) {
 			throw "Not enough memory for sampleDims\n";
 		}
 		memset(sampleDimsPtr, 0, size);
@@ -22,7 +22,7 @@ namespace Utility {
 #elif defined AVX
 		size_t size = (nrDims + REMAINDER_TABLE_AVX[nrDims % 8]) * sizeof(SampleDim);
 		SampleDim* sampleDimsPtr = (SampleDim*) _aligned_malloc(size, 32); // 32-byte aligned for 256-bit access
-		if (sampleDimsPtr == NULL) {
+		if (!sampleDimsPtr) {
 			throw "Not enough memory for sampleDims\n";
 		}
 		memset(sampleDimsPtr, 0, size);

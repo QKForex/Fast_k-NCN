@@ -15,3 +15,8 @@
 10.15%  457          0ms     868ms     868ms  5  Parallel_kNCN         ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sun May 19 04:26:57 2013
 10.15%  457          0ms     406ms     406ms  5  Parallel_kNCN         ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sun May 19 21:15:04 2013
 10.15%  457          0ms    1755ms    1755ms  5  Parallel_kNCN         ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Sun May 19 21:58:29 2013
+10.15%  457          0ms     421ms     421ms  5  Parallel_kNCN         ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Tue May 21 13:12:34 2013
+10.15%  457          0ms     438ms     438ms  5  Parallel_kNCN         ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Tue May 21 13:12:44 2013
+10.15%  457          0ms     440ms     440ms  5  Parallel_kNCN         ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Tue May 21 13:13:05 2013
+10.15%  457          0ms     438ms     438ms  5  Parallel_kNCN         ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Tue May 21 13:14:13 2013
+10.95%  493          0ms    1315ms    1315ms  5  Parallel_kNCN         ..\Datasets\ftrain01.txt     1400  ..\Datasets\ftest01.txt      4503 	Tue May 21 14:23:09 2013

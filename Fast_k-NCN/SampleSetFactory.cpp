@@ -1,29 +1,31 @@
 #include "SampleSetFactory.h"
 
 namespace Common {
-	//TODO: catch exceptions: bad_alloc on new
 	//TODO: should not use assignment operator, redundant copying
 	// int nrLoadSamples = 0 default: all samples
 	SampleSet SampleSetFactory::createSampleSet(std::string inputFilename, const int nrLoadSamples, const int nrLoadDims) {
 		std::ifstream inputFile;
 		inputFile.open(inputFilename); // maybe check once again
 
-		SampleSet set;
-		inputFile >> set.nrClasses;
-		inputFile >> set.nrDims;
-		inputFile >> set.nrSamples;
+		int setNrClasses;
+		int setNrDims;
+		int setNrSamples;
+		
+		inputFile >> setNrClasses;
+		inputFile >> setNrDims;
+		inputFile >> setNrSamples;
 
-		int nrOriginalDims = set.nrDims;
+		int nrOriginalDims = setNrDims;
 
-		if (nrLoadSamples != 0 && nrLoadSamples < set.nrSamples) {
-			set.nrSamples = nrLoadSamples;
+		if (nrLoadSamples != 0 && nrLoadSamples < setNrSamples) {
+			setNrSamples = nrLoadSamples;
 		}
-		if (nrLoadDims != 0 && nrLoadDims < set.nrDims) {
-			set.nrDims = nrLoadDims;
+		if (nrLoadDims != 0 && nrLoadDims < setNrDims) {
+			setNrDims = nrLoadDims;
 		}
-		if (set.samples == NULL) {
-			set.samples = new Sample[set.nrSamples];
-		}
+
+		SampleSet set(setNrClasses, setNrDims, setNrSamples);
+
 		for (int samIndex = 0; samIndex < set.nrSamples; samIndex++) {
 			set[samIndex] = createSample(inputFile, samIndex, set.nrDims, nrOriginalDims); 
 		}
@@ -42,8 +44,10 @@ namespace Common {
 		inputFile >> samLabel;
 		Sample sample(samIndex, samLabel, nrSamDims);
 		
+		SampleDim sampleDim;
 		for (int dimIndex = 0; dimIndex < sample.nrDims; dimIndex++) {
-			inputFile >> sample.dims[dimIndex];
+			inputFile >> sampleDim;
+			sample.dims[dimIndex] = sampleDim;
 		}
 
 		float dummySampleDim; // hack to ignore the rest of dims from stream

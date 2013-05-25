@@ -43,8 +43,10 @@ namespace Fast_kNCN_Test
 			trainfile >> nrDims;
 			trainfile >> nrSamples;
 
+			nrDims = 8;
+
 			Assert::AreEqual(8, nrClasses);
-			Assert::AreEqual(30, nrDims);
+			Assert::AreEqual(8, nrDims);
 			Assert::AreEqual(1400, nrSamples);
 
 			testSample = sf.createSample(trainfile, 0, nrDims);
@@ -53,8 +55,8 @@ namespace Fast_kNCN_Test
 			Assert::AreEqual(nrDims, testSample.nrDims);
 			Assert::IsNotNull(testSample.dims);
 
-			Assert::AreEqual(firstSampleDims[29], testSample[29]);
-			Assert::AreEqual(firstSampleDims[29], testSample[29]);
+			Assert::AreEqual(firstSampleDims[testSample.nrDims - 1], testSample[testSample.nrDims - 1]);
+			Assert::AreEqual(firstSampleDims[testSample.nrDims - 1], testSample[testSample.nrDims - 1]);
 		}
 
 		TEST_METHOD(ConstructorSample)
