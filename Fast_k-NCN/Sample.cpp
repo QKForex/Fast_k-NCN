@@ -99,10 +99,8 @@ namespace Common {
 	//}   
 
 	void Sample::copySampleDims(const SampleDim* src, int nrDims, SampleDim* dst) {
-		//for (int i = 0; i < nrDims; i++) { dst[i] = src[i]; }
-		size_t size = (nrDims + REMAINDER_TABLE_AVX[nrDims % 8]) * sizeof(SampleDim);
+		size_t size = (nrDims) * sizeof(SampleDim);
 		memcpy(dst, src, size);
-		//memmove(dst, src, nrDims*sizeof(SampleDim));
 	}
 
 	std::ostream& operator<<(std::ostream& out, const Sample& s) {
