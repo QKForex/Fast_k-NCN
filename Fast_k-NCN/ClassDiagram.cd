@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CacheEfficient_kNCN">
+    <Position X="8" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACgAAAAECQAAAAADAACAAFCAAAgQACBAAIAAAJAAASA=</HashCode>
+      <FileName>CacheEfficient_kNCN.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Classifier">
+    <Position X="12.25" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAQAAABABAAAAAgAAAIgZAChEgAAAIAAAIAA=</HashCode>
+      <FileName>Classifier.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LimitedV1_kNCN">
+    <Position X="16.5" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAoCgAAAARAAAIACAACAAAAAAEAAACBAAAAAEAAgAQA=</HashCode>
+      <FileName>LimitedV1_kNCN.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LimitedV2_kNCN">
+    <Position X="3.25" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAoCAAAAAQAAQIACAACAAAAAAEAAACBAAAAAACAgAQA=</HashCode>
+      <FileName>LimitedV2_kNCN.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Parallel_kNCN">
+    <Position X="6" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAQBAAIACAAAAAAAAAEAAACBEAIAAAAgAAAA=</HashCode>
+      <FileName>Parallel_kNCN.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PrematureTerm_kNCN">
+    <Position X="10.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAQAAAKACAACgBAAAAEAAACBAAAAAAAAAAAA=</HashCode>
+      <FileName>PrematureTerm_kNCN.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sequential_kNCN">
+    <Position X="14.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAQAgAIACAACAAAAAgEAAACBEAIAAAAAAAAA=</HashCode>
+      <FileName>Sequential_kNCN.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sequential_kNN">
+    <Position X="19" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAQAAAIACQAAAAAACAEAAACBEABAAAAAAAAA=</HashCode>
+      <FileName>Sequential_kNN.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility::NoSuchEnumException">
+    <Position X="17.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility::EnumParser&lt;T&gt;">
+    <Position X="19.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAACAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility::InputReader">
+    <Position X="5.75" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAEAAAAAAQADAAAEAAESCYAgQAQUgBAAQE=</HashCode>
+      <FileName>inputreader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utility::PerformanceAnalyzer">
+    <Position X="3.25" Y="5.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAgBIAQAAAAEAIAAABAAAACAAABgCAAIAAA=</HashCode>
+      <FileName>PerformanceAnalyzer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Common::Sample">
+    <Position X="12" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAQAAABAAAIAAAQBAAAEAAAAQAAAgAAABAAA=</HashCode>
+      <FileName>Sample.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Common::SampleSet">
+    <Position X="13.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAACEAAQEQACQgAAAAAIA=</HashCode>
+      <FileName>SampleSet.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Common::SampleSetFactory">
+    <Position X="8.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAEAAAAAAAAA=</HashCode>
+      <FileName>SampleSetFactory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Common::Distance">
+    <Position X="10.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAABBAAAAABAAAAA=</HashCode>
+      <FileName>Distance.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Common::NCNDistance">
+    <Position X="10.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Distance.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="Utility::SampleDim" Collapsed="true">
+    <Position X="8.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Utility::DistanceValue" Collapsed="true">
+    <Position X="8.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Config.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="Utility::ClassifierType">
+    <Position X="17.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAADAACAAAAIAAAAAAgAEAAAAAAAABAAAA=</HashCode>
+      <FileName>Config.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
